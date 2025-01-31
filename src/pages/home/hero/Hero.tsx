@@ -6,36 +6,32 @@ import CRT from "../../../components/CRT";
 import useTypewriter from "../../../hooks/useTypewriter";
 
 const Hero = () => {
-  const terminalText = `> Initializing Axiom Protocol...
-> Loading quantum algorithms...
-> Establishing neural networks...
-> Syncing with the future...
+  const terminalText = `> Starting Axiom environment...
+> Loading tools...
+> Ready
 
-STATUS: ONLINE
+Welcome to Axiom Club
+Tech innovation starts here
 
-Welcome to Axiom Club v2.0
-Where code meets consciousness
+[SYSTEM]: Active
+[USER]: What is Axiom?
+[SYSTEM]: A community of developers,
+engineers, and innovators at the
+forefront of technology.
 
-[SYSTEM]: Ready for input
-[USER]: Tell me more
-[SYSTEM]: Axiom Club is your gateway 
-to the next generation of technology.
+[USER]: Focus areas?
+[SYSTEM]: Current initiatives:
+- Full-Stack Development
+- Systems Architecture
+- Machine Learning
+- Open Source
+- Security Research
 
-Join us in shaping tomorrow.
-
-[USER]: Show capabilities
-[SYSTEM]: Capabilities loaded:
-- Quantum Computing Integration
-- Neural Network Development
-- Advanced AI Systems
-- Blockchain Architecture
-- Cybersecurity Protocols
-
-[STATUS]: All systems operational`;
+[STATUS]: Ready`;
 
   const { displayText, isFinished } = useTypewriter({
     text: terminalText,
-    speed: 30,
+    speed: 15,
   });
 
   const containerVariants = {

@@ -61,14 +61,14 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
           variants={screenVariants}
           initial="off"
           animate={isPowered ? "on" : "off"}
-          className="relative rounded-[20px] animate-[flicker_0.15s_infinite] perspective-[1000px] preserve-3d"
+          className="relative rounded-[20px] animate-[flicker_0.15s_infinite] perspective-[1000px] preserve-3d h-full"
         >
-          <div className="relative overflow-hidden rounded-[15px] scale-98">
+          <div className="relative overflow-hidden rounded-[15px] h-full">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: isPowered ? 1 : 0 }}
               transition={{ delay: 0.2 }}
-              className="relative z-10"
+              className="relative z-10 h-full"
             >
               {children}
             </motion.div>
