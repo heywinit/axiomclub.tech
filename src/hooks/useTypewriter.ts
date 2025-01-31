@@ -19,7 +19,7 @@ const useTypewriter = ({ text, speed = 50, delay = 0 }: UseTypewriterProps) => {
 
     const typeNextChar = () => {
       if (currentLineIndex >= lines.length) {
-        setIsFinished(true);
+        setTimeout(() => setIsFinished(true), 2000);
         return;
       }
 

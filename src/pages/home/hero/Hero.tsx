@@ -6,28 +6,31 @@ import CRT from "../../../components/CRT";
 import useTypewriter from "../../../hooks/useTypewriter";
 
 const Hero = () => {
-  const terminalText = `> Starting Axiom environment...
-> Loading tools...
-> Ready
+  const terminalText = `[    0.000000] Axiom OS v1.0.0-tech (axiom@svgu) (gcc version 12.3.0) #1 SMP PREEMPT
+[    0.052731] Command line: BOOT_IMAGE=/boot/axiom-os root=UUID=axiom-tech ro quiet splash
+[    0.134912] Loading essential drivers...
+[    0.256731] Initializing Axiom development environment...
+[    0.398211] Starting core services:
+[    0.412456] * Mounting innovation filesystem...           [OK]
+[    0.534123] * Loading creative modules...                 [OK]
+[    0.645892] * Starting code compiler service...          [OK]
+[    0.789234] * Establishing developer connections...       [OK]
+[    0.892456] * Activating AI assistance protocols...      [OK]
 
-Welcome to Axiom Club
-Tech innovation starts here
+[    1.023891] Axiom Club Tech Hub - Ready for innovation
+[    1.156234] Environment: Production
+[    1.234567] Status: Active
 
-[SYSTEM]: Active
-[USER]: What is Axiom?
-[SYSTEM]: A community of developers,
-engineers, and innovators at the
-forefront of technology.
+[SYSTEM]: Welcome to Axiom Club - Where Innovation Meets Excellence
+[SYSTEM]: Capabilities loaded:
+         ├── Full-Stack Development
+         ├── Systems Architecture
+         ├── Machine Learning
+         ├── Open Source Projects
+         └── Security Research
 
-[USER]: Focus areas?
-[SYSTEM]: Current initiatives:
-- Full-Stack Development
-- Systems Architecture
-- Machine Learning
-- Open Source
-- Security Research
-
-[STATUS]: Ready`;
+[SYSTEM]: All systems operational. Ready for creative development.
+[STATUS]: Awaiting user input...`;
 
   const { displayText, isFinished } = useTypewriter({
     text: terminalText,
@@ -70,19 +73,6 @@ forefront of technology.
     },
   };
 
-  const [isLargeScreen, setIsLargeScreen] = React.useState(false);
-
-  React.useEffect(() => {
-    const checkScreenSize = () => {
-      setIsLargeScreen(window.innerWidth >= 1024);
-    };
-
-    checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
-
-    return () => window.removeEventListener("resize", checkScreenSize);
-  }, []);
-
   return (
     <section className="min-h-screen flex items-center justify-center py-10 sm:py-20">
       <div className="container mx-auto px-4 h-[calc(100vh-5rem)] sm:h-[calc(100vh-10rem)]">
@@ -91,79 +81,54 @@ forefront of technology.
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="p-0 sm:p-8 grid h-full grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-12 items-stretch relative"
+            className="p-0 sm:p-8 h-full relative"
           >
-            {/* Terminal Section - Show on all screens initially */}
+            {/* Terminal Section */}
             <motion.div
-              className={`lg:block h-full ${
-                isFinished ? "lg:static absolute inset-0" : ""
-              }`}
-              initial={{ x: "0%" }}
+              className="h-full w-full absolute inset-0"
+              initial={{ opacity: 1 }}
               animate={{
-                x: isFinished ? ["0%", "-100%"] : "0%",
-                opacity: isFinished ? [1, 0] : 1,
-                display: isFinished ? ["block", "none"] : "block",
+                opacity: isFinished ? 0 : 1,
+                x: isFinished ? "-100%" : "0%",
               }}
               transition={{
                 duration: 0.5,
                 ease: "easeInOut",
               }}
             >
-              <motion.div
-                className="lg:static h-full"
-                initial={{ x: "0%" }}
-                animate={{
-                  x: isFinished ? ["0%", "-100%"] : "0%",
-                  opacity: isFinished ? [1, 0] : 1,
-                }}
-                transition={{
-                  duration: 0.5,
-                  ease: "easeInOut",
-                }}
-              >
-                <div className="relative h-full">
-                  <div className="text-[#ffb000] font-mono text-sm overflow-hidden h-full">
-                    <motion.pre
+              <div className="relative h-full">
+                <div className="text-[#ffb000] font-mono text-sm overflow-hidden h-full">
+                  <motion.pre
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="whitespace-pre-wrap break-words h-full max-w-full"
+                  >
+                    {displayText}
+                    <motion.span
                       initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="whitespace-pre-wrap h-full"
+                      animate={{ opacity: [0, 1, 0] }}
+                      transition={{
+                        duration: 0.8,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                      }}
                     >
-                      {displayText}
-                      <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: [0, 1, 0] }}
-                        transition={{
-                          duration: 0.8,
-                          repeat: Infinity,
-                          repeatType: "reverse",
-                        }}
-                      >
-                        _
-                      </motion.span>
-                    </motion.pre>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent" />
+                      _
+                    </motion.span>
+                  </motion.pre>
                 </div>
-              </motion.div>
+                <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent" />
+              </div>
             </motion.div>
 
             {/* Main Content Section */}
             <motion.div
-              className={`text-white space-y-6 h-full flex flex-col justify-center lg:static absolute inset-0 ${
-                !isFinished ? "hidden lg:flex" : "flex"
-              }`}
+              className="text-white space-y-6 h-full flex flex-col justify-center absolute inset-0"
               initial={{ opacity: 0, x: "100%" }}
-              animate={
-                isFinished
-                  ? {
-                      opacity: 1,
-                      x: isLargeScreen ? "0" : "0%",
-                    }
-                  : {
-                      opacity: 0,
-                      x: "100%",
-                    }
-              }
+              animate={{
+                opacity: isFinished ? 1 : 0,
+                x: isFinished ? "0%" : "100%",
+              }}
               transition={{
                 duration: 0.5,
                 delay: 0.3,
