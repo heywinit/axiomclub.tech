@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, memo } from "react";
+import React, { useState, useEffect, useCallback, memo, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
+import type { Theme } from "@/contexts/ThemeContext";
 
 type AudioContextType = typeof AudioContext;
 
@@ -11,23 +13,42 @@ interface CRTProps {
 }
 
 const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
+  const { theme, setTheme } = useTheme();
   const [isPowered, setIsPowered] = useState(true);
   const [leftKnobRotation, setLeftKnobRotation] = useState(0);
   const [staticLevel, setStaticLevel] = useState(0);
   const [brightnessLevel, setBrightnessLevel] = useState(1);
   const [easterEggCount, setEasterEggCount] = useState(0);
 
-  // Memoize handlers to prevent unnecessary re-renders
+  // Memoize theme update effect
+  useEffect(() => {
+    const root = document.documentElement;
+    const themeVariables = {
+      "--matrix-color": `var(--matrix-${theme})`,
+      "--matrix-dark": `var(--matrix-dark-${theme})`,
+      "--matrix-glow": `var(--matrix-glow-${theme})`,
+      "--matrix-color-50": `var(--matrix-${theme}-50)`,
+      "--matrix-color-30": `var(--matrix-${theme}-30)`,
+      "--matrix-color-20": `var(--matrix-${theme}-20)`,
+      "--matrix-color-10": `var(--matrix-${theme}-10)`,
+    };
+
+    Object.entries(themeVariables).forEach(([key, value]) => {
+      root.style.setProperty(key, value);
+    });
+  }, [theme]);
+
+  // Memoize handlers
   const handleLeftKnobClick = useCallback(() => {
-    setLeftKnobRotation((prev) => prev + 90);
-    setStaticLevel((prev) => (prev + 0.1) % 0.5);
     setLeftKnobRotation((prev) => {
-      if (prev >= 720) {
+      const newRotation = prev + 90;
+      if (newRotation >= 720) {
         setEasterEggCount((count) => count + 1);
         return 0;
       }
-      return prev;
+      return newRotation;
     });
+    setStaticLevel((prev) => (prev + 0.1) % 0.5);
   }, []);
 
   const handleBrightnessSlider = useCallback((index: number) => {
@@ -37,109 +58,150 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
     });
   }, []);
 
+  const handleThemeChange = useCallback(() => {
+    const nextTheme: Record<Theme, Theme> = {
+      amber: "ruby",
+      ruby: "emerald",
+      emerald: "sapphire",
+      sapphire: "amber",
+    };
+    setTheme(nextTheme[theme]);
+  }, [theme, setTheme]);
+
   const togglePower = useCallback(() => {
     setIsPowered((prev) => !prev);
   }, []);
 
-  // Sound effects with cleanup
-  useEffect(() => {
-    let audioContext: AudioContext | null = null;
-    let cleanupTimeout: NodeJS.Timeout;
+  // Memoize sound effect creation
+  const createPowerSound = useCallback(() => {
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: AudioContextType })
+        .webkitAudioContext;
 
-    const createPowerSound = () => {
-      const AudioContextClass =
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: AudioContextType })
-          .webkitAudioContext;
+    const audioContext = new AudioContextClass();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
 
-      audioContext = new AudioContextClass();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
 
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+    oscillator.type = "sine";
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
 
-      oscillator.type = "sine";
-      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    if (isPowered) {
+      oscillator.frequency.setValueAtTime(100, audioContext.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(
+        1000,
+        audioContext.currentTime + 0.1
+      );
+    } else {
+      oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(
+        100,
+        audioContext.currentTime + 0.1
+      );
+    }
 
-      if (isPowered) {
-        oscillator.frequency.setValueAtTime(100, audioContext.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(
-          1000,
-          audioContext.currentTime + 0.1
-        );
-      } else {
-        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(
-          100,
-          audioContext.currentTime + 0.1
-        );
-      }
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.1);
 
-      oscillator.start();
-      oscillator.stop(audioContext.currentTime + 0.1);
-
-      // Cleanup after sound is done
-      cleanupTimeout = setTimeout(() => {
-        audioContext?.close();
-        audioContext = null;
-      }, 200);
-    };
-
-    createPowerSound();
-
-    return () => {
-      if (cleanupTimeout) clearTimeout(cleanupTimeout);
-      if (audioContext) audioContext.close();
-    };
+    return audioContext;
   }, [isPowered]);
 
-  const screenVariants = {
-    off: {
-      opacity: 0,
-      scale: 0.96,
-      filter: "brightness(0)",
-    },
-    on: {
-      opacity: 1,
-      scale: 1,
-      filter: `brightness(${brightnessLevel})`,
-      transition: {
-        duration: 0.4,
-        type: "spring",
-        stiffness: 200,
-        damping: 20,
-      },
-    },
-  };
+  // Optimize sound effect cleanup
+  useEffect(() => {
+    let isCleanedUp = false;
+    const audioContext = createPowerSound();
+    const cleanupTimeout = setTimeout(() => {
+      if (!isCleanedUp) {
+        audioContext.close();
+        isCleanedUp = true;
+      }
+    }, 200);
 
-  const knobVariants = {
-    hover: {
-      scale: 1.1,
-      transition: {
-        duration: 0.2,
-        type: "spring",
-        stiffness: 400,
+    return () => {
+      clearTimeout(cleanupTimeout);
+      if (!isCleanedUp) {
+        audioContext.close();
+        isCleanedUp = true;
+      }
+    };
+  }, [isPowered, createPowerSound]);
+
+  // Memoize animation variants
+  const screenVariants = useMemo(
+    () => ({
+      off: {
+        opacity: 0,
+        scale: 0.96,
+        filter: "brightness(0)",
       },
-    },
-    tap: {
-      scale: 0.95,
-    },
-  };
+      on: {
+        opacity: 1,
+        scale: 1,
+        filter: `brightness(${brightnessLevel})`,
+        transition: {
+          duration: 0.4,
+          type: "spring",
+          stiffness: 200,
+          damping: 20,
+        },
+      },
+    }),
+    [brightnessLevel]
+  );
+
+  const knobVariants = useMemo(
+    () => ({
+      hover: {
+        scale: 1.1,
+        transition: {
+          duration: 0.2,
+          type: "spring",
+          stiffness: 400,
+        },
+      },
+      tap: {
+        scale: 0.95,
+      },
+    }),
+    []
+  );
+
+  // Memoize display text
+  const displayText = useMemo(() => {
+    if (easterEggCount >= 3) {
+      return (
+        <>
+          <span className="hidden sm:inline">PARTY MODE</span>
+          <span className="sm:hidden">PM</span>
+        </>
+      );
+    }
+    return (
+      <>
+        <span className="hidden sm:inline">{`AXIOM-OS v${
+          2 + easterEggCount
+        }.0 [${theme.toUpperCase()}]`}</span>
+        <span className="sm:hidden">{`AX v${2 + easterEggCount}`}</span>
+      </>
+    );
+  }, [easterEggCount, theme]);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`relative p-8 rounded-3xl bg-gradient-to-b from-[#1a1a1a] to-[#000000] shadow-[inset_0_0_0_8px_#1a1a1a,inset_0_0_0_10px_#000000,0_5px_25px_rgba(0,0,0,0.7)] transform perspective-[1000px] rotate-x-1 ${className}`}
+      className={`relative p-8 rounded-3xl bg-gradient-to-b from-[#1a1a1a] to-[#000000] shadow-[inset_0_0_0_8px_#1a1a1a,inset_0_0_0_10px_#000000,0_5px_25px_rgba(0,0,0,0.7)] transform perspective-[1000px] rotate-x-1 will-change-transform ${className}`}
     >
       <AnimatePresence>
         <motion.div
           variants={screenVariants}
           initial="off"
           animate={isPowered ? "on" : "off"}
-          className={`relative rounded-[20px] animate-[flicker_0.15s_infinite] perspective-[1000px] preserve-3d h-full ${
+          className={`relative rounded-[20px] animate-[flicker_0.15s_infinite] perspective-[1000px] preserve-3d h-full will-change-[transform,opacity] ${
             !isPowered ? "animate-[turnOff_0.2s_ease-out_forwards]" : ""
           }`}
         >
@@ -193,7 +255,7 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
                 repeat: Infinity,
                 ease: "linear",
               }}
-              className="absolute inset-0 bg-[linear-gradient(90deg,transparent_50%,rgba(255,176,0,0.02)_50%)] w-[200%] pointer-events-none"
+              className="absolute inset-0 bg-[linear-gradient(90deg,transparent_50%,var(--matrix-color-10)_50%)] w-[200%] pointer-events-none"
             />
             {/* Random vertical glitch strips */}
             <div className="absolute inset-0 overflow-hidden">
@@ -222,7 +284,7 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
                       delay: i * 1.5,
                       ease: [0.4, 0, 0.6, 1],
                     }}
-                    className="absolute h-[20%] w-full bg-[rgba(255,176,0,0.03)]"
+                    className="absolute h-[20%] w-full bg-[var(--matrix-color-20)]"
                     style={{ top: `${i * 30}%` }}
                   />
                 ))}
@@ -255,15 +317,18 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
             variants={knobVariants}
             whileHover="hover"
             whileTap="tap"
+            onClick={handleThemeChange}
             animate={{
               scale: easterEggCount >= 3 ? [1, 1.1, 1] : 1,
               rotate: easterEggCount >= 3 ? [0, 360] : 0,
+              backgroundColor: `var(--matrix-${theme})`,
+              borderColor: `var(--matrix-dark-${theme})`,
             }}
             transition={{
               duration: easterEggCount >= 3 ? 2 : 0.2,
               repeat: easterEggCount >= 3 ? Infinity : 0,
             }}
-            className="w-8 h-8 bg-[#333] rounded-full border-2 border-[#222] shadow-inner cursor-pointer"
+            className="w-8 h-8 rounded-full border-2 shadow-inner cursor-pointer"
           />
         </div>
 
@@ -271,7 +336,7 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
         <motion.div
           animate={{
             boxShadow: isPowered
-              ? ["0 0 5px rgba(255,176,0,0.5)", "0 0 10px rgba(255,176,0,0.3)"]
+              ? ["0 0 5px var(--matrix-color)", "0 0 10px var(--matrix-color)"]
               : "none",
           }}
           transition={{
@@ -279,7 +344,7 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
             repeat: Infinity,
             repeatType: "reverse",
           }}
-          className="bg-[#1a1100] px-4 py-1 rounded font-mono text-[#ffb000] text-xs tracking-wider"
+          className="bg-[var(--matrix-dark)] px-4 py-1 rounded font-mono text-[var(--matrix-color)] text-xs tracking-wider"
         >
           <motion.span
             animate={{
@@ -290,19 +355,7 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
               repeat: Infinity,
             }}
           >
-            {easterEggCount >= 3 ? (
-              <>
-                <span className="hidden sm:inline">PARTY MODE</span>
-                <span className="sm:hidden">PM</span>
-              </>
-            ) : (
-              <>
-                <span className="hidden sm:inline">{`AXIOM-OS v${
-                  2 + easterEggCount
-                }.0`}</span>
-                <span className="sm:hidden">{`AX v${2 + easterEggCount}`}</span>
-              </>
-            )}
+            {displayText}
           </motion.span>
         </motion.div>
 
@@ -339,7 +392,10 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
             animate={{
               opacity: isPowered ? [1, 0.5] : 0.2,
               boxShadow: isPowered
-                ? ["0 0 5px #ffb000", "0 0 10px #ffb000"]
+                ? [
+                    "0 0 5px var(--matrix-color)",
+                    "0 0 10px var(--matrix-color)",
+                  ]
                 : "none",
               scale: isPowered ? [1, 1.1, 1] : 1,
             }}
@@ -348,7 +404,7 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
               repeat: Infinity,
               repeatType: "reverse",
             }}
-            className="w-2 h-2 bg-[#ffb000] rounded-full"
+            className="w-2 h-2 bg-[var(--matrix-color)] rounded-full"
           />
         </div>
       </motion.div>

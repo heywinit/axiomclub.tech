@@ -1,7 +1,54 @@
 :root {
+  /* Amber Theme (Default) */
   --matrix-amber: #ffb000;
-  --matrix-dark: #3d2800;
-  --matrix-glow: #ffd700;
+  --matrix-dark-amber: #3d2800;
+  --matrix-glow-amber: #ffd700;
+  --matrix-amber-50: rgba(255, 176, 0, 0.5);
+  --matrix-amber-30: rgba(255, 176, 0, 0.3);
+  --matrix-amber-20: rgba(255, 176, 0, 0.2);
+  --matrix-amber-10: rgba(255, 176, 0, 0.1);
+
+  /* Ruby Theme */
+  --matrix-ruby: #ff3366;
+  --matrix-dark-ruby: #330011;
+  --matrix-glow-ruby: #ff6699;
+  --matrix-ruby-50: rgba(255, 51, 102, 0.5);
+  --matrix-ruby-30: rgba(255, 51, 102, 0.3);
+  --matrix-ruby-20: rgba(255, 51, 102, 0.2);
+  --matrix-ruby-10: rgba(255, 51, 102, 0.1);
+
+  /* Emerald Theme */
+  --matrix-emerald: #00ff9d;
+  --matrix-dark-emerald: #003322;
+  --matrix-glow-emerald: #33ffbb;
+  --matrix-emerald-50: rgba(0, 255, 157, 0.5);
+  --matrix-emerald-30: rgba(0, 255, 157, 0.3);
+  --matrix-emerald-20: rgba(0, 255, 157, 0.2);
+  --matrix-emerald-10: rgba(0, 255, 157, 0.1);
+
+  /* Sapphire Theme */
+  --matrix-sapphire: #00a8ff;
+  --matrix-dark-sapphire: #002233;
+  --matrix-glow-sapphire: #33bbff;
+  --matrix-sapphire-50: rgba(0, 168, 255, 0.5);
+  --matrix-sapphire-30: rgba(0, 168, 255, 0.3);
+  --matrix-sapphire-20: rgba(0, 168, 255, 0.2);
+  --matrix-sapphire-10: rgba(0, 168, 255, 0.1);
+
+  /* Dynamic theme variables */
+  --matrix-color: var(--matrix-amber);
+  --matrix-dark: var(--matrix-dark-amber);
+  --matrix-glow: var(--matrix-glow-amber);
+  --matrix-color-50: var(--matrix-amber-50);
+  --matrix-color-30: var(--matrix-amber-30);
+  --matrix-color-20: var(--matrix-amber-20);
+  --matrix-color-10: var(--matrix-amber-10);
   --background: #000000;
   --text: #ffffff;
+}
+
+/* Add smooth transitions for theme changes */
+* {
+  transition: color 0.3s ease, background-color 0.3s ease,
+    border-color 0.3s ease, box-shadow 0.3s ease;
 }

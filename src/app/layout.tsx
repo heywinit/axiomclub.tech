@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { DM_Sans } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import "../styles/theme.css";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -43,7 +45,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   viewport: "width=device-width, initial-scale=1, maximum-scale=5",
-  themeColor: "#ffb000",
+  themeColor: "var(--matrix-color)",
 };
 
 export default function RootLayout({
@@ -54,8 +56,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${dmSans.variable} ${dmSans.className} antialiased`}>
-        <Navbar />
-        {children}
+        <ThemeProvider>
+          <Navbar />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

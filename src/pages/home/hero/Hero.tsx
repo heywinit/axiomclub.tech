@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import React, { memo, useCallback, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import useTypewriter from "../../../hooks/useTypewriter";
@@ -41,56 +41,69 @@ const Hero = memo(() => {
     speed: 15,
   });
 
-  // Add keyboard listener for space key
-  React.useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
+  // Add keyboard listener for space key using useCallback
+  const handleKeyPress = useCallback(
+    (e: KeyboardEvent) => {
       if (e.code === "Space" && !isFinished) {
         skip();
       }
-    };
+    },
+    [isFinished, skip]
+  );
 
+  useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [isFinished, skip]);
+  }, [handleKeyPress]);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-        delayChildren: 1, // Delay children until typing starts
+  // Memoize animation variants
+  const containerVariants = useMemo(
+    () => ({
+      hidden: { opacity: 0 },
+      visible: {
+        opacity: 1,
+        transition: {
+          staggerChildren: 0.3,
+          delayChildren: 1,
+        },
       },
-    },
-  };
+    }),
+    []
+  );
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
+  const itemVariants = useMemo(
+    () => ({
+      hidden: { opacity: 0, y: 20 },
+      visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+          duration: 0.5,
+        },
       },
-    },
-  };
+    }),
+    []
+  );
 
-  const buttonVariants = {
-    hover: {
-      scale: 1.05,
-      transition: {
-        duration: 0.2,
-        type: "spring",
-        stiffness: 400,
+  const buttonVariants = useMemo(
+    () => ({
+      hover: {
+        scale: 1.05,
+        transition: {
+          duration: 0.2,
+          type: "spring",
+          stiffness: 400,
+        },
       },
-    },
-    tap: {
-      scale: 0.95,
-    },
-  };
+      tap: {
+        scale: 0.95,
+      },
+    }),
+    []
+  );
 
   return (
-    <section className="min-h-screen flex items-center justify-center py-10 sm:py-20">
+    <section className="min-h-screen flex items-center justify-center py-10 sm:py-20 will-change-transform">
       <div className="container mx-auto px-4 h-[calc(100vh-5rem)] sm:h-[calc(100vh-10rem)]">
         <CRT className="h-full sm:h-[85vh]">
           <motion.div
@@ -113,7 +126,7 @@ const Hero = memo(() => {
               }}
             >
               <div className="relative h-full">
-                <div className="text-[#ffb000] font-mono text-sm overflow-hidden h-full">
+                <div className="text-[var(--matrix-color)] font-mono text-sm overflow-hidden h-full">
                   <motion.pre
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -135,7 +148,7 @@ const Hero = memo(() => {
                 </div>
                 {!isFinished && (
                   <motion.div
-                    className="absolute bottom-24 left-1/2 -translate-x-1/2 bg-black/80 px-4 py-2 rounded-lg border border-amber-500/50 text-amber-400 text-base font-mono flex items-center gap-2"
+                    className="absolute bottom-24 left-1/2 -translate-x-1/2 bg-black/90 px-4 py-2 rounded-lg border-2 border-[var(--matrix-color-50)] text-[var(--matrix-color)] text-base font-mono flex items-center gap-2 backdrop-blur-sm"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{
@@ -144,7 +157,7 @@ const Hero = memo(() => {
                       repeatType: "reverse",
                     }}
                   >
-                    <kbd className="px-2 py-0.5 text-sm bg-amber-500/20 border border-amber-500/30 rounded">
+                    <kbd className="px-2 py-0.5 text-sm bg-[var(--matrix-color-10)] border-2 border-[var(--matrix-color-50)] rounded shadow-[0_0_10px_var(--matrix-color-20)]">
                       space
                     </kbd>
                     <span>Press to skip</span>
@@ -168,19 +181,19 @@ const Hero = memo(() => {
                 ease: "easeOut",
               }}
             >
-              <div className="relative max-w-4xl mx-auto w-full bg-black/50 backdrop-blur-sm border border-amber-500/30 rounded-lg sm:p-12">
+              <div className="relative max-w-4xl mx-auto w-full bg-black/50 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg sm:p-12">
                 {/* Window Header */}
                 <div className="absolute -top-3 left-0 right-0 flex justify-between items-center px-4">
-                  <div className="bg-black/80 px-4 py-1 rounded-full border border-amber-500/30 text-amber-500/80 text-xs font-mono">
+                  <div className="bg-black/80 px-4 py-1 rounded-full border border-[var(--matrix-color-30)] text-[var(--matrix-color-50)] text-xs font-mono">
                     AXIOM_OS {">"}init_future.sh
                   </div>
                 </div>
 
                 {/* Decorative Corner Elements */}
-                <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-amber-500/50 rounded-tl" />
-                <div className="absolute top-0 right-0 w-4 h-4 border-r-2 border-t-2 border-amber-500/50 rounded-tr" />
-                <div className="absolute bottom-0 left-0 w-4 h-4 border-l-2 border-b-2 border-amber-500/50 rounded-bl" />
-                <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-amber-500/50 rounded-br" />
+                <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-[var(--matrix-color-50)] rounded-tl" />
+                <div className="absolute top-0 right-0 w-4 h-4 border-r-2 border-t-2 border-[var(--matrix-color-50)] rounded-tr" />
+                <div className="absolute bottom-0 left-0 w-4 h-4 border-l-2 border-b-2 border-[var(--matrix-color-50)] rounded-bl" />
+                <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-[var(--matrix-color-50)] rounded-br" />
 
                 {/* Content */}
                 <motion.h1
@@ -192,9 +205,9 @@ const Hero = memo(() => {
                   transition={{ delay: 0.5 }}
                   className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold relative pb-1"
                 >
-                  <div className="absolute -left-6 top-1/2 -translate-y-1/2 w-3 h-12 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full" />
+                  <div className="absolute -left-6 top-1/2 -translate-y-1/2 w-3 h-12 bg-gradient-to-b from-[var(--matrix-color)] to-[var(--matrix-dark)] rounded-full" />
                   <motion.span
-                    className="inline-block bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent pb-1"
+                    className="inline-block bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent pb-1"
                     initial={{ opacity: 0, y: 20 }}
                     animate={
                       isFinished ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
@@ -211,10 +224,11 @@ const Hero = memo(() => {
                     isFinished ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                   }
                   transition={{ delay: 0.8 }}
-                  className="text-base sm:text-lg text-gray-300 mt-6 border-l-2 border-amber-500/30 pl-4"
+                  className="text-base sm:text-lg text-gray-300 mt-6 border-l-2 border-[var(--matrix-color-30)] pl-4"
                 >
-                  Welcome to <span className="text-amber-400">Axiom Club</span>,
-                  where innovation meets excellence. We&apos;re a community of
+                  Welcome to{" "}
+                  <span className="text-[var(--matrix-color)]">Axiom Club</span>
+                  , where innovation meets excellence. We&apos;re a community of
                   passionate tech enthusiasts at Sardar Vallabhbhai Global
                   University, pushing the boundaries of what&apos;s possible.
                 </motion.p>
@@ -231,7 +245,7 @@ const Hero = memo(() => {
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
-                    className="px-6 py-3 bg-amber-500 text-black font-semibold rounded-lg hover:bg-amber-400 transition-colors relative overflow-hidden group"
+                    className="px-6 py-3 bg-[var(--matrix-color)] text-black font-semibold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors relative overflow-hidden group"
                   >
                     <motion.span
                       className="absolute inset-0 bg-white/20"
@@ -245,7 +259,7 @@ const Hero = memo(() => {
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
-                    className="px-6 py-3 border-2 border-amber-500 text-amber-500 font-semibold rounded-lg hover:bg-amber-500/10 transition-colors"
+                    className="px-6 py-3 border-2 border-[var(--matrix-color-30)] text-[var(--matrix-color-50)] font-semibold rounded-lg hover:bg-[var(--matrix-color-50)]/10 transition-colors"
                   >
                     Explore Projects
                   </motion.button>
@@ -257,7 +271,7 @@ const Hero = memo(() => {
                     isFinished ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                   }
                   transition={{ delay: 1 }}
-                  className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-sm text-gray-400 mt-8 pt-6 border-t border-amber-500/30"
+                  className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-sm text-gray-400 mt-8 pt-6 border-t border-[var(--matrix-color-30)]"
                 >
                   {[
                     { text: "Active Projects: 5+", delay: 1.2 },
@@ -270,7 +284,7 @@ const Hero = memo(() => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: item.delay }}
                     >
-                      <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+                      <div className="w-2 h-2 bg-[var(--matrix-color)] rounded-full animate-pulse" />
                       <span>{item.text}</span>
                     </motion.div>
                   ))}
