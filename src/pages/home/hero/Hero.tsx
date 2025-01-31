@@ -86,7 +86,7 @@ Join us in shaping tomorrow.
           >
             <div className="hidden md:block h-full">
               <div className="relative h-full">
-                <div className="text-[#00ff00] font-mono text-sm overflow-hidden h-full">
+                <div className="text-[#ffb000] font-mono text-sm overflow-hidden h-full">
                   <motion.pre
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -123,7 +123,7 @@ Join us in shaping tomorrow.
                     className="text-4xl md:text-6xl font-bold"
                   >
                     <motion.span
-                      className="inline-block bg-gradient-to-r from-green-400 to-emerald-600 bg-clip-text text-transparent"
+                      className="inline-block bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.2 }}
@@ -148,7 +148,7 @@ Join us in shaping tomorrow.
                       variants={buttonVariants}
                       whileHover="hover"
                       whileTap="tap"
-                      className="px-6 py-3 bg-green-500 text-black font-semibold rounded-lg hover:bg-green-400 transition-colors relative overflow-hidden group"
+                      className="px-6 py-3 bg-amber-500 text-black font-semibold rounded-lg hover:bg-amber-400 transition-colors relative overflow-hidden group"
                     >
                       <motion.span
                         className="absolute inset-0 bg-white/20"
@@ -162,7 +162,7 @@ Join us in shaping tomorrow.
                       variants={buttonVariants}
                       whileHover="hover"
                       whileTap="tap"
-                      className="px-6 py-3 border-2 border-green-500 text-green-500 font-semibold rounded-lg hover:bg-green-500/10 transition-colors"
+                      className="px-6 py-3 border-2 border-amber-500 text-amber-500 font-semibold rounded-lg hover:bg-amber-500/10 transition-colors"
                     >
                       Learn More
                     </motion.button>
@@ -178,7 +178,7 @@ Join us in shaping tomorrow.
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.6 }}
                     >
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                      <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
                       <span>1000+ Members</span>
                     </motion.div>
                     <motion.div
@@ -187,7 +187,7 @@ Join us in shaping tomorrow.
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.8 }}
                     >
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                      <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
                       <span>24/7 Active</span>
                     </motion.div>
                   </motion.div>

@@ -61,7 +61,7 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
           variants={screenVariants}
           initial="off"
           animate={isPowered ? "on" : "off"}
-          className="relative p-8 rounded-[20px] animate-[flicker_0.15s_infinite] perspective-[1000px] preserve-3d"
+          className="relative rounded-[20px] animate-[flicker_0.15s_infinite] perspective-[1000px] preserve-3d"
         >
           <div className="relative overflow-hidden rounded-[15px] scale-98">
             <motion.div
@@ -110,7 +110,7 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
                 repeat: Infinity,
                 ease: "linear",
               }}
-              className="absolute inset-0 bg-[linear-gradient(90deg,transparent_50%,rgba(0,255,0,0.02)_50%)] w-[200%] pointer-events-none"
+              className="absolute inset-0 bg-[linear-gradient(90deg,transparent_50%,rgba(255,176,0,0.02)_50%)] w-[200%] pointer-events-none"
             />
             {/* Random vertical glitch strips */}
             <div className="absolute inset-0 overflow-hidden">
@@ -139,7 +139,7 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
                       delay: i * 1.5,
                       ease: [0.4, 0, 0.6, 1],
                     }}
-                    className="absolute h-[20%] w-full bg-[rgba(0,255,0,0.03)]"
+                    className="absolute h-[20%] w-full bg-[rgba(255,176,0,0.03)]"
                     style={{ top: `${i * 30}%` }}
                   />
                 ))}
@@ -176,7 +176,7 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
         <motion.div
           animate={{
             boxShadow: isPowered
-              ? ["0 0 5px rgba(0,255,0,0.5)", "0 0 10px rgba(0,255,0,0.3)"]
+              ? ["0 0 5px rgba(255,176,0,0.5)", "0 0 10px rgba(255,176,0,0.3)"]
               : "none",
           }}
           transition={{
@@ -184,7 +184,7 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
             repeat: Infinity,
             repeatType: "reverse",
           }}
-          className="bg-[#001100] px-4 py-1 rounded font-mono text-[#00ff00] text-xs tracking-wider"
+          className="bg-[#1a1100] px-4 py-1 rounded font-mono text-[#ffb000] text-xs tracking-wider"
         >
           <motion.span
             animate={{
@@ -224,7 +224,7 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
             animate={{
               opacity: isPowered ? [1, 0.5] : 0.2,
               boxShadow: isPowered
-                ? ["0 0 5px #00ff00", "0 0 10px #00ff00"]
+                ? ["0 0 5px #ffb000", "0 0 10px #ffb000"]
                 : "none",
             }}
             transition={{
@@ -232,7 +232,7 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
               repeat: Infinity,
               repeatType: "reverse",
             }}
-            className="w-2 h-2 bg-[#00ff00] rounded-full"
+            className="w-2 h-2 bg-[#ffb000] rounded-full"
           />
         </div>
       </motion.div>

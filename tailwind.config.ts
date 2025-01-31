@@ -11,9 +11,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        "matrix-green": "#00ff00",
-        "matrix-dark": "#003b00",
-        "matrix-glow": "#39ff14",
+        "matrix-amber": "#ffb000",
+        "matrix-dark": "#3d2800",
+        "matrix-glow": "#ffd700",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

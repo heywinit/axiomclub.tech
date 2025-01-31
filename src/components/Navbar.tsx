@@ -29,26 +29,26 @@ const Navbar = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <span className="text-[#00ff00] font-bold text-xl shadow-[0_0_5px_#00ff00,0_0_10px_#00ff00,0_0_20px_#00ff00]">
+              <span className="text-[#ffb000] font-bold text-xl shadow-[0_0_5px_#ffb000,0_0_10px_#ffb000,0_0_20px_#ffb000]">
                 AXIOM
               </span>
             </div>
             <div className="hidden md:flex items-center space-x-8">
               <a
                 href="#about"
-                className="text-[#00ff00] hover:text-[#39ff14] transition-colors"
+                className="text-[#ffb000] hover:text-[#ffd700] transition-colors"
               >
                 About
               </a>
               <a
                 href="#projects"
-                className="text-[#00ff00] hover:text-[#39ff14] transition-colors"
+                className="text-[#ffb000] hover:text-[#ffd700] transition-colors"
               >
                 Projects
               </a>
               <a
                 href="#contact"
-                className="text-[#00ff00] hover:text-[#39ff14] transition-colors"
+                className="text-[#ffb000] hover:text-[#ffd700] transition-colors"
               >
                 Contact
               </a>
