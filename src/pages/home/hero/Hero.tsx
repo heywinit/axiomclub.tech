@@ -70,6 +70,19 @@ forefront of technology.
     },
   };
 
+  const [isLargeScreen, setIsLargeScreen] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkScreenSize = () => {
+      setIsLargeScreen(window.innerWidth >= 1024);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
   return (
     <section className="min-h-screen flex items-center justify-center py-10 sm:py-20">
       <div className="container mx-auto px-4 h-[calc(100vh-5rem)] sm:h-[calc(100vh-10rem)]">
@@ -87,37 +100,51 @@ forefront of technology.
               }`}
               initial={{ x: "0%" }}
               animate={{
-                x: isFinished ? "-100%" : "0%",
-                opacity: isFinished ? 0 : 1,
+                x: isFinished ? ["0%", "-100%"] : "0%",
+                opacity: isFinished ? [1, 0] : 1,
+                display: isFinished ? ["block", "none"] : "block",
               }}
               transition={{
                 duration: 0.5,
                 ease: "easeInOut",
               }}
             >
-              <div className="relative h-full">
-                <div className="text-[#ffb000] font-mono text-sm overflow-hidden h-full">
-                  <motion.pre
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="whitespace-pre-wrap h-full"
-                  >
-                    {displayText}
-                    <motion.span
+              <motion.div
+                className="lg:static h-full"
+                initial={{ x: "0%" }}
+                animate={{
+                  x: isFinished ? ["0%", "-100%"] : "0%",
+                  opacity: isFinished ? [1, 0] : 1,
+                }}
+                transition={{
+                  duration: 0.5,
+                  ease: "easeInOut",
+                }}
+              >
+                <div className="relative h-full">
+                  <div className="text-[#ffb000] font-mono text-sm overflow-hidden h-full">
+                    <motion.pre
                       initial={{ opacity: 0 }}
-                      animate={{ opacity: [0, 1, 0] }}
-                      transition={{
-                        duration: 0.8,
-                        repeat: Infinity,
-                        repeatType: "reverse",
-                      }}
+                      animate={{ opacity: 1 }}
+                      className="whitespace-pre-wrap h-full"
                     >
-                      _
-                    </motion.span>
-                  </motion.pre>
+                      {displayText}
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 1, 0] }}
+                        transition={{
+                          duration: 0.8,
+                          repeat: Infinity,
+                          repeatType: "reverse",
+                        }}
+                      >
+                        _
+                      </motion.span>
+                    </motion.pre>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent" />
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent" />
-              </div>
+              </motion.div>
             </motion.div>
 
             {/* Main Content Section */}
@@ -127,7 +154,15 @@ forefront of technology.
               }`}
               initial={{ opacity: 0, x: "100%" }}
               animate={
-                isFinished ? { opacity: 1, x: "0%" } : { opacity: 0, x: "100%" }
+                isFinished
+                  ? {
+                      opacity: 1,
+                      x: isLargeScreen ? "0" : "0%",
+                    }
+                  : {
+                      opacity: 0,
+                      x: "100%",
+                    }
               }
               transition={{
                 duration: 0.5,
