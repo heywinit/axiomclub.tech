@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { DM_Sans } from "next/font/google";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import Navbar from "@/components/Navbar";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -26,8 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${dmSans.variable} ${dmSans.variable} ${dmSans.className} antialiased`}
+        className={`${dmSans.variable} ${dmSans.className} antialiased`}
       >
+        <Navbar />
         {children}
       </body>
     </html>
