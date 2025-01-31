@@ -16,9 +16,9 @@ const terminalText = `[    0.000000] Axiom OS v1.0.0-tech (axiom@svgu) (gcc vers
 [    0.398211] Starting core services:
 [    0.412456] * Mounting innovation filesystem...           [OK]
 [    0.534123] * Loading creative modules...                 [OK]
-[    0.645892] * Starting code compiler service...          [OK]
+[    0.645892] * Starting code compiler service...           [OK]
 [    0.789234] * Establishing developer connections...       [OK]
-[    0.892456] * Activating AI assistance protocols...      [OK]
+[    0.892456] * Activating AI assistance protocols...       [OK]
 
 [    1.023891] Axiom Club Tech Hub - Ready for innovation
 [    1.156234] Environment: Production
@@ -36,10 +36,22 @@ const terminalText = `[    0.000000] Axiom OS v1.0.0-tech (axiom@svgu) (gcc vers
 [STATUS]: Awaiting user input...`;
 
 const Hero = memo(() => {
-  const { displayText, isFinished } = useTypewriter({
+  const { displayText, isFinished, skip } = useTypewriter({
     text: terminalText,
     speed: 15,
   });
+
+  // Add keyboard listener for space key
+  React.useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.code === "Space" && !isFinished) {
+        skip();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [isFinished, skip]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -121,6 +133,23 @@ const Hero = memo(() => {
                     </motion.span>
                   </motion.pre>
                 </div>
+                {!isFinished && (
+                  <motion.div
+                    className="absolute bottom-24 left-1/2 -translate-x-1/2 bg-black/80 px-4 py-2 rounded-lg border border-amber-500/50 text-amber-400 text-base font-mono flex items-center gap-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                    }}
+                  >
+                    <kbd className="px-2 py-0.5 text-sm bg-amber-500/20 border border-amber-500/30 rounded">
+                      space
+                    </kbd>
+                    <span>Press to skip</span>
+                  </motion.div>
+                )}
                 <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent" />
               </div>
             </motion.div>

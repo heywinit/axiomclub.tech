@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface UseTypewriterProps {
   text: string;
@@ -9,6 +9,11 @@ interface UseTypewriterProps {
 const useTypewriter = ({ text, speed = 50, delay = 0 }: UseTypewriterProps) => {
   const [displayText, setDisplayText] = useState("");
   const [isFinished, setIsFinished] = useState(false);
+
+  const skip = useCallback(() => {
+    setDisplayText(text);
+    setIsFinished(true);
+  }, [text]);
 
   useEffect(() => {
     const lines = text.split("\n");
@@ -50,6 +55,7 @@ const useTypewriter = ({ text, speed = 50, delay = 0 }: UseTypewriterProps) => {
   return {
     displayText,
     isFinished,
+    skip,
   };
 };
 
