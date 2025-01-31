@@ -157,11 +157,11 @@ const Hero = () => {
                     isFinished ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                   }
                   transition={{ delay: 0.5 }}
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold relative"
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold relative pb-1"
                 >
                   <div className="absolute -left-6 top-1/2 -translate-y-1/2 w-3 h-12 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full" />
                   <motion.span
-                    className="inline-block bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent"
+                    className="inline-block bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent pb-1"
                     initial={{ opacity: 0, y: 20 }}
                     animate={
                       isFinished ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
@@ -206,7 +206,7 @@ const Hero = () => {
                       whileHover={{ x: "100%" }}
                       transition={{ duration: 0.5 }}
                     />
-                    Join the Innovation
+                    Join us
                   </motion.button>
                   <motion.button
                     variants={buttonVariants}
