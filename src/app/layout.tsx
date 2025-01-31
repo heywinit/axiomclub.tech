@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { DM_Sans } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import "../styles/theme.css";
 
@@ -60,6 +61,7 @@ export default function RootLayout({
           <Navbar />
           {children}
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
