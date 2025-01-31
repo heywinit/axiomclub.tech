@@ -201,7 +201,7 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
           variants={screenVariants}
           initial="off"
           animate={isPowered ? "on" : "off"}
-          className={`relative rounded-[20px] animate-[flicker_0.15s_infinite] perspective-[1000px] preserve-3d h-full will-change-[transform,opacity] ${
+          className={`relative rounded-[20px] perspective-[1000px] preserve-3d h-full will-change-[transform,opacity] ${
             !isPowered ? "animate-[turnOff_0.2s_ease-out_forwards]" : ""
           }`}
         >
@@ -220,76 +220,10 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
             {/* CRT overlay effects */}
             <motion.div
               animate={{
-                opacity: isPowered ? [0.3, 0.7] : 0,
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatType: "reverse",
+                opacity: isPowered ? 0.5 : 0,
               }}
               className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_60%,rgba(0,0,0,0.3)_100%)] pointer-events-none z-20"
             />
-            <motion.div
-              animate={{
-                opacity: isPowered ? 1 : 0,
-              }}
-              className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] pointer-events-none animate-[screenWarp_8s_infinite] rounded-[15px]"
-            />
-            <motion.div
-              animate={{
-                opacity: isPowered ? [0, 0.1] : 0,
-              }}
-              transition={{
-                duration: 0.15,
-                repeat: Infinity,
-              }}
-              className="absolute inset-0 bg-[rgba(18,16,16,0.1)] pointer-events-none rounded-[15px]"
-            />
-            {/* Vertical scanning line */}
-            <motion.div
-              animate={{
-                x: isPowered ? ["0%", "100%"] : "0%",
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              className="absolute inset-0 bg-[linear-gradient(90deg,transparent_50%,var(--matrix-color-10)_50%)] w-[200%] pointer-events-none"
-            />
-            {/* Random vertical glitch strips */}
-            <div className="absolute inset-0 overflow-hidden">
-              <motion.div
-                animate={{
-                  y: isPowered ? ["0%", "-100%"] : "0%",
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "linear",
-                  times: [0, 1],
-                  step: 6,
-                }}
-                className="absolute inset-0"
-              >
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <motion.div
-                    key={i}
-                    animate={{
-                      y: isPowered ? ["100%", "-100%"] : "0%",
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      delay: i * 1.5,
-                      ease: [0.4, 0, 0.6, 1],
-                    }}
-                    className="absolute h-[20%] w-full bg-[var(--matrix-color-20)]"
-                    style={{ top: `${i * 30}%` }}
-                  />
-                ))}
-              </motion.div>
-            </div>
           </div>
         </motion.div>
       </AnimatePresence>
