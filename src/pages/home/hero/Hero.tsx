@@ -1,12 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import { motion } from "framer-motion";
-import CRT from "../../../components/CRT";
+import dynamic from "next/dynamic";
 import useTypewriter from "../../../hooks/useTypewriter";
 
-const Hero = () => {
-  const terminalText = `[    0.000000] Axiom OS v1.0.0-tech (axiom@svgu) (gcc version 12.3.0) #1 SMP PREEMPT
+// Dynamically import CRT component with no SSR
+const CRT = dynamic(() => import("../../../components/CRT"), { ssr: false });
+
+// Memoize the terminal text to prevent unnecessary re-renders
+const terminalText = `[    0.000000] Axiom OS v1.0.0-tech (axiom@svgu) (gcc version 12.3.0) #1 SMP PREEMPT
 [    0.052731] Command line: BOOT_IMAGE=/boot/axiom-os root=UUID=axiom-tech ro quiet splash
 [    0.134912] Loading essential drivers...
 [    0.256731] Initializing Axiom development environment...
@@ -32,6 +35,7 @@ const Hero = () => {
 [SYSTEM]: All systems operational. Ready for creative development.
 [STATUS]: Awaiting user input...`;
 
+const Hero = memo(() => {
   const { displayText, isFinished } = useTypewriter({
     text: terminalText,
     speed: 15,
@@ -249,6 +253,8 @@ const Hero = () => {
       </div>
     </section>
   );
-};
+});
+
+Hero.displayName = "Hero";
 
 export default Hero;

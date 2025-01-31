@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type AudioContextType = typeof AudioContext;
@@ -10,22 +10,49 @@ interface CRTProps {
   className?: string;
 }
 
-const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
+const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
   const [isPowered, setIsPowered] = useState(true);
   const [leftKnobRotation, setLeftKnobRotation] = useState(0);
   const [staticLevel, setStaticLevel] = useState(0);
   const [brightnessLevel, setBrightnessLevel] = useState(1);
   const [easterEggCount, setEasterEggCount] = useState(0);
 
-  // Sound effects
+  // Memoize handlers to prevent unnecessary re-renders
+  const handleLeftKnobClick = useCallback(() => {
+    setLeftKnobRotation((prev) => prev + 90);
+    setStaticLevel((prev) => (prev + 0.1) % 0.5);
+    setLeftKnobRotation((prev) => {
+      if (prev >= 720) {
+        setEasterEggCount((count) => count + 1);
+        return 0;
+      }
+      return prev;
+    });
+  }, []);
+
+  const handleBrightnessSlider = useCallback((index: number) => {
+    setBrightnessLevel((prev) => {
+      const newValue = index === 0 ? prev + 0.1 : prev - 0.1;
+      return Math.min(Math.max(newValue, 0.5), 1.5);
+    });
+  }, []);
+
+  const togglePower = useCallback(() => {
+    setIsPowered((prev) => !prev);
+  }, []);
+
+  // Sound effects with cleanup
   useEffect(() => {
-    const AudioContextClass =
-      window.AudioContext ||
-      (window as unknown as { webkitAudioContext: AudioContextType })
-        .webkitAudioContext;
-    const audioContext = new AudioContextClass();
+    let audioContext: AudioContext | null = null;
+    let cleanupTimeout: NodeJS.Timeout;
 
     const createPowerSound = () => {
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: AudioContextType })
+          .webkitAudioContext;
+
+      audioContext = new AudioContextClass();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
 
@@ -51,9 +78,20 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
 
       oscillator.start();
       oscillator.stop(audioContext.currentTime + 0.1);
+
+      // Cleanup after sound is done
+      cleanupTimeout = setTimeout(() => {
+        audioContext?.close();
+        audioContext = null;
+      }, 200);
     };
 
     createPowerSound();
+
+    return () => {
+      if (cleanupTimeout) clearTimeout(cleanupTimeout);
+      if (audioContext) audioContext.close();
+    };
   }, [isPowered]);
 
   const screenVariants = {
@@ -87,22 +125,6 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
     tap: {
       scale: 0.95,
     },
-  };
-
-  const handleLeftKnobClick = () => {
-    setLeftKnobRotation((prev) => prev + 90);
-    setStaticLevel((prev) => (prev + 0.1) % 0.5);
-    if (leftKnobRotation >= 720) {
-      setEasterEggCount((prev) => prev + 1);
-      setLeftKnobRotation(0);
-    }
-  };
-
-  const handleBrightnessSlider = (index: number) => {
-    setBrightnessLevel((prev) => {
-      const newValue = index === 0 ? prev + 0.1 : prev - 0.1;
-      return Math.min(Math.max(newValue, 0.5), 1.5);
-    });
   };
 
   return (
@@ -302,7 +324,7 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
           <motion.div
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => setIsPowered(!isPowered)}
+            onClick={togglePower}
             animate={{
               rotate: isPowered ? [0, 5, -5, 0] : 0,
             }}
@@ -332,6 +354,8 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
       </motion.div>
     </motion.div>
   );
-};
+});
+
+CRT.displayName = "CRT";
 
 export default CRT;
