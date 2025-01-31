@@ -141,11 +141,6 @@ const Hero = () => {
                   <div className="bg-black/80 px-4 py-1 rounded-full border border-amber-500/30 text-amber-500/80 text-xs font-mono">
                     AXIOM_OS {">"}init_future.sh
                   </div>
-                  <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                    <div className="w-3 h-3 rounded-full bg-amber-500/50" />
-                    <div className="w-3 h-3 rounded-full bg-amber-500/30" />
-                  </div>
                 </div>
 
                 {/* Decorative Corner Elements */}
