@@ -63,7 +63,8 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
       amber: "ruby",
       ruby: "emerald",
       emerald: "sapphire",
-      sapphire: "amber",
+      sapphire: "violet",
+      violet: "amber",
     };
     setTheme(nextTheme[theme]);
   }, [theme, setTheme]);

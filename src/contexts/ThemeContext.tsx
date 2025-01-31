@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState } from "react";
 
-export type Theme = "amber" | "ruby" | "emerald" | "sapphire";
+export type Theme = "amber" | "ruby" | "emerald" | "sapphire" | "violet";
 
 interface ThemeContextType {
   theme: Theme;

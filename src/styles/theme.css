@@ -35,6 +35,15 @@
   --matrix-sapphire-20: rgba(0, 168, 255, 0.2);
   --matrix-sapphire-10: rgba(0, 168, 255, 0.1);
 
+  /* Violet Theme */
+  --matrix-violet: #9d00ff;
+  --matrix-dark-violet: #1a0033;
+  --matrix-glow-violet: #b366ff;
+  --matrix-violet-50: rgba(157, 0, 255, 0.5);
+  --matrix-violet-30: rgba(157, 0, 255, 0.3);
+  --matrix-violet-20: rgba(157, 0, 255, 0.2);
+  --matrix-violet-10: rgba(157, 0, 255, 0.1);
+
   /* Dynamic theme variables */
   --matrix-color: var(--matrix-amber);
   --matrix-dark: var(--matrix-dark-amber);
