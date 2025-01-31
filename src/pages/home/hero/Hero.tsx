@@ -72,8 +72,8 @@ forefront of technology.
 
   return (
     <section className="min-h-screen flex items-center justify-center py-20">
-      <div className="container mx-auto px-4">
-        <CRT className="min-h-[75vh]">
+      <div className="container mx-auto px-4 h-[calc(100vh-10rem)]">
+        <CRT className="h-full">
           <motion.div
             variants={containerVariants}
             initial="hidden"

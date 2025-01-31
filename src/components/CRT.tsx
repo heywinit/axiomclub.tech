@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+
+type AudioContextType = typeof AudioContext;
 
 interface CRTProps {
   children: React.ReactNode;
@@ -10,43 +12,97 @@ interface CRTProps {
 
 const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
   const [isPowered, setIsPowered] = useState(true);
+  const [leftKnobRotation, setLeftKnobRotation] = useState(0);
+  const [staticLevel, setStaticLevel] = useState(0);
+  const [brightnessLevel, setBrightnessLevel] = useState(1);
+  const [easterEggCount, setEasterEggCount] = useState(0);
+
+  // Sound effects
+  useEffect(() => {
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: AudioContextType })
+        .webkitAudioContext;
+    const audioContext = new AudioContextClass();
+
+    const createPowerSound = () => {
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.type = "sine";
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+
+      if (isPowered) {
+        oscillator.frequency.setValueAtTime(100, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(
+          1000,
+          audioContext.currentTime + 0.1
+        );
+      } else {
+        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(
+          100,
+          audioContext.currentTime + 0.1
+        );
+      }
+
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.1);
+    };
+
+    createPowerSound();
+  }, [isPowered]);
 
   const screenVariants = {
     off: {
       opacity: 0,
-      scale: 0.98,
+      scale: 0.96,
+      filter: "brightness(0)",
     },
     on: {
       opacity: 1,
       scale: 1,
+      filter: `brightness(${brightnessLevel})`,
       transition: {
-        duration: 0.3,
+        duration: 0.4,
         type: "spring",
-        stiffness: 300,
+        stiffness: 200,
+        damping: 20,
       },
     },
   };
 
   const knobVariants = {
     hover: {
-      rotate: 180,
+      scale: 1.1,
       transition: {
-        duration: 0.3,
+        duration: 0.2,
         type: "spring",
-        stiffness: 300,
+        stiffness: 400,
       },
+    },
+    tap: {
+      scale: 0.95,
     },
   };
 
-  const sliderVariants = {
-    hover: {
-      y: [-2, 2],
-      transition: {
-        duration: 0.3,
-        type: "spring",
-        stiffness: 300,
-      },
-    },
+  const handleLeftKnobClick = () => {
+    setLeftKnobRotation((prev) => prev + 90);
+    setStaticLevel((prev) => (prev + 0.1) % 0.5);
+    if (leftKnobRotation >= 720) {
+      setEasterEggCount((prev) => prev + 1);
+      setLeftKnobRotation(0);
+    }
+  };
+
+  const handleBrightnessSlider = (index: number) => {
+    setBrightnessLevel((prev) => {
+      const newValue = index === 0 ? prev + 0.1 : prev - 0.1;
+      return Math.min(Math.max(newValue, 0.5), 1.5);
+    });
   };
 
   return (
@@ -61,12 +117,17 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
           variants={screenVariants}
           initial="off"
           animate={isPowered ? "on" : "off"}
-          className="relative rounded-[20px] animate-[flicker_0.15s_infinite] perspective-[1000px] preserve-3d h-full"
+          className={`relative rounded-[20px] animate-[flicker_0.15s_infinite] perspective-[1000px] preserve-3d h-full ${
+            !isPowered ? "animate-[turnOff_0.2s_ease-out_forwards]" : ""
+          }`}
         >
           <div className="relative overflow-hidden rounded-[15px] h-full">
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: isPowered ? 1 : 0 }}
+              animate={{
+                opacity: isPowered ? 1 : 0,
+                filter: `brightness(${brightnessLevel}) blur(${staticLevel}px)`,
+              }}
               transition={{ delay: 0.2 }}
               className="relative z-10 h-full"
             >
@@ -161,13 +222,25 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
           <motion.div
             variants={knobVariants}
             whileHover="hover"
-            className="w-8 h-8 bg-[#333] rounded-full border-2 border-[#222] shadow-inner cursor-pointer"
+            whileTap="tap"
+            animate={{ rotate: leftKnobRotation }}
+            onClick={handleLeftKnobClick}
+            className="w-8 h-8 bg-[#333] rounded-full border-2 border-[#222] shadow-inner cursor-pointer transform origin-center"
           >
             <div className="w-1 h-4 bg-[#666] mx-auto mt-1.5" />
           </motion.div>
           <motion.div
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            variants={knobVariants}
+            whileHover="hover"
+            whileTap="tap"
+            animate={{
+              scale: easterEggCount >= 3 ? [1, 1.1, 1] : 1,
+              rotate: easterEggCount >= 3 ? [0, 360] : 0,
+            }}
+            transition={{
+              duration: easterEggCount >= 3 ? 2 : 0.2,
+              repeat: easterEggCount >= 3 ? Infinity : 0,
+            }}
             className="w-8 h-8 bg-[#333] rounded-full border-2 border-[#222] shadow-inner cursor-pointer"
           />
         </div>
@@ -195,29 +268,39 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
               repeat: Infinity,
             }}
           >
-            AXIOM-OS v2.0
+            {easterEggCount >= 3
+              ? "PARTY MODE"
+              : `AXIOM-OS v${2 + easterEggCount}.0`}
           </motion.span>
         </motion.div>
 
         {/* Right side controls */}
         <div className="flex items-center space-x-4">
           <div className="flex flex-col space-y-2">
-            <motion.div
-              variants={sliderVariants}
-              whileHover="hover"
-              className="w-6 h-2 bg-[#333] rounded-sm cursor-pointer"
-            />
-            <motion.div
-              variants={sliderVariants}
-              whileHover="hover"
-              className="w-6 h-2 bg-[#333] rounded-sm cursor-pointer"
-            />
+            {[0, 1].map((index) => (
+              <motion.div
+                key={index}
+                variants={knobVariants}
+                whileHover="hover"
+                whileTap="tap"
+                onClick={() => handleBrightnessSlider(index)}
+                className="w-6 h-2 bg-[#333] rounded-sm cursor-pointer"
+              />
+            ))}
           </div>
           {/* Power button and LED */}
           <motion.div
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsPowered(!isPowered)}
+            animate={{
+              rotate: isPowered ? [0, 5, -5, 0] : 0,
+            }}
+            transition={{
+              duration: 0.5,
+              repeat: isPowered ? Infinity : 0,
+              repeatDelay: 5,
+            }}
             className="w-4 h-4 bg-[#333] rounded-full border-2 border-[#222] shadow-md cursor-pointer"
           />
           <motion.div
@@ -226,6 +309,7 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
               boxShadow: isPowered
                 ? ["0 0 5px #ffb000", "0 0 10px #ffb000"]
                 : "none",
+              scale: isPowered ? [1, 1.1, 1] : 1,
             }}
             transition={{
               duration: 2,
