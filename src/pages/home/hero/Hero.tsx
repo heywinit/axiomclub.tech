@@ -135,7 +135,7 @@ const Hero = () => {
                 ease: "easeOut",
               }}
             >
-              <div className="relative max-w-4xl mx-auto w-full bg-black/50 backdrop-blur-sm border border-amber-500/30 rounded-lg p-10 sm:p-12">
+              <div className="relative max-w-4xl mx-auto w-full bg-black/50 backdrop-blur-sm border border-amber-500/30 rounded-lg sm:p-12">
                 {/* Window Header */}
                 <div className="absolute -top-3 left-0 right-0 flex justify-between items-center px-4">
                   <div className="bg-black/80 px-4 py-1 rounded-full border border-amber-500/30 text-amber-500/80 text-xs font-mono">
