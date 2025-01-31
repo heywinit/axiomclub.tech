@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import CRT from "./CRT";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -24,37 +25,37 @@ const Navbar = () => {
         visible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
       }`}
     >
-      <div className="crt bg-black/90 backdrop-blur-sm">
+      <CRT className="bg-black/90 backdrop-blur-sm">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <span className="text-matrix-green font-bold text-xl neon-text">
+              <span className="text-[#00ff00] font-bold text-xl shadow-[0_0_5px_#00ff00,0_0_10px_#00ff00,0_0_20px_#00ff00]">
                 AXIOM
               </span>
             </div>
             <div className="hidden md:flex items-center space-x-8">
               <a
                 href="#about"
-                className="text-matrix-green hover:text-matrix-glow transition-colors"
+                className="text-[#00ff00] hover:text-[#39ff14] transition-colors"
               >
                 About
               </a>
               <a
                 href="#projects"
-                className="text-matrix-green hover:text-matrix-glow transition-colors"
+                className="text-[#00ff00] hover:text-[#39ff14] transition-colors"
               >
                 Projects
               </a>
               <a
                 href="#contact"
-                className="text-matrix-green hover:text-matrix-glow transition-colors"
+                className="text-[#00ff00] hover:text-[#39ff14] transition-colors"
               >
                 Contact
               </a>
             </div>
           </div>
         </div>
-      </div>
+      </CRT>
     </nav>
   );
 };
