@@ -60,6 +60,50 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-conic":
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+      keyframes: {
+        flicker: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.9" },
+        },
+        screenWarp: {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(4px)" },
+        },
+        ledPulse: {
+          "0%, 100%": { opacity: "1", boxShadow: "0 0 5px #00ff00" },
+          "50%": { opacity: "0.6", boxShadow: "0 0 2px #00ff00" },
+        },
+        scanline: {
+          "0%": { transform: "translateX(-50%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        verticalStrips: {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(100%)" },
+        },
+        stripMove: {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(100%)" },
+        },
+        typing: {
+          "0%": { height: "0" },
+          "100%": { height: "400px" },
+        },
+      },
+      animation: {
+        flicker: "flicker 0.15s infinite",
+        screenWarp: "screenWarp 8s infinite",
+        ledPulse: "ledPulse 2s infinite",
+        scanline: "scanline 3s linear infinite",
+        verticalStrips: "verticalStrips 6s steps(6) infinite",
+        stripMove: "stripMove 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        typing: "typing 0.5s ease-out forwards",
+      },
     },
   },
   plugins: [tailwindAnimate],

@@ -1,4 +1,7 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface CRTProps {
   children: React.ReactNode;
@@ -6,23 +9,234 @@ interface CRTProps {
 }
 
 const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
+  const [isPowered, setIsPowered] = useState(true);
+
+  const screenVariants = {
+    off: {
+      opacity: 0,
+      scale: 0.98,
+    },
+    on: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.3,
+        type: "spring",
+        stiffness: 300,
+      },
+    },
+  };
+
+  const knobVariants = {
+    hover: {
+      rotate: 180,
+      transition: {
+        duration: 0.3,
+        type: "spring",
+        stiffness: 300,
+      },
+    },
+  };
+
+  const sliderVariants = {
+    hover: {
+      y: [-2, 2],
+      transition: {
+        duration: 0.3,
+        type: "spring",
+        stiffness: 300,
+      },
+    },
+  };
+
   return (
-    <div
-      className={`relative p-8 rounded-3xl bg-gradient-to-b from-[#2c2c2c] to-[#0f0f0f] shadow-[inset_0_0_0_8px_#1a1a1a,inset_0_0_0_10px_#000000,0_5px_15px_rgba(0,0,0,0.5)] transform perspective-[1000px] rotate-x-2 ${className}`}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={`relative p-8 rounded-3xl bg-gradient-to-b from-[#1a1a1a] to-[#000000] shadow-[inset_0_0_0_8px_#1a1a1a,inset_0_0_0_10px_#000000,0_5px_25px_rgba(0,0,0,0.7)] transform perspective-[1000px] rotate-x-1 ${className}`}
     >
-      <div className="relative p-8 bg-black rounded-[20px] border-3 border-[#003b00] shadow-[inset_0_0_20px_#003b00,0_0_20px_#00ff00] animate-[flicker_0.15s_infinite] perspective-[1000px] preserve-3d">
-        <div className="relative overflow-hidden rounded-[15px] scale-98">
-          <div className="relative z-10">{children}</div>
-          {/* CRT overlay effects */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_60%,rgba(0,0,0,0.2)_100%)] pointer-events-none z-20" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] pointer-events-none animate-[screenWarp_8s_infinite] rounded-[15px]" />
-          <div className="absolute inset-0 bg-[rgba(18,16,16,0.1)] opacity-0 pointer-events-none animate-[flicker_0.15s_infinite] rounded-[15px]" />
+      <AnimatePresence>
+        <motion.div
+          variants={screenVariants}
+          initial="off"
+          animate={isPowered ? "on" : "off"}
+          className="relative p-8 rounded-[20px] animate-[flicker_0.15s_infinite] perspective-[1000px] preserve-3d"
+        >
+          <div className="relative overflow-hidden rounded-[15px] scale-98">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isPowered ? 1 : 0 }}
+              transition={{ delay: 0.2 }}
+              className="relative z-10"
+            >
+              {children}
+            </motion.div>
+            {/* CRT overlay effects */}
+            <motion.div
+              animate={{
+                opacity: isPowered ? [0.3, 0.7] : 0,
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+              className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_60%,rgba(0,0,0,0.3)_100%)] pointer-events-none z-20"
+            />
+            <motion.div
+              animate={{
+                opacity: isPowered ? 1 : 0,
+              }}
+              className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] pointer-events-none animate-[screenWarp_8s_infinite] rounded-[15px]"
+            />
+            <motion.div
+              animate={{
+                opacity: isPowered ? [0, 0.1] : 0,
+              }}
+              transition={{
+                duration: 0.15,
+                repeat: Infinity,
+              }}
+              className="absolute inset-0 bg-[rgba(18,16,16,0.1)] pointer-events-none rounded-[15px]"
+            />
+            {/* Vertical scanning line */}
+            <motion.div
+              animate={{
+                x: isPowered ? ["0%", "100%"] : "0%",
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              className="absolute inset-0 bg-[linear-gradient(90deg,transparent_50%,rgba(0,255,0,0.02)_50%)] w-[200%] pointer-events-none"
+            />
+            {/* Random vertical glitch strips */}
+            <div className="absolute inset-0 overflow-hidden">
+              <motion.div
+                animate={{
+                  y: isPowered ? ["0%", "-100%"] : "0%",
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "linear",
+                  times: [0, 1],
+                  step: 6,
+                }}
+                className="absolute inset-0"
+              >
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <motion.div
+                    key={i}
+                    animate={{
+                      y: isPowered ? ["100%", "-100%"] : "0%",
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      delay: i * 1.5,
+                      ease: [0.4, 0, 0.6, 1],
+                    }}
+                    className="absolute h-[20%] w-full bg-[rgba(0,255,0,0.03)]"
+                    style={{ top: `${i * 30}%` }}
+                  />
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* TV Control Panel */}
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="absolute bottom-0 left-0 right-0 h-16 bg-[#1a1a1a] rounded-b-3xl flex items-center justify-between px-8"
+      >
+        {/* Left side controls */}
+        <div className="flex items-center space-x-4">
+          <motion.div
+            variants={knobVariants}
+            whileHover="hover"
+            className="w-8 h-8 bg-[#333] rounded-full border-2 border-[#222] shadow-inner cursor-pointer"
+          >
+            <div className="w-1 h-4 bg-[#666] mx-auto mt-1.5" />
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="w-8 h-8 bg-[#333] rounded-full border-2 border-[#222] shadow-inner cursor-pointer"
+          />
         </div>
-      </div>
-      {/* Power button and LED */}
-      <div className="absolute bottom-4 right-8 w-4 h-4 bg-[#333] rounded-full border-2 border-[#222] shadow-md" />
-      <div className="absolute bottom-4 right-14 w-2 h-2 bg-[#00ff00] rounded-full animate-[ledPulse_2s_infinite]" />
-    </div>
+
+        {/* Center matrix display */}
+        <motion.div
+          animate={{
+            boxShadow: isPowered
+              ? ["0 0 5px rgba(0,255,0,0.5)", "0 0 10px rgba(0,255,0,0.3)"]
+              : "none",
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+          className="bg-[#001100] px-4 py-1 rounded font-mono text-[#00ff00] text-xs tracking-wider"
+        >
+          <motion.span
+            animate={{
+              opacity: isPowered ? [1, 0.5, 1] : 0.2,
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+            }}
+          >
+            AXIOM-OS v2.0
+          </motion.span>
+        </motion.div>
+
+        {/* Right side controls */}
+        <div className="flex items-center space-x-4">
+          <div className="flex flex-col space-y-2">
+            <motion.div
+              variants={sliderVariants}
+              whileHover="hover"
+              className="w-6 h-2 bg-[#333] rounded-sm cursor-pointer"
+            />
+            <motion.div
+              variants={sliderVariants}
+              whileHover="hover"
+              className="w-6 h-2 bg-[#333] rounded-sm cursor-pointer"
+            />
+          </div>
+          {/* Power button and LED */}
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setIsPowered(!isPowered)}
+            className="w-4 h-4 bg-[#333] rounded-full border-2 border-[#222] shadow-md cursor-pointer"
+          />
+          <motion.div
+            animate={{
+              opacity: isPowered ? [1, 0.5] : 0.2,
+              boxShadow: isPowered
+                ? ["0 0 5px #00ff00", "0 0 10px #00ff00"]
+                : "none",
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+            className="w-2 h-2 bg-[#00ff00] rounded-full"
+          />
+        </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
