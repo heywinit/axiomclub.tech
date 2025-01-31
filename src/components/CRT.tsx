@@ -268,9 +268,19 @@ const CRT: React.FC<CRTProps> = ({ children, className = "" }) => {
               repeat: Infinity,
             }}
           >
-            {easterEggCount >= 3
-              ? "PARTY MODE"
-              : `AXIOM-OS v${2 + easterEggCount}.0`}
+            {easterEggCount >= 3 ? (
+              <>
+                <span className="hidden sm:inline">PARTY MODE</span>
+                <span className="sm:hidden">PM</span>
+              </>
+            ) : (
+              <>
+                <span className="hidden sm:inline">{`AXIOM-OS v${
+                  2 + easterEggCount
+                }.0`}</span>
+                <span className="sm:hidden">{`AX v${2 + easterEggCount}`}</span>
+              </>
+            )}
           </motion.span>
         </motion.div>
 
