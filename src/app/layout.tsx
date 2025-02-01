@@ -59,7 +59,7 @@ export default function RootLayout({
       <body className={`${dmSans.variable} ${dmSans.className} antialiased`}>
         <ThemeProvider>
           <Navbar />
-          <main className="pl-20">{children}</main>
+          <main className="lg:pl-32">{children}</main>
           <Analytics />
         </ThemeProvider>
       </body>
