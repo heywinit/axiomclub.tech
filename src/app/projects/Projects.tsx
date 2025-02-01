@@ -1,176 +1,132 @@
 "use client";
 
-import React, { memo, useCallback, useEffect } from "react";
-import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
-import useTypewriter from "@/hooks/useTypewriter";
+import React, { memo, useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ChevronDown,
+  ChevronUp,
+  Search,
+  Terminal,
+  ExternalLink,
+  Github,
+} from "lucide-react";
 
-// Dynamically import CRT component with no SSR
-const CRT = dynamic(() => import("@/components/CRT"), { ssr: false });
-
-// Memoize the terminal text
-const terminalText = `[    0.000000] Axiom OS v1.0.0-tech (axiom@svgu) (gcc version 12.3.0) #1 SMP PREEMPT
-[    0.052731] Command line: BOOT_IMAGE=/boot/axiom-os root=UUID=axiom-tech ro quiet splash
-[    0.134912] Loading project database...
-[    0.256731] Initializing project viewer...
-[    0.398211] Starting project services:
-[    0.412456] * Mounting project filesystem...            [OK]
-[    0.534123] * Loading project metadata...              [OK]
-[    0.645892] * Starting project compiler...             [OK]
-[    0.789234] * Establishing GitHub connections...       [OK]
-[    0.892456] * Activating project protocols...          [OK]
-
-[    1.023891] Axiom Club Project Hub - Innovation Showcase
-[    1.156234] Environment: Production
-[    1.234567] Status: Active
-
-[SYSTEM]: Welcome to Axiom Club Projects
-[SYSTEM]: Project Categories:
-         ├── Web Development
-         ├── Mobile Apps
-         ├── AI/ML Solutions
-         ├── IoT Projects
-         └── Open Source
-
-[SYSTEM]: Project database loaded successfully.
-[STATUS]: Ready to explore projects...`;
-
-interface ProjectCardProps {
+interface Project {
   title: string;
   description: string;
   tech: string[];
   status: "Completed" | "In Progress" | "Planning";
   github?: string;
   demo?: string;
-  delay: number;
 }
 
-const ProjectCard = memo(
-  ({
-    title,
-    description,
-    tech,
-    status,
-    github,
-    demo,
-    delay,
-  }: ProjectCardProps) => {
+const ITEMS_PER_PAGE = 5;
+
+const ProjectRow = memo(
+  ({ project, index }: { project: Project; index: number }) => {
+    const [expanded, setExpanded] = useState(false);
+
     return (
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay }}
-        whileHover={{ scale: 1.02 }}
-        className="relative p-6 bg-black/50 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg overflow-hidden group"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: index * 0.05 }}
+        className="border-b border-[var(--matrix-color-30)] hover:bg-[var(--matrix-color-10)]"
       >
-        {/* Animated background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--matrix-color-10)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-        {/* Decorative corner elements */}
-        <div className="absolute top-0 left-0 w-3 h-3 border-l-2 border-t-2 border-[var(--matrix-color-50)]" />
-        <div className="absolute top-0 right-0 w-3 h-3 border-r-2 border-t-2 border-[var(--matrix-color-50)]" />
-        <div className="absolute bottom-0 left-0 w-3 h-3 border-l-2 border-b-2 border-[var(--matrix-color-50)]" />
-        <div className="absolute bottom-0 right-0 w-3 h-3 border-r-2 border-b-2 border-[var(--matrix-color-50)]" />
-
-        {/* Content */}
-        <div className="relative z-10">
-          <div className="flex justify-between items-start mb-4">
-            <h3 className="text-xl font-bold text-[var(--matrix-color)]">
-              {title}
-            </h3>
-            <span
-              className={`text-sm px-2 py-1 rounded ${
-                status === "Completed"
-                  ? "bg-green-500/20 text-green-400"
-                  : status === "In Progress"
-                  ? "bg-yellow-500/20 text-yellow-400"
-                  : "bg-blue-500/20 text-blue-400"
-              }`}
-            >
-              {status}
-            </span>
-          </div>
-          <p className="text-gray-300 mb-4">{description}</p>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {tech.map((t, i) => (
-              <span
-                key={i}
-                className="text-xs px-2 py-1 rounded-full bg-[var(--matrix-color-20)] text-[var(--matrix-color)]"
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-          <div className="flex gap-3">
-            {github && (
-              <motion.a
-                href={github}
+        <div
+          onClick={() => setExpanded(!expanded)}
+          className="flex items-center py-3 px-4 cursor-pointer group"
+        >
+          <Terminal size={16} className="text-[var(--matrix-color)] mr-3" />
+          <span className="text-[var(--matrix-color)] font-mono">
+            {project.title}
+          </span>
+          <span
+            className={`ml-4 text-sm px-2 py-0.5 rounded ${
+              project.status === "Completed"
+                ? "bg-green-500/20 text-green-400"
+                : project.status === "In Progress"
+                ? "bg-yellow-500/20 text-yellow-400"
+                : "bg-blue-500/20 text-blue-400"
+            }`}
+          >
+            {project.status}
+          </span>
+          <div className="ml-auto flex items-center space-x-3">
+            {project.github && (
+              <a
+                href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="text-sm px-3 py-1 rounded border border-[var(--matrix-color-30)] text-[var(--matrix-color-50)] hover:bg-[var(--matrix-color-20)] transition-colors"
+                className="opacity-50 hover:opacity-100"
+                onClick={(e) => e.stopPropagation()}
               >
-                GitHub
-              </motion.a>
+                <Github size={16} />
+              </a>
             )}
-            {demo && (
-              <motion.a
-                href={demo}
+            {project.demo && (
+              <a
+                href={project.demo}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="text-sm px-3 py-1 rounded bg-[var(--matrix-color)] text-black hover:bg-[var(--matrix-glow)] transition-colors"
+                className="opacity-50 hover:opacity-100"
+                onClick={(e) => e.stopPropagation()}
               >
-                Live Demo
-              </motion.a>
+                <ExternalLink size={16} />
+              </a>
+            )}
+            {expanded ? (
+              <ChevronUp size={16} className="text-[var(--matrix-color)]" />
+            ) : (
+              <ChevronDown size={16} className="text-[var(--matrix-color)]" />
             )}
           </div>
         </div>
-
-        {/* Hover effect line */}
-        <motion.div
-          className="absolute bottom-0 left-0 h-1 bg-[var(--matrix-color)]"
-          initial={{ width: "0%" }}
-          whileHover={{ width: "100%" }}
-          transition={{ duration: 0.3 }}
-        />
+        <AnimatePresence>
+          {expanded && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="px-4 pb-4 font-mono"
+            >
+              <div className="pl-6 border-l border-[var(--matrix-color-30)]">
+                <p className="text-gray-300 mb-3">{project.description}</p>
+                <div className="flex flex-wrap gap-2">
+                  {project.tech.map((tech, i) => (
+                    <span
+                      key={i}
+                      className="text-xs px-2 py-1 bg-[var(--matrix-color-20)] text-[var(--matrix-color)] rounded"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     );
   }
 );
 
-ProjectCard.displayName = "ProjectCard";
+ProjectRow.displayName = "ProjectRow";
 
 const Projects = memo(() => {
-  const { displayText, isFinished, skip } = useTypewriter({
-    text: terminalText,
-    speed: 15,
-  });
-
-  // Add keyboard listener for space key
-  const handleKeyPress = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.code === "Space" && !isFinished) {
-        skip();
-      }
-    },
-    [isFinished, skip]
-  );
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [handleKeyPress]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const [selectedTech, setSelectedTech] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<"name" | "status">("name");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   // Sample projects data
   const projects = [
     {
       title: "Axiom Club Website",
       description:
-        "The official website for Axiom Club featuring a unique retro-futuristic CRT interface built with Next.js and React.",
+        "The official website for Axiom Club featuring a unique retro-futuristic interface built with Next.js and React.",
       tech: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Framer Motion"],
       status: "Completed" as const,
       github: "https://github.com/axiomclub/website",
@@ -216,139 +172,213 @@ const Projects = memo(() => {
     },
   ];
 
+  // Get unique tech stack items
+  const uniqueTech = useMemo(() => {
+    const techSet = new Set(projects.flatMap((p) => p.tech));
+    return Array.from(techSet);
+  }, [projects]);
+
+  // Filter and sort projects
+  const filteredProjects = useMemo(() => {
+    return projects
+      .filter((project) => {
+        const matchesSearch =
+          project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          project.description
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          project.tech.some((t) =>
+            t.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+        const matchesStatus =
+          selectedStatus === "all" || project.status === selectedStatus;
+        const matchesTech =
+          selectedTech === "all" || project.tech.includes(selectedTech);
+        return matchesSearch && matchesStatus && matchesTech;
+      })
+      .sort((a, b) => {
+        if (sortBy === "name") {
+          return sortOrder === "asc"
+            ? a.title.localeCompare(b.title)
+            : b.title.localeCompare(a.title);
+        } else {
+          return sortOrder === "asc"
+            ? a.status.localeCompare(b.status)
+            : b.status.localeCompare(a.status);
+        }
+      });
+  }, [projects, searchQuery, selectedStatus, selectedTech, sortBy, sortOrder]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredProjects.length / ITEMS_PER_PAGE);
+  const paginatedProjects = filteredProjects.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
-    <section className="min-h-screen flex items-center justify-center py-10 sm:py-20 will-change-transform">
-      <div className="container mx-auto px-4 h-[calc(100vh-5rem)] sm:h-[calc(100vh-10rem)]">
-        <CRT className="h-full sm:h-[85vh]">
+    <section className="min-h-screen py-10 sm:py-20">
+      <div className="container mx-auto px-4">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
           <motion.div
-            initial="hidden"
-            animate="visible"
-            className="p-0 sm:p-8 h-full relative"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-12"
           >
-            {/* Terminal Section */}
-            <motion.div
-              className="h-full w-full absolute inset-0"
-              initial={{ opacity: 1 }}
-              animate={{
-                opacity: isFinished ? 0 : 1,
-                x: isFinished ? "-100%" : "0%",
-              }}
-              transition={{
-                duration: 0.5,
-                ease: "easeInOut",
-              }}
-            >
-              <div className="relative h-full">
-                <div className="text-[var(--matrix-color)] font-mono text-sm overflow-hidden h-full">
-                  <motion.pre
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="whitespace-pre-wrap break-words h-full max-w-full"
-                  >
-                    {displayText}
-                    <motion.span
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: [0, 1, 0] }}
-                      transition={{
-                        duration: 0.8,
-                        repeat: Infinity,
-                        repeatType: "reverse",
-                      }}
-                    >
-                      _
-                    </motion.span>
-                  </motion.pre>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              {/* Left side - Terminal style */}
+              <div className="text-left font-mono">
+                <div className="flex items-center gap-2 text-[var(--matrix-color)] mb-3">
+                  <Terminal size={18} />
+                  <span className="text-lg font-bold">PROJECT INDEX</span>
                 </div>
-                {!isFinished && (
-                  <motion.div
-                    className="absolute bottom-24 left-1/2 -translate-x-1/2 bg-black/90 px-4 py-2 rounded-lg border-2 border-[var(--matrix-color-50)] text-[var(--matrix-color)] text-base font-mono flex items-center gap-2 backdrop-blur-sm"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{
-                      duration: 1,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                    }}
-                  >
-                    <kbd className="px-2 py-0.5 text-sm bg-[var(--matrix-color-10)] border-2 border-[var(--matrix-color-50)] rounded shadow-[0_0_10px_var(--matrix-color-20)]">
-                      space
-                    </kbd>
-                    <span>Press to skip</span>
-                  </motion.div>
-                )}
-                <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent" />
-              </div>
-            </motion.div>
-
-            {/* Projects Grid Section */}
-            <motion.div
-              className="h-full overflow-y-auto"
-              initial={{ opacity: 0, x: "100%" }}
-              animate={{
-                opacity: isFinished ? 1 : 0,
-                x: isFinished ? "0%" : "100%",
-              }}
-              transition={{
-                duration: 0.5,
-                delay: 0.3,
-                ease: "easeOut",
-              }}
-            >
-              <div className="max-w-6xl mx-auto">
-                {/* Section Header */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="text-center mb-12"
-                >
-                  <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                    <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
-                      Our Projects
-                    </span>
-                  </h1>
-                  <p className="text-gray-300 max-w-2xl mx-auto">
-                    Explore our innovative projects that push the boundaries of
-                    technology. From web applications to IoT solutions, discover
-                    what we&apos;re building at Axiom Club.
-                  </p>
-                </motion.div>
-
-                {/* Projects Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                  {projects.map((project, index) => (
-                    <ProjectCard key={index} {...project} delay={index * 0.1} />
-                  ))}
+                <div className="text-gray-400">
+                  Viewing {filteredProjects.length} projects •{" "}
+                  {projects.filter((p) => p.status === "Completed").length}{" "}
+                  completed
                 </div>
-
-                {/* Call to Action */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 }}
-                  className="text-center"
-                >
-                  <motion.a
-                    href="https://github.com/axiomclub"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="inline-block px-8 py-3 bg-[var(--matrix-color)] text-black font-semibold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors relative overflow-hidden group"
-                  >
-                    <motion.span
-                      className="absolute inset-0 bg-white/20"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: "100%" }}
-                      transition={{ duration: 0.5 }}
-                    />
-                    View All Projects on GitHub
-                  </motion.a>
-                </motion.div>
               </div>
-            </motion.div>
+
+              {/* Right side - Status & Suggest */}
+              <div className="text-right font-mono flex items-center justify-end gap-4">
+                <div className="inline-flex items-center gap-3 px-4 py-2 bg-black/30 rounded-lg border border-[var(--matrix-color-30)]">
+                  <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
+                  <span className="text-gray-300">System Active</span>
+                </div>
+                <motion.a
+                  href="https://github.com/axiomclub/website/issues/new?labels=project-suggestion&template=project_suggestion.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--matrix-color)] text-black rounded-lg hover:bg-[var(--matrix-glow)] transition-colors font-bold"
+                >
+                  <span>+</span>
+                  <span>Suggest Project</span>
+                </motion.a>
+              </div>
+            </div>
           </motion.div>
-        </CRT>
+
+          {/* Main Content Area with Fixed Height */}
+          <div className="flex flex-col h-[calc(100vh-250px)] min-h-[500px]">
+            {/* Controls */}
+            <div className="mb-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="relative flex-1">
+                  <Search
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    size={18}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search projects..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 bg-black/30 border border-[var(--matrix-color-30)] rounded-lg focus:outline-none focus:border-[var(--matrix-color)] font-mono"
+                  />
+                </div>
+                <div className="flex gap-2 sm:gap-4">
+                  <select
+                    value={selectedStatus}
+                    onChange={(e) => setSelectedStatus(e.target.value)}
+                    className="px-3 py-2 bg-black/30 border border-[var(--matrix-color-30)] rounded-lg focus:outline-none focus:border-[var(--matrix-color)] font-mono text-sm"
+                  >
+                    <option value="all">All Status</option>
+                    <option value="Completed">Completed</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Planning">Planning</option>
+                  </select>
+                  <select
+                    value={selectedTech}
+                    onChange={(e) => setSelectedTech(e.target.value)}
+                    className="px-3 py-2 bg-black/30 border border-[var(--matrix-color-30)] rounded-lg focus:outline-none focus:border-[var(--matrix-color)] font-mono text-sm"
+                  >
+                    <option value="all">Tech Stack</option>
+                    {uniqueTech.map((tech) => (
+                      <option key={tech} value={tech}>
+                        {tech}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={sortBy}
+                    onChange={(e) =>
+                      setSortBy(e.target.value as "name" | "status")
+                    }
+                    className="px-3 py-2 bg-black/30 border border-[var(--matrix-color-30)] rounded-lg focus:outline-none focus:border-[var(--matrix-color)] font-mono text-sm"
+                  >
+                    <option value="name">Sort by Name</option>
+                    <option value="status">Sort by Status</option>
+                  </select>
+                  <button
+                    onClick={() =>
+                      setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+                    }
+                    className="px-3 py-2 bg-black/30 border border-[var(--matrix-color-30)] rounded-lg hover:bg-[var(--matrix-color-20)] font-mono"
+                  >
+                    {sortOrder === "asc" ? "↑" : "↓"}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Projects List with Scroll */}
+            <div className="flex-1 overflow-y-auto mb-4 rounded-lg border border-[var(--matrix-color-30)]">
+              <div className="bg-black/20">
+                {paginatedProjects.length > 0 ? (
+                  paginatedProjects.map((project, index) => (
+                    <ProjectRow
+                      key={project.title}
+                      project={project}
+                      index={index}
+                    />
+                  ))
+                ) : (
+                  <div className="p-8 text-center text-gray-400 font-mono">
+                    No projects match your search criteria
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Fixed Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-between items-center px-4 py-3 bg-black/30 border border-[var(--matrix-color-30)] rounded-lg font-mono">
+                <div className="text-gray-400 text-sm">
+                  Page {currentPage} of {totalPages}
+                </div>
+                <div className="flex gap-2">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                    (page) => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-3 py-1 rounded ${
+                          currentPage === page
+                            ? "bg-[var(--matrix-color)] text-black"
+                            : "hover:bg-[var(--matrix-color-20)]"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    )
+                  )}
+                </div>
+                <div className="text-gray-400 text-sm">
+                  {(currentPage - 1) * ITEMS_PER_PAGE + 1}-
+                  {Math.min(
+                    currentPage * ITEMS_PER_PAGE,
+                    filteredProjects.length
+                  )}{" "}
+                  of {filteredProjects.length}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );
