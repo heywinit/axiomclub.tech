@@ -4,10 +4,11 @@ import React, { memo, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useNavbar } from "@/contexts/NavbarContext";
 
 const Navbar = memo(() => {
   const pathname = usePathname();
-  const [isPowered, setIsPowered] = useState(true);
+  const { isPowered, setIsPowered } = useNavbar();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [knobRotations, setKnobRotations] = useState({
     contrast: 0,
@@ -46,8 +47,8 @@ const Navbar = memo(() => {
 
   const togglePower = useCallback(() => {
     createKnobSound(isPowered ? 100 : 400);
-    setIsPowered((prev) => !prev);
-  }, [createKnobSound, isPowered]);
+    setIsPowered(!isPowered);
+  }, [createKnobSound, isPowered, setIsPowered]);
 
   const rotateKnob = useCallback(
     (knob: keyof typeof knobRotations) => {

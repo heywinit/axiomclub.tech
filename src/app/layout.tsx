@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { DM_Sans } from "next/font/google";
-import Navbar from "@/components/Navbar";
 import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { NavbarProvider } from "@/contexts/NavbarContext";
+import ClientLayout from "@/components/ClientLayout";
 import "../styles/theme.css";
 
 const dmSans = DM_Sans({
@@ -58,9 +59,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${dmSans.variable} ${dmSans.className} antialiased`}>
         <ThemeProvider>
-          <Navbar />
-          <main className="lg:pl-32">{children}</main>
-          <Analytics />
+          <NavbarProvider>
+            <ClientLayout>{children}</ClientLayout>
+            <Analytics />
+          </NavbarProvider>
         </ThemeProvider>
       </body>
     </html>
