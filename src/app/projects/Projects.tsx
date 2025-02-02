@@ -16,7 +16,7 @@ interface Project {
   title: string;
   description: string;
   tech: string[];
-  status: "Completed" | "In Progress" | "Planning";
+  status: "Completed" | "In Progress" | "Planning" | "Planned";
   github?: string;
   demo?: string;
 }
@@ -270,8 +270,9 @@ const Projects = memo(() => {
           "OpenAI API",
           "Supabase",
         ],
-        status: "Planning",
+        status: "Planning" as const,
         github: "https://github.com/axiomclub/waqt",
+        // demo: "https://waqt.axiomclub.tech",
       },
       {
         title: "PairUp",
@@ -287,8 +288,8 @@ const Projects = memo(() => {
           "Framer Motion",
           "WebSockets",
         ],
-        status: "Planned",
-        github: "https://github.com/axiomclub/PairUp",
+        status: "Planned" as const,
+        github: "https://github.com/axiomclub/pairup",
         // demo: "https://studybuddy.axiomclub.tech",
       },
       {
@@ -296,7 +297,7 @@ const Projects = memo(() => {
         description:
           "A simulation tool for visualizing how different CPU scheduling algorithms work (e.g., Round Robin, Shortest Job First, Priority Scheduling).",
         tech: ["JavaScript", "React", "D3.js"],
-        status: "Planned",
+        status: "Planned" as const,
         github: "https://github.com/axiomclub/schedulersim",
         // demo: "https://schedulersim.axiomclub.tech",
       },
@@ -305,26 +306,26 @@ const Projects = memo(() => {
         description:
           "A tool to visualize and compare different data compression algorithms (e.g., Huffman, LZW, Run-Length Encoding).",
         tech: ["JavaScript", "React", "D3.js"],
-        status: "Planned",
+        status: "Planned" as const,
         github: "https://github.com/axiomclub/datacompviz",
         // demo: "https://datacompviz.axiomclub.tech",
       },
       {
-        title: "MyCustomOS",
+        title: "ZenOS",
         description:
           "A basic operating system built from scratch to learn how BIOS, bootloaders, and low-level system architecture work.",
-        tech: [
-          "C",
-          "Assembly",
-          "x86/x64 Assembly",
-          "GCC",
-          "GRUB",
-          "QEMU",
-          "Bochs",
-        ],
-        status: "Planned",
-        github: "https://github.com/axiomclub/mycustomos",
-        // demo: "https://mycustomos.axiomclub.tech",
+        tech: ["C", "Assembly", "x86/x64 Assembly", "GCC", "QEMU", "Bochs"],
+        status: "Planned" as const,
+        github: "https://github.com/axiomclub/zenos",
+        // demo: "https://zenos.axiomclub.tech",
+      },
+      {
+        title: "Rootus",
+        description: "A one stop solution to your daily commute needs.",
+        tech: ["React", "Express", "TypeScript", "MongoDB", "React Native"],
+        status: "Planned" as const,
+        github: "https://github.com/axiomclub/rootus",
+        // demo: "https://rootus.axiomclub.tech",
       },
     ],
     []
