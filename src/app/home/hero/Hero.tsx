@@ -44,11 +44,12 @@ const Hero = memo(() => {
   // Add keyboard listener for space key using useCallback
   const handleKeyPress = useCallback(
     (e: KeyboardEvent) => {
-      if (e.code === "Space" && !isFinished) {
+      if (e.code === "Space") {
         skip();
+        e.preventDefault(); // Prevent default space bar scrolling
       }
     },
-    [isFinished, skip]
+    [skip]
   );
 
   useEffect(() => {
