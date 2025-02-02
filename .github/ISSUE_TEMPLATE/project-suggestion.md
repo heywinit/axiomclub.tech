@@ -2,97 +2,43 @@
 name: Project Suggestion
 about: Suggest us something the club should work on!
 title: ''
-labels: ''
-assignees: ''
+labels: enhancement
+assignees: byedeep, heywinit, VaidehiCodes
 
 ---
 
-name: "Project Idea Suggestion"
-description: "Propose a new project idea for our club."
-title: "[Project Idea] <Descriptive Title>"
-labels: ["project-idea"]
-assignees: []
+## 🚀 Project Idea Submission
 
-body:
-  - type: markdown
-    attributes:
-      value: "### 🚀 **Project Idea Submission**\nThank you for suggesting a project idea! Please fill out the details below."
+### 📌 Project Name
+**Name:** _[Enter a short and descriptive project name]_
 
-  - type: input
-    id: project_name
-    attributes:
-      label: "📌 Project Name"
-      placeholder: "Enter a short and descriptive project name"
-    validations:
-      required: true
+### 📝 Project Description
+**Description:**  
+_[Provide a clear and concise description of the project. What problem does it solve?]_
 
-  - type: textarea
-    id: project_description
-    attributes:
-      label: "📝 Project Description"
-      description: "Provide a clear and concise description of the project."
-      placeholder: "What is the project about? What problem does it solve?"
-    validations:
-      required: true
+### 🌟 Key Features
+- _Feature 1_
+- _Feature 2_
+- _Feature 3_
 
-  - type: textarea
-    id: features
-    attributes:
-      label: "🌟 Key Features"
-      description: "List the main features or functionalities this project should include."
-      placeholder: "- Feature 1\n- Feature 2\n- Feature 3"
-    validations:
-      required: false
+### 🛠️ Suggested Tech Stack
+- _[Programming languages, frameworks, or tools]_  
+  _(e.g., Python, Django, React, Node.js, Arduino, Raspberry Pi)_
 
-  - type: textarea
-    id: tech_stack
-    attributes:
-      label: "🛠️ Suggested Tech Stack"
-      description: "What programming languages, frameworks, or tools should be used?"
-      placeholder: "- Python, Django\n- React, Node.js\n- Arduino, Raspberry Pi"
-    validations:
-      required: false
+### ⚡ Complexity Level
+- [ ] Beginner  
+- [ ] Intermediate  
+- [ ] Advanced  
 
-  - type: dropdown
-    id: complexity
-    attributes:
-      label: "⚡ Complexity Level"
-      description: "How complex is this project?"
-      options:
-        - "Beginner"
-        - "Intermediate"
-        - "Advanced"
-    validations:
-      required: true
+### 🎯 Project Category
+- [ ] Web Development  
+- [ ] Mobile App  
+- [ ] AI/ML  
+- [ ] Embedded Systems  
+- [ ] Cybersecurity  
+- [ ] Game Development  
+- [ ] Other  
 
-  - type: dropdown
-    id: category
-    attributes:
-      label: "🎯 Project Category"
-      description: "Select the relevant category for this project."
-      options:
-        - "Web Development"
-        - "Mobile App"
-        - "AI/ML"
-        - "Embedded Systems"
-        - "Cybersecurity"
-        - "Game Development"
-        - "Other"
-    validations:
-      required: true
-
-  - type: textarea
-    id: potential_impact
-    attributes:
-      label: "🌍 Potential Impact"
-      description: "How will this project benefit users, the community, or the industry?"
-      placeholder: "Describe the real-world impact."
-    validations:
-      required: false
-
-  - type: textarea
-    id: additional_notes
-    attributes:
-      label: "💡 Additional Notes"
-      description: "Any other details or references you'd like to share?"
-      placeholder: "Links, research papers, similar p
+### 🌍 Potential Impact
+**How will this project benefit users, the community, or the industry?**  
+_[Explain the potential impact.]_
