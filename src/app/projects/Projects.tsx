@@ -248,7 +248,7 @@ const Projects = memo(() => {
                   <span className="text-gray-300">System Active</span>
                 </div>
                 <motion.a
-                  href="https://github.com/axiomclub/website/issues/new?labels=project-suggestion&template=project_suggestion.md"
+                  href="https://github.com/axiom-svgu/axiomclub.tech/issues/new?labels=project-suggestion&template=project_suggestion.md"
                   target="_blank"
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.05 }}
