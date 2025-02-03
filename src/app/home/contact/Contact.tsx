@@ -250,6 +250,15 @@ const Contact = memo(() => {
   return (
     <section className="py-20 relative overflow-hidden bg-black" id="contact">
       <div className="container mx-auto px-4 relative z-10">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold text-[var(--matrix-color)] mb-4">
+            Contact Us
+          </h2>
+          <p className="text-[var(--matrix-color-70)] text-lg max-w-2xl mx-auto">
+            Ready to start your next project? Drop us a message through our
+            secure terminal interface.
+          </p>
+        </div>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
