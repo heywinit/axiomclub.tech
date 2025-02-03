@@ -1,98 +1,50 @@
 "use client";
 
 import React, { memo, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useNavbar } from "@/contexts/NavbarContext";
+import { useTheme } from "@/contexts/ThemeContext";
+import type { Theme } from "@/contexts/ThemeContext";
+
+const THEMES: { name: Theme; color: string }[] = [
+  { name: "amber", color: "#ffb000" },
+  { name: "ruby", color: "#ff3366" },
+  { name: "emerald", color: "#00ff9d" },
+  { name: "sapphire", color: "#00a8ff" },
+  { name: "violet", color: "#9d00ff" },
+];
+
+const LINKS = [
+  { label: "HOME", href: "/" },
+  { label: "ABOUT", href: "/about" },
+  { label: "PROJECTS", href: "/projects" },
+  { label: "TEAM", href: "/team" },
+  { label: "CONTACT", href: "/contact" },
+];
 
 const Navbar = memo(() => {
   const pathname = usePathname();
   const { isPowered, setIsPowered } = useNavbar();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [knobRotations, setKnobRotations] = useState({
-    contrast: 0,
-    brightness: 0,
-    volume: 0,
+  const { theme, setTheme } = useTheme();
+  const [selectedChannel, setSelectedChannel] = useState(() => {
+    return LINKS.findIndex((link) => link.href === pathname);
   });
-  const [displayOpacity, setDisplayOpacity] = useState(1);
-  const [displayBrightness, setDisplayBrightness] = useState(1);
 
-  const createKnobSound = useCallback((frequency: number) => {
-    type WebkitWindow = Window & {
-      webkitAudioContext: typeof AudioContext;
-    };
-
-    const AudioContextClass =
-      window.AudioContext ||
-      (window as unknown as WebkitWindow).webkitAudioContext;
-    if (!AudioContextClass) return;
-
-    const audioContext = new AudioContextClass();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-
-    oscillator.type = "sine";
-    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-
-    oscillator.start();
-    oscillator.stop(audioContext.currentTime + 0.1);
-
-    setTimeout(() => audioContext.close(), 200);
+  const handleChannelChange = useCallback((index: number) => {
+    setSelectedChannel(index);
   }, []);
-
-  const togglePower = useCallback(() => {
-    createKnobSound(isPowered ? 100 : 400);
-    setIsPowered(!isPowered);
-  }, [createKnobSound, isPowered, setIsPowered]);
-
-  const rotateKnob = useCallback(
-    (knob: keyof typeof knobRotations) => {
-      setKnobRotations((prev) => {
-        const newRotation = prev[knob] + 45;
-
-        // Update display properties based on knob type
-        switch (knob) {
-          case "contrast":
-            setDisplayOpacity(Math.max(0.3, 1 - (newRotation % 360) / 360));
-            createKnobSound(200);
-            break;
-          case "brightness":
-            setDisplayBrightness(Math.max(0.5, 1 - (newRotation % 360) / 360));
-            createKnobSound(300);
-            break;
-          case "volume":
-            createKnobSound(400 + (newRotation % 360));
-            break;
-        }
-
-        return { ...prev, [knob]: newRotation };
-      });
-    },
-    [createKnobSound]
-  );
-
-  const channels = [
-    { label: "HOME", href: "/" },
-    { label: "ABT", href: "/about" },
-    { label: "PRJS", href: "/projects" },
-    { label: "TEAM", href: "/team" },
-    { label: "CNCT", href: "/contact" },
-  ];
 
   if (!isPowered) {
     return (
-      <motion.div
+      <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0 }}
-        onClick={togglePower}
-        className="fixed left-4 top-4 w-8 h-8 rounded-full bg-[var(--matrix-color)] cursor-pointer z-50 shadow-[0_0_15px_var(--matrix-color)]"
-        whileHover={{ scale: 1.2 }}
+        onClick={() => setIsPowered(true)}
+        className="fixed left-4 top-4 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border-2 border-[var(--matrix-color)] flex items-center justify-center z-50"
+        whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
         <motion.div
@@ -105,74 +57,44 @@ const Navbar = memo(() => {
             repeat: Infinity,
             repeatType: "reverse",
           }}
-          className="w-full h-full rounded-full bg-[var(--matrix-color)] opacity-50"
+          className="w-4 h-4 rounded-full bg-[var(--matrix-color)]"
         />
-      </motion.div>
+      </motion.button>
     );
   }
 
   return (
-    <AnimatePresence>
-      {/* Mobile Menu Button */}
-      <motion.button
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        exit={{ scale: 0 }}
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="fixed left-4 top-4 w-10 h-10 rounded-full bg-black border-2 border-[var(--matrix-color)] cursor-pointer z-50 lg:hidden flex items-center justify-center"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+    <motion.nav
+      initial={{ x: -100 }}
+      animate={{ x: 0 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      className="fixed left-0 top-0 h-screen z-50 p-4"
+    >
+      <motion.div
+        className="h-full w-36 bg-black rounded-2xl border border-[var(--matrix-color-30)] shadow-lg flex flex-col items-center gap-4 p-4 relative"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
       >
+        {/* Brand Display */}
         <motion.div
-          animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
-          className="w-5 h-5 flex flex-col justify-center gap-1"
+          className="w-full bg-black rounded-lg border-2 border-[var(--matrix-color-30)] p-2 relative overflow-hidden"
+          animate={{
+            boxShadow: [
+              "0 0 0px var(--matrix-color)",
+              "0 0 10px var(--matrix-color)",
+            ],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
         >
-          <motion.span
-            animate={{
-              rotate: isMobileMenuOpen ? 45 : 0,
-              y: isMobileMenuOpen ? 2 : 0,
-            }}
-            className="w-full h-0.5 bg-[var(--matrix-color)] block"
-          />
-          <motion.span
-            animate={{ opacity: isMobileMenuOpen ? 0 : 1 }}
-            className="w-full h-0.5 bg-[var(--matrix-color)] block"
-          />
-          <motion.span
-            animate={{
-              rotate: isMobileMenuOpen ? -45 : 0,
-              y: isMobileMenuOpen ? -2 : 0,
-            }}
-            className="w-full h-0.5 bg-[var(--matrix-color)] block"
-          />
-        </motion.div>
-      </motion.button>
-
-      <motion.nav
-        initial={{ x: -100, opacity: 0 }}
-        animate={{
-          x: 0,
-          opacity: 1,
-          width: isMobileMenuOpen ? "100%" : "auto",
-        }}
-        exit={{ x: -100, opacity: 0 }}
-        transition={{ duration: 0.5, type: "spring" }}
-        style={{
-          filter: `brightness(${displayBrightness})`,
-          opacity: displayOpacity,
-        }}
-        className={`fixed left-0 top-0 h-screen bg-gradient-to-b from-[#1a1a1a] to-[#000000] shadow-[5px_0_25px_rgba(0,0,0,0.7)] z-40 p-4 
-          ${isMobileMenuOpen ? "w-full" : "w-32"} 
-          lg:w-32
-          ${!isMobileMenuOpen ? "hidden lg:block" : ""}`}
-      >
-        <div className="relative h-full flex flex-col gap-6 items-center rounded-xl bg-black/50 border border-[var(--matrix-color-30)] p-4">
-          {/* Matrix Display */}
           <motion.div
-            className="flex items-center justify-center p-2 font-mono text-4xl tracking-wider text-center text-[var(--matrix-color)]"
+            className="font-mono text-center text-[var(--matrix-color)] text-sm relative z-10"
             animate={{
-              opacity: [1, 0.5],
-              filter: ["brightness(1)", "brightness(1.2)"],
+              opacity: [1, 0.7],
             }}
             transition={{
               duration: 2,
@@ -180,119 +102,212 @@ const Navbar = memo(() => {
               repeatType: "reverse",
             }}
           >
-            {"{x}"}
+            AXIOM-RC v2.0
           </motion.div>
+          {/* Scanlines */}
+          <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px] pointer-events-none opacity-40" />
+        </motion.div>
 
-          {/* Channel Buttons */}
-          <div className="flex flex-col gap-2 w-full lg:w-full md:w-64 mx-auto">
-            {channels.map((channel) => {
-              const isActive = pathname === channel.href;
+        {/* Channel Display */}
+        <div className="w-full space-y-2">
+          <div className="w-full bg-black rounded-lg border-2 border-[var(--matrix-color-30)] p-2 relative overflow-hidden">
+            <div className="font-mono text-center text-[var(--matrix-color)] text-xs mb-1">
+              CH-{(selectedChannel + 1).toString().padStart(2, "0")}
+            </div>
+            <motion.div
+              className="text-[8px] font-mono text-center text-[var(--matrix-color-50)]"
+              animate={{ opacity: [1, 0.8] }}
+              transition={{ duration: 1, repeat: Infinity }}
+            >
+              {LINKS[selectedChannel]?.label || "NO SIGNAL"}
+            </motion.div>
+            {/* Scanlines */}
+            <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px] pointer-events-none opacity-40" />
+          </div>
+          {/* Signal Strength */}
+          <div className="flex justify-between px-1">
+            {[...Array(5)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="w-3 h-1 bg-[var(--matrix-color)] rounded-sm"
+                animate={{
+                  opacity: i <= selectedChannel ? [0.5, 1] : 0.3,
+                }}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                  delay: i * 0.1,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Navigation Section */}
+        <div className="w-full space-y-2">
+          <div className="text-[var(--matrix-color)] text-[10px] font-mono text-center border-b-2 border-[var(--matrix-color-30)] pb-1">
+            CHANNEL SELECT
+          </div>
+          <div className="grid grid-cols-2 gap-2 w-full">
+            {LINKS.map((link, index) => {
+              const isActive = pathname === link.href;
               return (
-                <Link key={channel.href} href={channel.href}>
+                <Link key={link.href} href={link.href}>
                   <motion.button
+                    onClick={() => handleChannelChange(index)}
+                    className={`w-full rounded-lg border-2 relative ${
+                      isActive
+                        ? "bg-[var(--matrix-color-20)] border-[var(--matrix-color)]"
+                        : "bg-black border-[var(--matrix-color-30)] hover:border-[var(--matrix-color)]"
+                    } flex flex-col items-center justify-center py-2 gap-1`}
+                    whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="relative w-full"
                   >
-                    <motion.div
-                      animate={{
-                        backgroundColor: isActive ? "#1a1a1a" : "#262626",
-                        boxShadow: isActive
-                          ? "inset 0 2px 4px rgba(0,0,0,0.3), 0 0 10px var(--matrix-color-30)"
-                          : "inset 0 2px 4px rgba(0,0,0,0.1)",
-                      }}
-                      className="w-full h-10 lg:h-8 rounded border-2 border-[var(--matrix-color-30)] flex items-center justify-between px-4 lg:px-2 group"
+                    <span
+                      className={`font-mono text-lg ${
+                        isActive
+                          ? "text-[var(--matrix-color)]"
+                          : "text-[var(--matrix-color-50)]"
+                      }`}
                     >
-                      <span className="w-2 h-2">
-                        {isActive && (
-                          <motion.div
-                            layoutId="channelIndicator"
-                            className="w-full h-full rounded-full bg-[var(--matrix-color)]"
-                            transition={{
-                              type: "spring",
-                              stiffness: 300,
-                              damping: 30,
-                            }}
-                          />
-                        )}
-                      </span>
-                      <span className="font-mono text-sm lg:text-[10px] text-[var(--matrix-color-50)]">
-                        {channel.label}
-                      </span>
-                    </motion.div>
+                      {index + 1}
+                    </span>
+                    <span className="text-[8px] font-mono text-[var(--matrix-color-50)]">
+                      {link.label}
+                    </span>
+                    {isActive && (
+                      <motion.div
+                        className="absolute right-1 top-1 w-1.5 h-1.5 rounded-full bg-[var(--matrix-color)]"
+                        animate={{ opacity: [1, 0.5] }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                        }}
+                      />
+                    )}
                   </motion.button>
                 </Link>
               );
             })}
           </div>
+        </div>
 
-          {/* Control Knobs */}
-          <div className="flex lg:flex-col flex-row gap-8 items-center mt-4 flex-wrap justify-center">
-            {Object.entries(knobRotations).map(([knob, rotation]) => (
-              <div key={knob} className="flex flex-col items-center gap-1">
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  animate={{ rotate: rotation }}
-                  onClick={() => rotateKnob(knob as keyof typeof knobRotations)}
-                  className="w-12 h-12 lg:w-10 lg:h-10 bg-[#333] rounded-full border-2 border-[#222] shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] cursor-pointer transform origin-center hover:shadow-[0_0_10px_var(--matrix-color-30)]"
-                >
-                  <div className="w-1 h-6 lg:h-5 bg-[#666] mx-auto mt-2" />
-                </motion.div>
-                <span className="text-[var(--matrix-color-50)] text-xs lg:text-[10px] uppercase font-mono">
-                  {knob}
-                </span>
-              </div>
+        {/* Theme Controls */}
+        <div className="w-full space-y-2">
+          <div className="text-[var(--matrix-color)] text-[10px] font-mono text-center border-b-2 border-[var(--matrix-color-30)] pb-1">
+            COLOR ADJUST
+          </div>
+          <div className="grid grid-cols-3 gap-1">
+            {THEMES.map((t) => (
+              <motion.button
+                key={t.name}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setTheme(t.name)}
+                className={`aspect-square rounded-lg border-2 relative ${
+                  theme === t.name
+                    ? "border-[var(--matrix-color)] bg-[var(--matrix-color-20)]"
+                    : "border-[var(--matrix-color-30)] bg-black"
+                } flex items-center justify-center group`}
+              >
+                <div
+                  className="w-3 h-3 rounded-full transition-transform group-hover:scale-125"
+                  style={{ backgroundColor: t.color }}
+                />
+                {theme === t.name && (
+                  <motion.div
+                    className="absolute inset-0 rounded-lg border-2 border-[var(--matrix-color)]"
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                    }}
+                  />
+                )}
+              </motion.button>
             ))}
           </div>
+        </div>
 
-          {/* Power Button */}
+        {/* Volume Controls */}
+        <div className="w-full space-y-2">
+          <div className="text-[var(--matrix-color)] text-[10px] font-mono text-center border-b-2 border-[var(--matrix-color-30)] pb-1">
+            SYSTEM
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="aspect-square rounded-lg bg-black border-2 border-[var(--matrix-color-30)] flex items-center justify-center group hover:border-[var(--matrix-color)]"
+            >
+              <span className="font-mono text-[10px] text-[var(--matrix-color-50)] group-hover:text-[var(--matrix-color)]">
+                VOL +
+              </span>
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="aspect-square rounded-lg bg-black border-2 border-[var(--matrix-color-30)] flex items-center justify-center group hover:border-[var(--matrix-color)]"
+            >
+              <span className="font-mono text-[10px] text-[var(--matrix-color-50)] group-hover:text-[var(--matrix-color)]">
+                VOL -
+              </span>
+            </motion.button>
+          </div>
+        </div>
+
+        {/* Power Button */}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsPowered(false)}
+          className="mt-auto w-full aspect-[2/1] rounded-lg bg-black border-2 border-[var(--matrix-color)] flex items-center justify-center gap-3 relative overflow-hidden group"
+        >
+          <div className="w-6 h-6 rounded-full border-2 border-[var(--matrix-color)] flex items-center justify-center">
+            <motion.div
+              className="w-3 h-3 bg-[var(--matrix-color)] rounded-full"
+              animate={{
+                opacity: [1, 0.5],
+                scale: [1, 0.9, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            />
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="font-mono text-[10px] text-[var(--matrix-color)]">
+              POWER
+            </span>
+            <span className="font-mono text-[8px] text-[var(--matrix-color-50)]">
+              STANDBY
+            </span>
+          </div>
+          {/* Power button glow */}
           <motion.div
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={togglePower}
-            animate={{
-              rotate: [0, 5, -5, 0],
-            }}
+            className="absolute inset-0 bg-[var(--matrix-color)]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.15, 0] }}
             transition={{
               duration: 2,
               repeat: Infinity,
               repeatType: "reverse",
             }}
-            className="mt-auto flex flex-col items-center gap-2"
-          >
-            <motion.div className="w-6 h-6 rounded-full border-2 border-[var(--matrix-color)] flex items-center justify-center cursor-pointer">
-              <motion.div
-                animate={{
-                  opacity: [0.5, 1],
-                }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                }}
-                className="w-2 h-2 rounded-full bg-[var(--matrix-color)]"
-              />
-            </motion.div>
-            <span className="text-[var(--matrix-color-50)] text-[10px] uppercase font-mono">
-              Power
-            </span>
-          </motion.div>
+          />
+        </motion.button>
 
-          {/* Decorative Elements */}
-          <div className="absolute inset-0 pointer-events-none rounded-xl overflow-hidden">
-            {/* Scanlines */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.1)_50%)] bg-size-[100%_4px]" />
-
-            {/* Corner Accents */}
-            <div className="absolute top-2 left-2 w-3 h-3 border-l-2 border-t-2 border-[var(--matrix-color-30)] rounded-tl-lg" />
-            <div className="absolute top-2 right-2 w-3 h-3 border-r-2 border-t-2 border-[var(--matrix-color-30)] rounded-tr-lg" />
-            <div className="absolute bottom-2 left-2 w-3 h-3 border-l-2 border-b-2 border-[var(--matrix-color-30)] rounded-bl-lg" />
-            <div className="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-[var(--matrix-color-30)] rounded-br-lg" />
-          </div>
+        {/* Decorative Elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Corner Accents */}
+          <div className="absolute top-2 left-2 w-3 h-3 border-l-2 border-t-2 border-[var(--matrix-color-30)] rounded-tl" />
+          <div className="absolute top-2 right-2 w-3 h-3 border-r-2 border-t-2 border-[var(--matrix-color-30)] rounded-tr" />
+          <div className="absolute bottom-2 left-2 w-3 h-3 border-l-2 border-b-2 border-[var(--matrix-color-30)] rounded-bl" />
+          <div className="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-[var(--matrix-color-30)] rounded-br" />
         </div>
-      </motion.nav>
-    </AnimatePresence>
+      </motion.div>
+    </motion.nav>
   );
 });
 
