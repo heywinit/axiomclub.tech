@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
 interface FormData {
@@ -8,6 +8,10 @@ interface FormData {
   email: string;
   message: string;
   interests: string[];
+}
+
+interface ValidationErrors {
+  [key: string]: string;
 }
 
 const interestOptions = [
@@ -27,22 +31,95 @@ const Contact = memo(() => {
     interests: [],
   });
 
+  const [errors, setErrors] = useState<ValidationErrors>({});
+  const terminalRef = useRef<HTMLDivElement>(null);
+  const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  // Validation functions
+  const validateField = (field: keyof FormData): string => {
+    const value = formData[field];
+
+    switch (field) {
+      case "name":
+        if (!value || typeof value !== "string")
+          return "ERROR: Name is required";
+        if (value.trim().length < 2)
+          return "ERROR: Name must be at least 2 characters";
+        return "";
+
+      case "email":
+        if (!value || typeof value !== "string")
+          return "ERROR: Email is required";
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) return "ERROR: Invalid email format";
+        return "";
+
+      case "interests":
+        if (!Array.isArray(value) || !value.length)
+          return "ERROR: Select at least one interest";
+        return "";
+
+      case "message":
+        if (!value || typeof value !== "string")
+          return "ERROR: Message is required";
+        if (value.trim().length < 10)
+          return "ERROR: Message must be at least 10 characters";
+        return "";
+
+      default:
+        return "";
+    }
+  };
+
+  const validateCurrentStep = (): boolean => {
+    const currentField = ["name", "email", "interests", "message"][
+      currentStep
+    ] as keyof FormData;
+    const error = validateField(currentField);
+
+    if (error) {
+      setErrors((prev) => ({ ...prev, [currentField]: error }));
+      return false;
+    }
+
+    setErrors((prev) => ({ ...prev, [currentField]: "" }));
+    return true;
+  };
+
+  // Scroll to the bottom of terminal when new content is added
+  useEffect(() => {
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+  }, [currentStep, submitted, errors]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate all fields before final submission
+    const allErrors: ValidationErrors = {
+      name: validateField("name"),
+      email: validateField("email"),
+      interests: validateField("interests"),
+      message: validateField("message"),
+    };
+
+    if (Object.values(allErrors).some((error) => error)) {
+      setErrors(allErrors);
+      return;
+    }
+
     setIsSubmitting(true);
-
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
-
     setIsSubmitting(false);
     setSubmitted(true);
+    setErrors({});
 
-    // Reset form after 3 seconds
     setTimeout(() => {
       setSubmitted(false);
+      setCurrentStep(0);
       setFormData({
         name: "",
         email: "",
@@ -61,198 +138,166 @@ const Contact = memo(() => {
     }));
   };
 
-  return (
-    <section className="py-20 relative overflow-hidden">
-      {/* Matrix Code Rain Effect */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black z-10" />
-        <div className="absolute inset-0 opacity-5">
-          {/* Matrix code columns */}
-          <div className="grid grid-cols-12 h-full">
-            {[...Array(12)].map((_, i) => (
-              <div
-                key={i}
-                className="border-r border-[var(--matrix-color-30)] h-full"
-                style={{
-                  animation: `matrixRain ${
-                    Math.random() * 2 + 1
-                  }s linear infinite`,
-                  animationDelay: `${Math.random() * 2}s`,
-                }}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+  const handleKeyPress = (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter" && !isSubmitting) {
+      e.preventDefault();
 
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
-              Join The Matrix
+      if (currentStep < 3) {
+        if (validateCurrentStep()) {
+          setCurrentStep((prev) => prev + 1);
+        }
+      } else {
+        if (validateCurrentStep()) {
+          handleSubmit(e as unknown as React.FormEvent);
+        }
+      }
+    }
+  };
+
+  const renderPrompt = () => {
+    const prompts = [
+      { label: "name", value: formData.name },
+      { label: "email", value: formData.email },
+      { label: "interests", value: formData.interests.join(", ") },
+      { label: "message", value: formData.message },
+    ];
+
+    return prompts.map((prompt, index) => (
+      <div
+        key={prompt.label}
+        className={`mb-4 ${index > currentStep ? "hidden" : ""}`}
+      >
+        <div className="flex items-center text-[var(--matrix-color)] mb-1">
+          <span className="mr-2">root@axiom:~$</span>
+          <span>enter_{prompt.label}</span>
+          {prompt.label === "interests" && (
+            <span className="ml-2 text-[var(--matrix-color-70)] text-sm">
+              (Click to select, ENTER when done)
             </span>
-          </h2>
-          <p className="text-gray-300 max-w-2xl mx-auto text-lg">
-            Ready to be part of something extraordinary? Connect with us and
-            let&apos;s build the future together.
-          </p>
-        </motion.div>
-
-        {/* Contact Form */}
-        <div className="max-w-4xl mx-auto">
-          <motion.form
-            onSubmit={handleSubmit}
-            className="bg-black/90 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-8 relative overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            {/* Success Message */}
-            <motion.div
-              className={`absolute inset-0 bg-black/95 flex items-center justify-center ${
-                submitted ? "pointer-events-auto" : "pointer-events-none"
-              }`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: submitted ? 1 : 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.div
-                initial={{ scale: 0.5 }}
-                animate={{ scale: submitted ? 1 : 0.5 }}
-                className="text-center"
-              >
-                <div className="text-[var(--matrix-color)] text-6xl mb-4">
-                  ✓
-                </div>
-                <h3 className="text-2xl font-bold text-[var(--matrix-color)] mb-2">
-                  Message Sent!
-                </h3>
-                <p className="text-gray-300">
-                  We&apos;ll get back to you as soon as possible.
-                </p>
-              </motion.div>
-            </motion.div>
-
-            {/* Form Fields */}
-            <div className="space-y-6">
-              {/* Name Field */}
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-[var(--matrix-color)] mb-2"
-                >
-                  Name
-                </label>
+          )}
+        </div>
+        {index === currentStep && !submitted ? (
+          <>
+            <div className="flex items-center">
+              <span className="text-[var(--matrix-color-70)]">{"> "}</span>
+              {prompt.label !== "interests" ? (
                 <input
-                  type="text"
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                  className="w-full px-4 py-2 bg-black/50 border border-[var(--matrix-color-30)] rounded-lg text-white focus:outline-none focus:border-[var(--matrix-color)] transition-colors"
-                  required
-                />
-              </div>
-
-              {/* Email Field */}
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-[var(--matrix-color)] mb-2"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, email: e.target.value }))
-                  }
-                  className="w-full px-4 py-2 bg-black/50 border border-[var(--matrix-color-30)] rounded-lg text-white focus:outline-none focus:border-[var(--matrix-color)] transition-colors"
-                  required
-                />
-              </div>
-
-              {/* Interests */}
-              <div>
-                <label className="block text-[var(--matrix-color)] mb-2">
-                  Areas of Interest
-                </label>
-                <div className="flex flex-wrap gap-3">
-                  {interestOptions.map((interest) => (
-                    <motion.button
-                      key={interest}
-                      type="button"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handleInterestToggle(interest)}
-                      className={`px-4 py-2 rounded-full border ${
-                        formData.interests.includes(interest)
-                          ? "bg-[var(--matrix-color)] text-black border-[var(--matrix-color)]"
-                          : "border-[var(--matrix-color-30)] text-[var(--matrix-color)]"
-                      } transition-colors`}
-                    >
-                      {interest}
-                    </motion.button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Message Field */}
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-[var(--matrix-color)] mb-2"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  value={formData.message}
+                  type={prompt.label === "email" ? "email" : "text"}
+                  value={prompt.value}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      message: e.target.value,
+                      [prompt.label]: e.target.value,
                     }))
                   }
-                  className="w-full px-4 py-2 bg-black/50 border border-[var(--matrix-color-30)] rounded-lg text-white focus:outline-none focus:border-[var(--matrix-color)] transition-colors h-32 resize-none"
-                  required
+                  onKeyPress={handleKeyPress}
+                  className="flex-1 bg-transparent border-none outline-none text-[var(--matrix-color)] ml-2 font-mono"
+                  autoFocus
                 />
-              </div>
-
-              {/* Submit Button */}
-              <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full py-3 bg-[var(--matrix-color)] text-black font-semibold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-black" />
+              ) : (
+                <div className="flex-1">
+                  <div
+                    className="flex flex-wrap gap-2 mt-2"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !isSubmitting) {
+                        e.preventDefault();
+                        if (validateCurrentStep()) {
+                          setCurrentStep((prev) => prev + 1);
+                        }
+                      }
+                    }}
+                    tabIndex={0}
+                  >
+                    {interestOptions.map((interest, i) => (
+                      <button
+                        key={interest}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleInterestToggle(interest);
+                        }}
+                        type="button"
+                        className={`px-2 py-1 font-mono text-sm ${
+                          formData.interests.includes(interest)
+                            ? "text-black bg-[var(--matrix-color)]"
+                            : "text-[var(--matrix-color)] border border-[var(--matrix-color-30)]"
+                        } hover:border-[var(--matrix-color)]`}
+                      >
+                        [{i + 1}] {interest}
+                      </button>
+                    ))}
                   </div>
-                ) : (
-                  "Send Message"
-                )}
-              </motion.button>
+                </div>
+              )}
+            </div>
+            {errors[prompt.label] && (
+              <div className="mt-2 text-red-500 font-mono">
+                <span className="mr-2">!</span>
+                {errors[prompt.label]}
+              </div>
+            )}
+          </>
+        ) : index < currentStep ? (
+          <div className="text-[var(--matrix-color-70)] font-mono">
+            <span className="mr-2">{">"}</span>
+            {prompt.value || "[empty]"}
+          </div>
+        ) : null}
+      </div>
+    ));
+  };
+
+  return (
+    <section className="py-20 relative overflow-hidden bg-black" id="contact">
+      <div className="container mx-auto px-4 relative z-10">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="max-w-3xl mx-auto"
+        >
+          <div className="bg-black border border-[var(--matrix-color-30)] rounded">
+            {/* Terminal Header */}
+            <div className="border-b border-[var(--matrix-color-30)] p-2 flex items-center">
+              <div className="flex space-x-2">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              </div>
+              <div className="flex-1 text-center text-[var(--matrix-color-70)] text-sm font-mono">
+                AxiomClub Terminal - Contact Interface v1.0.0
+              </div>
             </div>
 
-            {/* Decorative Corner Elements */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-[var(--matrix-color-50)]" />
-            <div className="absolute top-0 right-0 w-4 h-4 border-r-2 border-t-2 border-[var(--matrix-color-50)]" />
-            <div className="absolute bottom-0 left-0 w-4 h-4 border-l-2 border-b-2 border-[var(--matrix-color-50)]" />
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-[var(--matrix-color-50)]" />
-          </motion.form>
-        </div>
+            {/* Terminal Content */}
+            <div
+              ref={terminalRef}
+              className="p-4 font-mono h-[400px] overflow-y-auto custom-scrollbar"
+            >
+              {!submitted ? (
+                <form onSubmit={handleSubmit} className="h-full">
+                  <div className="mb-4 text-[var(--matrix-color)]">
+                    <span className="text-[var(--matrix-color-70)]">
+                      Last login: {new Date().toUTCString()}
+                    </span>
+                    <div className="mt-2">
+                      Welcome to AxiomClub Contact Terminal. Press ENTER after
+                      each input to continue.
+                    </div>
+                  </div>
+                  {renderPrompt()}
+                </form>
+              ) : (
+                <div className="text-[var(--matrix-color)]">
+                  <div className="mb-2">Message sent successfully!</div>
+                  <div className="text-[var(--matrix-color-70)]">
+                    Connection closing in 3 seconds...
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
