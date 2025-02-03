@@ -194,7 +194,6 @@ const Contact = memo(() => {
                   }
                   onKeyPress={handleKeyPress}
                   className="flex-1 bg-transparent border-none outline-none text-[var(--matrix-color)] ml-2 font-mono"
-                  autoFocus
                 />
               ) : (
                 <div className="flex-1">
