@@ -14,7 +14,8 @@ const newsItems: NewsItem[] = [
   {
     date: "2025-01-30",
     title: "The Foundation of Axiom Club",
-    content: "",
+    content:
+      "Systum elvish bhai bhai elvish systum Systum elvish bhai bhai elvish systum Systum elvish bhai bhai elvish systum Systum elvish bhai bhai elvish systum Systum elvish bhai bhai elvish systum ",
     tags: ["AI", "Research", "Innovation"],
   },
   {
