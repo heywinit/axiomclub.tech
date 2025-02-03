@@ -147,3 +147,16 @@
     box-shadow: 0 0 2px #00ff00;
   }
 }
+
+@keyframes matrixRain {
+  0% {
+    background-position: 0% -100%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+.animate-matrix {
+  animation: matrixRain 20s linear infinite;
+}

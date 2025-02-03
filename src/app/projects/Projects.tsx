@@ -11,15 +11,8 @@ import {
   Github,
   SlidersHorizontal,
 } from "lucide-react";
-
-interface Project {
-  title: string;
-  description: string;
-  tech: string[];
-  status: "Completed" | "In Progress" | "Planning" | "Planned";
-  github?: string;
-  demo?: string;
-}
+import { Project } from "@/types/project";
+import { getAllProjects } from "@/services/projectService";
 
 // Custom Dropdown Component
 interface CustomDropdownProps {
@@ -240,96 +233,8 @@ const Projects = memo(() => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [showFilters, setShowFilters] = useState(false);
 
-  // Sample projects data
-  const projects = useMemo(
-    () => [
-      {
-        title: "Axiom Club Website",
-        description:
-          "The official website for Axiom Club featuring a unique retro-futuristic interface built with Next.js and React.",
-        tech: [
-          "Next.js",
-          "React",
-          "TypeScript",
-          "Tailwind CSS",
-          "Framer Motion",
-        ],
-        status: "Completed" as const,
-        github: "https://github.com/axiomclub/website",
-        demo: "https://axiomclub.tech",
-      },
-      {
-        title: "Waqt",
-        description:
-          "A smart task management app that prioritizes tasks based on deadlines and importance using AI.",
-        tech: [
-          "Next.js",
-          "React",
-          "TypeScript",
-          "Tailwind CSS",
-          "OpenAI API",
-          "Supabase",
-        ],
-        status: "Planning" as const,
-        github: "https://github.com/axiomclub/waqt",
-        // demo: "https://waqt.axiomclub.tech",
-      },
-      {
-        title: "PairUp",
-        description:
-          "A Tinder-style matchmaking app that helps university students find study/project partners based on subjects, skills, and availability.",
-        tech: [
-          "Next.js",
-          "React",
-          "Express",
-          "TypeScript",
-          "Supabase",
-          "PostgreSQL",
-          "Framer Motion",
-          "WebSockets",
-        ],
-        status: "Planned" as const,
-        github: "https://github.com/axiomclub/pairup",
-        // demo: "https://studybuddy.axiomclub.tech",
-      },
-      {
-        title: "SchedulerSim",
-        description:
-          "A simulation tool for visualizing how different CPU scheduling algorithms work (e.g., Round Robin, Shortest Job First, Priority Scheduling).",
-        tech: ["JavaScript", "React", "D3.js"],
-        status: "Planned" as const,
-        github: "https://github.com/axiomclub/schedulersim",
-        // demo: "https://schedulersim.axiomclub.tech",
-      },
-      {
-        title: "DataCompViz",
-        description:
-          "A tool to visualize and compare different data compression algorithms (e.g., Huffman, LZW, Run-Length Encoding).",
-        tech: ["JavaScript", "React", "D3.js"],
-        status: "Planned" as const,
-        github: "https://github.com/axiomclub/datacompviz",
-        // demo: "https://datacompviz.axiomclub.tech",
-      },
-      {
-        title: "ZenOS",
-        description:
-          "A basic operating system built from scratch to learn how BIOS, bootloaders, and low-level system architecture work.",
-        tech: ["C", "Assembly", "x86/x64 Assembly", "GCC", "QEMU", "Bochs"],
-        status: "Planned" as const,
-        github: "https://github.com/axiomclub/zenos",
-        // demo: "https://zenos.axiomclub.tech",
-      },
-      {
-        title: "Rootus",
-        description: "A one stop solution to your daily commute needs.",
-        tech: ["React", "Express", "TypeScript", "MongoDB", "React Native"],
-        status: "Planned" as const,
-        github: "https://github.com/axiomclub/rootus",
-        // demo: "https://rootus.axiomclub.tech",
-      },
-    ],
-    []
-  );
+  // Get projects from service
+  const projects = useMemo(() => getAllProjects(), []);
 
   // Get unique tech stack items and sort them alphabetically
   const uniqueTech = useMemo(() => {
@@ -369,8 +274,16 @@ const Projects = memo(() => {
   }, [projects, searchQuery, selectedStatus, selectedTech, sortBy, sortOrder]);
 
   return (
-    <section className="min-h-screen py-10 sm:py-20">
-      <div className="container mx-auto px-4">
+    <section className="min-h-screen py-10 sm:py-20 relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black z-10" />
+        <div className="absolute inset-0 opacity-5">
+          <div className="h-full w-full bg-[linear-gradient(transparent_50%,rgba(32,224,128,.2)_50%,transparent_100%)] bg-[length:100%_3px] animate-matrix" />
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <motion.div

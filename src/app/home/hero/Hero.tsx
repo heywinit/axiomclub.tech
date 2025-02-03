@@ -185,7 +185,7 @@ const Hero = memo(() => {
               <div className="relative max-w-4xl mx-auto w-full bg-black/50 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg sm:p-12">
                 {/* Window Header */}
                 <div className="absolute -top-3 left-0 right-0 flex justify-between items-center px-4">
-                  <div className="bg-black/80 px-4 py-1 rounded-full border border-[var(--matrix-color-30)] text-[var(--matrix-color-50)] text-xs font-mono">
+                  <div className="bg-black px-4 py-1 rounded-full border border-[var(--matrix-color)] text-[var(--matrix-color)] text-xs font-mono">
                     AXIOM_OS {">"}init_future.sh
                   </div>
                 </div>
@@ -230,8 +230,11 @@ const Hero = memo(() => {
                   Welcome to{" "}
                   <span className="text-[var(--matrix-color)]">Axiom Club</span>
                   , where innovation meets excellence. We&apos;re a community of
-                  passionate tech enthusiasts at Sardar Vallabhbhai Global
-                  University, pushing the boundaries of what&apos;s possible.
+                  passionate tech enthusiasts at{" "}
+                  <span className="text-[var(--matrix-color)]">
+                    Sardar Vallabhbhai Global University
+                  </span>
+                  , pushing the boundaries of what&apos;s possible.
                 </motion.p>
 
                 <motion.div
