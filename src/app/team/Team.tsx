@@ -163,7 +163,7 @@ const TEAM_0X00: TeamMember[] = [
 
 const MemberCard = memo(
   ({ member, isLead = false }: { member: TeamMember; isLead?: boolean }) => {
-    const [isHovered, setIsHovered] = useState(false);
+    const [, setIsHovered] = useState(false);
 
     return (
       <motion.div

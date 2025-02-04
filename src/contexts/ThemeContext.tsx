@@ -40,7 +40,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     } else {
       updateTheme(theme);
     }
-  }, []);
+  }, [theme, updateTheme]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme: updateTheme }}>
