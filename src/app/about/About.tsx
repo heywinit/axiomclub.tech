@@ -119,6 +119,86 @@ const MatrixRain = memo(() => {
 
 MatrixRain.displayName = "MatrixRain";
 
+const CrypticText = memo(({ text }: { text: string }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const characters = "アイウエオカキクケコサシスセソタチツテトナニヌネノ";
+
+  return (
+    <motion.span
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className="inline-block relative cursor-pointer"
+    >
+      {text.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          className="inline-block relative"
+          animate={
+            isHovered
+              ? {
+                  y: [0, -2, 0],
+                }
+              : {}
+          }
+          transition={{
+            duration: 0.2,
+            delay: index * 0.02,
+            repeat: isHovered ? Infinity : 0,
+            repeatType: "reverse",
+          }}
+        >
+          {isHovered && (
+            <motion.span
+              className="absolute top-0 left-0 text-[var(--matrix-glow)]"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0, 1, 0],
+              }}
+              transition={{
+                duration: 0.1,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            >
+              {characters[Math.floor(Math.random() * characters.length)]}
+            </motion.span>
+          )}
+          <motion.span
+            animate={
+              isHovered
+                ? {
+                    opacity: [1, 0.5, 1],
+                  }
+                : {}
+            }
+            transition={{
+              duration: 0.2,
+              delay: index * 0.02,
+              repeat: Infinity,
+            }}
+          >
+            {char}
+          </motion.span>
+        </motion.span>
+      ))}
+    </motion.span>
+  );
+});
+
+CrypticText.displayName = "CrypticText";
+
+const MatrixOverlay = memo(() => (
+  <div className="fixed inset-0 pointer-events-none">
+    <div className="absolute inset-0 bg-[linear-gradient(transparent_2px,var(--background)_2px)] bg-[length:100%_4px] animate-scan" />
+    <div className="absolute inset-0 [background:repeating-linear-gradient(0deg,var(--matrix-color)_0_1px,transparent_1px_4px)] opacity-10" />
+    <div className="absolute inset-0 [background:repeating-linear-gradient(90deg,var(--matrix-color)_0_1px,transparent_1px_4px)] opacity-10" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_-100px,var(--matrix-glow-30),transparent)]" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_800px,var(--matrix-color-20),transparent)]" />
+  </div>
+));
+
+MatrixOverlay.displayName = "MatrixOverlay";
+
 const About = memo(() => {
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
@@ -172,7 +252,8 @@ const About = memo(() => {
   ];
 
   return (
-    <section className="min-h-screen relative overflow-hidden bg-black">
+    <section className="min-h-screen relative overflow-hidden bg-black font-mono">
+      <MatrixOverlay />
       <MatrixRain />
 
       {/* Hero Section */}
@@ -180,543 +261,629 @@ const About = memo(() => {
         style={{ opacity, scale }}
         className="relative min-h-[600px] flex items-center justify-center py-12"
       >
-        {/* Simplified Background */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-[600px] h-[600px] rounded-full border border-[var(--matrix-color)] opacity-30 animate-[spin_40s_linear_infinite]" />
-        </div>
-
         <div className="container mx-auto px-4 relative z-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="max-w-5xl mx-auto"
+            className="max-w-5xl mx-auto text-center"
           >
-            <div className="relative">
-              <div className="bg-black rounded-lg border border-[var(--matrix-color)] p-6 font-mono">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className="relative">
-                    <div className="text-[var(--matrix-color)] text-xl font-bold tracking-wider">
-                      AXIOM CLUB
-                    </div>
-                    <div className="h-0.5 w-full bg-[var(--matrix-color)] mt-1" />
-                  </div>
-                  <div className="text-[var(--matrix-color)] text-sm">
-                    {new Date().toLocaleDateString()}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-4">
-                  {/* Left Column - Key Metrics and Activity */}
-                  <div className="col-span-8 grid grid-rows-[auto_1fr] gap-4">
-                    {/* Top Row - Current Projects and Tech Stack */}
-                    <div className="grid grid-cols-2 gap-4">
-                      {/* Active Projects */}
-                      <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
-                        <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
-                          <Code2 className="w-4 h-4" />
-                          Projects
-                        </div>
-                        <div className="space-y-4">
-                          {projects.map((project) => (
-                            <div key={project.name} className="space-y-1">
-                              <div className="flex justify-between text-xs">
-                                <span className="text-[var(--matrix-color)]">
-                                  {project.name}
-                                </span>
-                                <span className="text-[var(--matrix-color-90)]">
-                                  {project.tech}
-                                </span>
-                              </div>
-                              <div className="h-1 bg-black/40 rounded-full overflow-hidden">
-                                <div
-                                  className="h-full bg-[var(--matrix-color)] rounded-full"
-                                  style={{ width: `${project.progress}%` }}
-                                />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Tech Stack */}
-                      <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
-                        <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
-                          <Braces className="w-4 h-4" />
-                          Tech Stack
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          {techStack.map((stack) => (
-                            <div key={stack.category} className="space-y-1">
-                              <div className="text-[var(--matrix-color-90)] text-xs">
-                                {stack.category}
-                              </div>
-                              <div className="space-y-0.5">
-                                {stack.techs.map((tech) => (
-                                  <div
-                                    key={tech}
-                                    className="text-xs text-[var(--matrix-color)]"
-                                  >
-                                    {tech}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Activity Timeline */}
-                    <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
-                      <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
-                        <Terminal className="w-4 h-4" />
-                        Recent Activities
-                      </div>
-                      <div className="space-y-3 overflow-auto max-h-[300px]">
-                        {activities.map((activity) => (
-                          <div
-                            key={activity.date}
-                            className="flex items-start gap-3 text-xs border-l-2 border-[var(--matrix-color)] pl-3"
-                          >
-                            <div className="text-[var(--matrix-color-90)]">
-                              {activity.date}
-                            </div>
-                            <div>
-                              <div className="text-[var(--matrix-color)] font-medium">
-                                {activity.event}
-                              </div>
-                              <div className="text-[var(--matrix-color-90)]">
-                                {activity.details}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Column */}
-                  <div className="col-span-4 space-y-4">
-                    {/* Stats */}
-                    <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
-                      <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
-                        <Users className="w-4 h-4" />
-                        Stats
-                      </div>
-                      <div className="space-y-3">
-                        {stats.map((stat) => (
-                          <div
-                            key={stat.label}
-                            className="flex justify-between items-center"
-                          >
-                            <span className="text-[var(--matrix-color-90)] text-xs">
-                              {stat.label}
-                            </span>
-                            <span className="text-[var(--matrix-color)] text-lg font-bold">
-                              {stat.value}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Upcoming Events */}
-                    <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
-                      <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
-                        <Terminal className="w-4 h-4" />
-                        Upcoming
-                      </div>
-                      <div className="space-y-3">
-                        {events.map((event) => (
-                          <div
-                            key={event.date}
-                            className="flex items-start gap-2 text-xs"
-                          >
-                            <div className="text-[var(--matrix-color)] font-medium min-w-[60px]">
-                              {event.date}
-                            </div>
-                            <div>
-                              <div className="text-[var(--matrix-color-90)]">
-                                {event.event}
-                              </div>
-                              <div className="text-[var(--matrix-color-90)] opacity-60">
-                                {event.type}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
-                      <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
-                        <Network className="w-4 h-4" />
-                        Connect
-                      </div>
-                      <div className="space-y-3 text-xs">
-                        <div className="text-[var(--matrix-color-90)] text-xs">
-                          Join our Discord community for discussions, events,
-                          and collaboration
-                        </div>
-                        <a
-                          href={`https://${socialLinks.discord}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block text-[var(--matrix-color)] hover:opacity-80"
-                        >
-                          {socialLinks.discord}
-                        </a>
-                        <div className="text-[var(--matrix-color-90)] text-xs">
-                          Follow our GitHub for project updates
-                        </div>
-                        <a
-                          href={`https://${socialLinks.github}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block text-[var(--matrix-color)] hover:opacity-80"
-                        >
-                          {socialLinks.github}
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div className="inline-block relative mb-8">
+              <h1 className="text-4xl md:text-6xl font-bold mb-4 relative z-10">
+                <motion.div
+                  className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent inline-flex items-center gap-3 justify-center"
+                  animate={{
+                    textShadow: [
+                      "0 0 20px var(--matrix-color-50)",
+                      "0 0 10px var(--matrix-color-30)",
+                      "0 0 20px var(--matrix-color-50)",
+                    ],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }}
+                >
+                  <span className="opacity-70">[</span>
+                  <CrypticText text="About" />
+                  <Terminal className="w-8 h-8" />
+                  <CrypticText text="Axiom" />
+                  <span className="opacity-70">]</span>
+                  <motion.span
+                    animate={{
+                      opacity: [1, 0, 1],
+                    }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                    }}
+                    className="text-[var(--matrix-color)] opacity-50"
+                  >
+                    _
+                  </motion.span>
+                </motion.div>
+              </h1>
+              <motion.div
+                className="absolute -inset-4 bg-black/50 blur-xl -z-10"
+                animate={{
+                  opacity: [0.5, 0.3, 0.5],
+                  scale: [1, 1.02, 1],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+              />
+            </div>
+            <div className="flex items-center justify-center gap-2 text-[var(--matrix-color-90)] mt-4">
+              <Terminal className="w-4 h-4" />
+              <motion.div
+                className="font-mono"
+                animate={{
+                  opacity: [1, 0.5, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                }}
+              >
+                <span className="text-[var(--matrix-color)]">root@axiom</span>
+                <span>:</span>
+                <span className="opacity-75">~</span>
+                <span>$</span>
+              </motion.div>
+              <motion.span
+                className="font-mono"
+                initial={{ width: 0 }}
+                animate={{ width: "auto" }}
+                transition={{ duration: 1, delay: 0.5 }}
+                style={{
+                  overflow: "hidden",
+                  display: "inline-block",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                cat about_axiom.md
+              </motion.span>
+              <motion.span
+                animate={{
+                  opacity: [1, 0, 1],
+                }}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                }}
+                className="font-mono text-[var(--matrix-color)]"
+              >
+                ▊
+              </motion.span>
             </div>
           </motion.div>
         </div>
       </motion.div>
 
-      {/* Content Sections */}
-      <div className="container mx-auto px-4 py-20">
+      {/* Rest of the existing sections with updated styling */}
+      <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Stats Dashboard */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color)] rounded-lg p-8 mb-16"
+          >
+            {/* Existing dashboard content */}
+            <div className="grid grid-cols-12 gap-4">
+              {/* Left Column - Key Metrics and Activity */}
+              <div className="col-span-8 grid grid-rows-[auto_1fr] gap-4">
+                {/* Top Row - Current Projects and Tech Stack */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Active Projects */}
+                  <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
+                    <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
+                      <Code2 className="w-4 h-4" />
+                      Projects
+                    </div>
+                    <div className="space-y-4">
+                      {projects.map((project) => (
+                        <div key={project.name} className="space-y-1">
+                          <div className="flex justify-between text-xs">
+                            <span className="text-[var(--matrix-color)]">
+                              {project.name}
+                            </span>
+                            <span className="text-[var(--matrix-color-90)]">
+                              {project.tech}
+                            </span>
+                          </div>
+                          <div className="h-1 bg-black/40 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-[var(--matrix-color)] rounded-full"
+                              style={{ width: `${project.progress}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Tech Stack */}
+                  <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
+                    <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
+                      <Braces className="w-4 h-4" />
+                      Tech Stack
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      {techStack.map((stack) => (
+                        <div key={stack.category} className="space-y-1">
+                          <div className="text-[var(--matrix-color-90)] text-xs">
+                            {stack.category}
+                          </div>
+                          <div className="space-y-0.5">
+                            {stack.techs.map((tech) => (
+                              <div
+                                key={tech}
+                                className="text-xs text-[var(--matrix-color)]"
+                              >
+                                {tech}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Activity Timeline */}
+                <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
+                  <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
+                    <Terminal className="w-4 h-4" />
+                    Recent Activities
+                  </div>
+                  <div className="space-y-3 overflow-auto max-h-[300px]">
+                    {activities.map((activity) => (
+                      <div
+                        key={activity.date}
+                        className="flex items-start gap-3 text-xs border-l-2 border-[var(--matrix-color)] pl-3"
+                      >
+                        <div className="text-[var(--matrix-color-90)]">
+                          {activity.date}
+                        </div>
+                        <div>
+                          <div className="text-[var(--matrix-color)] font-medium">
+                            {activity.event}
+                          </div>
+                          <div className="text-[var(--matrix-color-90)]">
+                            {activity.details}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div className="col-span-4 space-y-4">
+                {/* Stats */}
+                <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
+                  <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    Stats
+                  </div>
+                  <div className="space-y-3">
+                    {stats.map((stat) => (
+                      <div
+                        key={stat.label}
+                        className="flex justify-between items-center"
+                      >
+                        <span className="text-[var(--matrix-color-90)] text-xs">
+                          {stat.label}
+                        </span>
+                        <span className="text-[var(--matrix-color)] text-lg font-bold">
+                          {stat.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Upcoming Events */}
+                <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
+                  <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
+                    <Terminal className="w-4 h-4" />
+                    Upcoming
+                  </div>
+                  <div className="space-y-3">
+                    {events.map((event) => (
+                      <div
+                        key={event.date}
+                        className="flex items-start gap-2 text-xs"
+                      >
+                        <div className="text-[var(--matrix-color)] font-medium min-w-[60px]">
+                          {event.date}
+                        </div>
+                        <div>
+                          <div className="text-[var(--matrix-color-90)]">
+                            {event.event}
+                          </div>
+                          <div className="text-[var(--matrix-color-90)] opacity-60">
+                            {event.type}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
+                  <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
+                    <Network className="w-4 h-4" />
+                    Connect
+                  </div>
+                  <div className="space-y-3 text-xs">
+                    <div className="text-[var(--matrix-color-90)] text-xs">
+                      Join our Discord community for discussions, events, and
+                      collaboration
+                    </div>
+                    <a
+                      href={`https://${socialLinks.discord}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-[var(--matrix-color)] hover:opacity-80"
+                    >
+                      {socialLinks.discord}
+                    </a>
+                    <div className="text-[var(--matrix-color-90)] text-xs">
+                      Follow our GitHub for project updates
+                    </div>
+                    <a
+                      href={`https://${socialLinks.github}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-[var(--matrix-color)] hover:opacity-80"
+                    >
+                      {socialLinks.github}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Content Sections with enhanced styling */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
             {sections.map((section, index) => (
               <AboutSection key={section.title} {...section} index={index} />
             ))}
           </div>
-        </div>
-      </div>
 
-      {/* History & Timeline Section */}
-      <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
-                Our Journey
-              </span>
-            </h2>
-            <p className="text-gray-300 max-w-2xl mx-auto">
-              From humble beginnings to technological excellence
-            </p>
-          </motion.div>
-
-          <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-[var(--matrix-color-30)]" />
-            {[
-              {
-                year: "2023",
-                title: "Club Foundation",
-                description:
-                  "Axiom Club was established with a vision to revolutionize tech education.",
-              },
-              {
-                year: "2023",
-                title: "First Hackathon",
-                description:
-                  "Successfully organized our first internal hackathon with 50+ participants.",
-              },
-              {
-                year: "2024",
-                title: "Project Milestones",
-                description:
-                  "Launched multiple successful projects and established industry partnerships.",
-              },
-            ].map((event, index) => (
+          {/* History & Timeline Section */}
+          <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
+            <div className="max-w-6xl mx-auto">
               <motion.div
-                key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-                className={`relative flex items-center gap-8 mb-12 ${
-                  index % 2 === 0 ? "flex-row" : "flex-row-reverse"
-                }`}
-              >
-                <div
-                  className={`w-1/2 ${
-                    index % 2 === 0 ? "text-right" : "text-left"
-                  }`}
-                >
-                  <div className="text-[var(--matrix-color)] font-mono text-xl mb-2">
-                    {event.year}
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    {event.title}
-                  </h3>
-                  <p className="text-gray-300">{event.description}</p>
-                </div>
-                <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[var(--matrix-color)] rounded-full border-4 border-black" />
-                <div className="w-1/2" />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Achievements & Impact Section */}
-      <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
-                Achievements & Impact
-              </span>
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                number: "50+",
-                label: "Active Members",
-                description: "Passionate developers and innovators",
-              },
-              {
-                number: "10+",
-                label: "Projects Completed",
-                description: "From web apps to AI solutions",
-              },
-              {
-                number: "5+",
-                label: "Industry Partners",
-                description: "Collaborating for innovation",
-              },
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-                className="relative group"
+                className="text-center mb-16"
               >
-                <div className="absolute -inset-1 bg-gradient-to-r from-[var(--matrix-color-90)] to-[var(--matrix-glow-30)] rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
-                <div className="relative p-6 bg-black/50 ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300 text-center">
-                  <div className="text-4xl font-bold text-[var(--matrix-color)] mb-2">
-                    {stat.number}
-                  </div>
-                  <div className="text-xl font-semibold text-white mb-2">
-                    {stat.label}
-                  </div>
-                  <div className="text-gray-300">{stat.description}</div>
-                </div>
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                  <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
+                    Our Journey
+                  </span>
+                </h2>
+                <p className="text-gray-300 max-w-2xl mx-auto">
+                  From humble beginnings to technological excellence
+                </p>
               </motion.div>
-            ))}
+
+              <div className="relative">
+                <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-[var(--matrix-color-30)]" />
+                {[
+                  {
+                    year: "2023",
+                    title: "Club Foundation",
+                    description:
+                      "Axiom Club was established with a vision to revolutionize tech education.",
+                  },
+                  {
+                    year: "2023",
+                    title: "First Hackathon",
+                    description:
+                      "Successfully organized our first internal hackathon with 50+ participants.",
+                  },
+                  {
+                    year: "2024",
+                    title: "Project Milestones",
+                    description:
+                      "Launched multiple successful projects and established industry partnerships.",
+                  },
+                ].map((event, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.2 }}
+                    className={`relative flex items-center gap-8 mb-12 ${
+                      index % 2 === 0 ? "flex-row" : "flex-row-reverse"
+                    }`}
+                  >
+                    <div
+                      className={`w-1/2 ${
+                        index % 2 === 0 ? "text-right" : "text-left"
+                      }`}
+                    >
+                      <div className="text-[var(--matrix-color)] font-mono text-xl mb-2">
+                        {event.year}
+                      </div>
+                      <h3 className="text-xl font-bold text-white mb-2">
+                        {event.title}
+                      </h3>
+                      <p className="text-gray-300">{event.description}</p>
+                    </div>
+                    <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[var(--matrix-color)] rounded-full border-4 border-black" />
+                    <div className="w-1/2" />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Core Values Section */}
-      <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
-                Core Values
-              </span>
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: "💡",
-                title: "Innovation",
-                description:
-                  "Pushing boundaries and embracing new technologies",
-              },
-              {
-                icon: "🤝",
-                title: "Collaboration",
-                description: "Working together to achieve greater results",
-              },
-              {
-                icon: "🎯",
-                title: "Excellence",
-                description:
-                  "Striving for the highest quality in everything we do",
-              },
-              {
-                icon: "🌱",
-                title: "Growth",
-                description: "Continuous learning and personal development",
-              },
-            ].map((value, index) => (
+          {/* Achievements & Impact Section */}
+          <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
+            <div className="max-w-6xl mx-auto">
               <motion.div
-                key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-6 hover:border-[var(--matrix-color)] transition-colors"
+                className="text-center mb-16"
               >
-                <div className="text-4xl mb-4">{value.icon}</div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  {value.title}
-                </h3>
-                <p className="text-gray-300">{value.description}</p>
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                  <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
+                    Achievements & Impact
+                  </span>
+                </h2>
               </motion.div>
-            ))}
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {[
+                  {
+                    number: "50+",
+                    label: "Active Members",
+                    description: "Passionate developers and innovators",
+                  },
+                  {
+                    number: "10+",
+                    label: "Projects Completed",
+                    description: "From web apps to AI solutions",
+                  },
+                  {
+                    number: "5+",
+                    label: "Industry Partners",
+                    description: "Collaborating for innovation",
+                  },
+                ].map((stat, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.2 }}
+                    className="relative group"
+                  >
+                    <div className="absolute -inset-1 bg-gradient-to-r from-[var(--matrix-color-90)] to-[var(--matrix-glow-30)] rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
+                    <div className="relative p-6 bg-black/50 ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300 text-center">
+                      <div className="text-4xl font-bold text-[var(--matrix-color)] mb-2">
+                        {stat.number}
+                      </div>
+                      <div className="text-xl font-semibold text-white mb-2">
+                        {stat.label}
+                      </div>
+                      <div className="text-gray-300">{stat.description}</div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Join Us Section */}
-      <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color)] rounded-lg p-8 md:p-12">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-8"
-            >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
-                  Join Axiom Club
-                </span>
-              </h2>
-              <p className="text-gray-300 max-w-2xl mx-auto">
-                Ready to be part of something extraordinary? Join our community
-                of innovators and shape the future of technology.
-              </p>
-            </motion.div>
+          {/* Core Values Section */}
+          <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
+            <div className="max-w-6xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-center mb-16"
+              >
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                  <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
+                    Core Values
+                  </span>
+                </h2>
+              </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              {[
-                {
-                  title: "Learn",
-                  description:
-                    "Access workshops, tutorials, and hands-on projects",
-                },
-                {
-                  title: "Build",
-                  description: "Work on real projects with cutting-edge tech",
-                },
-                {
-                  title: "Connect",
-                  description: "Network with industry professionals and peers",
-                },
-              ].map((benefit, index) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[
+                  {
+                    icon: "💡",
+                    title: "Innovation",
+                    description:
+                      "Pushing boundaries and embracing new technologies",
+                  },
+                  {
+                    icon: "🤝",
+                    title: "Collaboration",
+                    description: "Working together to achieve greater results",
+                  },
+                  {
+                    icon: "🎯",
+                    title: "Excellence",
+                    description:
+                      "Striving for the highest quality in everything we do",
+                  },
+                  {
+                    icon: "🌱",
+                    title: "Growth",
+                    description: "Continuous learning and personal development",
+                  },
+                ].map((value, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-6 hover:border-[var(--matrix-color)] transition-colors"
+                  >
+                    <div className="text-4xl mb-4">{value.icon}</div>
+                    <h3 className="text-xl font-bold text-white mb-2">
+                      {value.title}
+                    </h3>
+                    <p className="text-gray-300">{value.description}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Join Us Section */}
+          <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
+            <div className="max-w-6xl mx-auto">
+              <div className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color)] rounded-lg p-8 md:p-12">
                 <motion.div
-                  key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-6"
+                  className="text-center mb-8"
                 >
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-gray-300">{benefit.description}</p>
+                  <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                    <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
+                      Join Axiom Club
+                    </span>
+                  </h2>
+                  <p className="text-gray-300 max-w-2xl mx-auto">
+                    Ready to be part of something extraordinary? Join our
+                    community of innovators and shape the future of technology.
+                  </p>
                 </motion.div>
-              ))}
-            </div>
 
-            <div className="text-center">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-3 bg-[var(--matrix-color)] text-black font-semibold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors relative overflow-hidden group"
-              >
-                <motion.span
-                  className="absolute inset-0 bg-white/20"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: "100%" }}
-                  transition={{ duration: 0.5 }}
-                />
-                Apply Now
-              </motion.button>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                  {[
+                    {
+                      title: "Learn",
+                      description:
+                        "Access workshops, tutorials, and hands-on projects",
+                    },
+                    {
+                      title: "Build",
+                      description:
+                        "Work on real projects with cutting-edge tech",
+                    },
+                    {
+                      title: "Connect",
+                      description:
+                        "Network with industry professionals and peers",
+                    },
+                  ].map((benefit, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-6"
+                    >
+                      <h3 className="text-xl font-bold text-white mb-2">
+                        {benefit.title}
+                      </h3>
+                      <p className="text-gray-300">{benefit.description}</p>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="text-center">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-8 py-3 bg-[var(--matrix-color)] text-black font-semibold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors relative overflow-hidden group"
+                  >
+                    <motion.span
+                      className="absolute inset-0 bg-white/20"
+                      initial={{ x: "-100%" }}
+                      whileHover={{ x: "100%" }}
+                      transition={{ duration: 0.5 }}
+                    />
+                    Apply Now
+                  </motion.button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Resources Section */}
-      <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
-                Resources
-              </span>
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                title: "Documentation",
-                description:
-                  "Access our comprehensive guides and documentation",
-                link: "#",
-              },
-              {
-                title: "GitHub Repository",
-                description:
-                  "Explore our open-source projects and contributions",
-                link: "#",
-              },
-              {
-                title: "Learning Path",
-                description: "Follow our curated learning paths and tutorials",
-                link: "#",
-              },
-            ].map((resource, index) => (
+          {/* Resources Section */}
+          <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
+            <div className="max-w-6xl mx-auto">
               <motion.div
-                key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="group cursor-pointer"
+                className="text-center mb-16"
               >
-                <div className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-6 hover:border-[var(--matrix-color)] transition-colors h-full">
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[var(--matrix-color)] transition-colors">
-                    {resource.title}
-                  </h3>
-                  <p className="text-gray-300 mb-4">{resource.description}</p>
-                  <div className="text-[var(--matrix-color)] font-mono text-sm">
-                    {">"} Learn more
-                  </div>
-                </div>
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                  <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
+                    Resources
+                  </span>
+                </h2>
               </motion.div>
-            ))}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  {
+                    title: "Documentation",
+                    description:
+                      "Access our comprehensive guides and documentation",
+                    link: "#",
+                  },
+                  {
+                    title: "GitHub Repository",
+                    description:
+                      "Explore our open-source projects and contributions",
+                    link: "#",
+                  },
+                  {
+                    title: "Learning Path",
+                    description:
+                      "Follow our curated learning paths and tutorials",
+                    link: "#",
+                  },
+                ].map((resource, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="group cursor-pointer"
+                  >
+                    <div className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-6 hover:border-[var(--matrix-color)] transition-colors h-full">
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[var(--matrix-color)] transition-colors">
+                        {resource.title}
+                      </h3>
+                      <p className="text-gray-300 mb-4">
+                        {resource.description}
+                      </p>
+                      <div className="text-[var(--matrix-color)] font-mono text-sm">
+                        {">"} Learn more
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
