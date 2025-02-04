@@ -12,6 +12,15 @@ interface CRTProps {
   className?: string;
 }
 
+// Add theme color mapping
+const THEME_COLORS = {
+  amber: { color: "#ffb000", dark: "#3d2800" },
+  ruby: { color: "#ff3366", dark: "#330011" },
+  emerald: { color: "#00ff9d", dark: "#003322" },
+  sapphire: { color: "#00a8ff", dark: "#002233" },
+  violet: { color: "#9d00ff", dark: "#1a0033" },
+} as const;
+
 const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
   const { theme, setTheme } = useTheme();
   const [isPowered, setIsPowered] = useState(true);
@@ -20,23 +29,13 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
   const [brightnessLevel, setBrightnessLevel] = useState(1);
   const [easterEggCount, setEasterEggCount] = useState(0);
 
-  // Memoize theme update effect
-  useEffect(() => {
-    const root = document.documentElement;
-    const themeVariables = {
-      "--matrix-color": `var(--matrix-${theme})`,
-      "--matrix-dark": `var(--matrix-dark-${theme})`,
-      "--matrix-glow": `var(--matrix-glow-${theme})`,
-      "--matrix-color-50": `var(--matrix-${theme}-50)`,
-      "--matrix-color-30": `var(--matrix-${theme}-30)`,
-      "--matrix-color-20": `var(--matrix-${theme}-20)`,
-      "--matrix-color-10": `var(--matrix-${theme}-10)`,
-    };
-
-    Object.entries(themeVariables).forEach(([key, value]) => {
-      root.style.setProperty(key, value);
-    });
-  }, [theme]);
+  // Remove the old theme update effect since it's now handled by ThemeContext
+  const handleThemeChange = useCallback(() => {
+    const themes: Theme[] = ["amber", "ruby", "emerald", "sapphire", "violet"];
+    const currentIndex = themes.indexOf(theme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    setTheme(themes[nextIndex]);
+  }, [theme, setTheme]);
 
   // Memoize handlers
   const handleLeftKnobClick = useCallback(() => {
@@ -57,17 +56,6 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
       return Math.min(Math.max(newValue, 0.5), 1.5);
     });
   }, []);
-
-  const handleThemeChange = useCallback(() => {
-    const nextTheme: Record<Theme, Theme> = {
-      amber: "ruby",
-      ruby: "emerald",
-      emerald: "sapphire",
-      sapphire: "violet",
-      violet: "amber",
-    };
-    setTheme(nextTheme[theme]);
-  }, [theme, setTheme]);
 
   const togglePower = useCallback(() => {
     setIsPowered((prev) => !prev);
@@ -256,8 +244,8 @@ const CRT: React.FC<CRTProps> = memo(({ children, className = "" }) => {
             animate={{
               scale: easterEggCount >= 3 ? [1, 1.1, 1] : 1,
               rotate: easterEggCount >= 3 ? [0, 360] : 0,
-              backgroundColor: `var(--matrix-${theme})`,
-              borderColor: `var(--matrix-dark-${theme})`,
+              backgroundColor: THEME_COLORS[theme].color,
+              borderColor: THEME_COLORS[theme].dark,
             }}
             transition={{
               duration: easterEggCount >= 3 ? 2 : 0.2,

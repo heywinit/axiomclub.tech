@@ -1,59 +1,58 @@
+/* Base theme variables that don't change */
 :root {
-  /* Amber Theme (Default) */
-  --matrix-amber: #ffb000;
-  --matrix-dark-amber: #3d2800;
-  --matrix-glow-amber: #ffd700;
-  --matrix-amber-50: rgba(255, 176, 0, 0.5);
-  --matrix-amber-30: rgba(255, 176, 0, 0.3);
-  --matrix-amber-20: rgba(255, 176, 0, 0.2);
-  --matrix-amber-10: rgba(255, 176, 0, 0.1);
-
-  /* Ruby Theme */
-  --matrix-ruby: #ff3366;
-  --matrix-dark-ruby: #330011;
-  --matrix-glow-ruby: #ff6699;
-  --matrix-ruby-50: rgba(255, 51, 102, 0.5);
-  --matrix-ruby-30: rgba(255, 51, 102, 0.3);
-  --matrix-ruby-20: rgba(255, 51, 102, 0.2);
-  --matrix-ruby-10: rgba(255, 51, 102, 0.1);
-
-  /* Emerald Theme */
-  --matrix-emerald: #00ff9d;
-  --matrix-dark-emerald: #003322;
-  --matrix-glow-emerald: #33ffbb;
-  --matrix-emerald-50: rgba(0, 255, 157, 0.5);
-  --matrix-emerald-30: rgba(0, 255, 157, 0.3);
-  --matrix-emerald-20: rgba(0, 255, 157, 0.2);
-  --matrix-emerald-10: rgba(0, 255, 157, 0.1);
-
-  /* Sapphire Theme */
-  --matrix-sapphire: #00a8ff;
-  --matrix-dark-sapphire: #002233;
-  --matrix-glow-sapphire: #33bbff;
-  --matrix-sapphire-50: rgba(0, 168, 255, 0.5);
-  --matrix-sapphire-30: rgba(0, 168, 255, 0.3);
-  --matrix-sapphire-20: rgba(0, 168, 255, 0.2);
-  --matrix-sapphire-10: rgba(0, 168, 255, 0.1);
-
-  /* Violet Theme */
-  --matrix-violet: #9d00ff;
-  --matrix-dark-violet: #1a0033;
-  --matrix-glow-violet: #b366ff;
-  --matrix-violet-50: rgba(157, 0, 255, 0.5);
-  --matrix-violet-30: rgba(157, 0, 255, 0.3);
-  --matrix-violet-20: rgba(157, 0, 255, 0.2);
-  --matrix-violet-10: rgba(157, 0, 255, 0.1);
-
-  /* Dynamic theme variables */
-  --matrix-color: var(--matrix-amber);
-  --matrix-dark: var(--matrix-dark-amber);
-  --matrix-glow: var(--matrix-glow-amber);
-  --matrix-color-50: var(--matrix-amber-50);
-  --matrix-color-30: var(--matrix-amber-30);
-  --matrix-color-20: var(--matrix-amber-20);
-  --matrix-color-10: var(--matrix-amber-10);
   --background: #000000;
   --text: #ffffff;
+}
+
+/* Theme Classes */
+[data-theme="amber"] {
+  --matrix-color: #ffb000;
+  --matrix-dark: #3d2800;
+  --matrix-glow: #ffd700;
+  --matrix-color-50: rgba(255, 176, 0, 0.5);
+  --matrix-color-30: rgba(255, 176, 0, 0.3);
+  --matrix-color-20: rgba(255, 176, 0, 0.2);
+  --matrix-color-10: rgba(255, 176, 0, 0.1);
+}
+
+[data-theme="ruby"] {
+  --matrix-color: #ff3366;
+  --matrix-dark: #330011;
+  --matrix-glow: #ff6699;
+  --matrix-color-50: rgba(255, 51, 102, 0.5);
+  --matrix-color-30: rgba(255, 51, 102, 0.3);
+  --matrix-color-20: rgba(255, 51, 102, 0.2);
+  --matrix-color-10: rgba(255, 51, 102, 0.1);
+}
+
+[data-theme="emerald"] {
+  --matrix-color: #00ff9d;
+  --matrix-dark: #003322;
+  --matrix-glow: #33ffbb;
+  --matrix-color-50: rgba(0, 255, 157, 0.5);
+  --matrix-color-30: rgba(0, 255, 157, 0.3);
+  --matrix-color-20: rgba(0, 255, 157, 0.2);
+  --matrix-color-10: rgba(0, 255, 157, 0.1);
+}
+
+[data-theme="sapphire"] {
+  --matrix-color: #00a8ff;
+  --matrix-dark: #002233;
+  --matrix-glow: #33bbff;
+  --matrix-color-50: rgba(0, 168, 255, 0.5);
+  --matrix-color-30: rgba(0, 168, 255, 0.3);
+  --matrix-color-20: rgba(0, 168, 255, 0.2);
+  --matrix-color-10: rgba(0, 168, 255, 0.1);
+}
+
+[data-theme="violet"] {
+  --matrix-color: #9d00ff;
+  --matrix-dark: #1a0033;
+  --matrix-glow: #b366ff;
+  --matrix-color-50: rgba(157, 0, 255, 0.5);
+  --matrix-color-30: rgba(157, 0, 255, 0.3);
+  --matrix-color-20: rgba(157, 0, 255, 0.2);
+  --matrix-color-10: rgba(157, 0, 255, 0.1);
 }
 
 /* Add smooth transitions for theme changes */

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import "../styles/theme.css";
 import "./globals.css";
 import { DM_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { NavbarProvider } from "@/contexts/NavbarContext";
 import ClientLayout from "@/components/ClientLayout";
-import "../styles/theme.css";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -56,7 +56,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="amber">
       <body className={`${dmSans.variable} ${dmSans.className} antialiased`}>
         <ThemeProvider>
           <NavbarProvider>
