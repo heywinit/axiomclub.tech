@@ -1,3 +1,9 @@
-export default function About() {
-  return <div>about</div>;
+import About from "./About";
+
+export default function AboutPage() {
+  return (
+    <main className="flex flex-col gap-24 relative">
+      <About />
+    </main>
+  );
 }

@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 
 export type Theme = "amber" | "ruby" | "emerald" | "sapphire" | "violet";
 
@@ -13,21 +19,31 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
-    // Try to get theme from localStorage, fallback to "amber"
     if (typeof window !== "undefined") {
-      const savedTheme = localStorage.getItem("axiom-theme");
-      return (savedTheme as Theme) || "amber";
+      return (localStorage.getItem("axiom-theme") as Theme) || "amber";
     }
     return "amber";
   });
 
-  // Sync theme with localStorage
+  const updateTheme = useCallback((newTheme: Theme) => {
+    if (typeof window === "undefined") return;
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("axiom-theme", newTheme);
+    setTheme(newTheme);
+  }, []);
+
+  // Set initial theme
   useEffect(() => {
-    localStorage.setItem("axiom-theme", theme);
-  }, [theme]);
+    const savedTheme = localStorage.getItem("axiom-theme") as Theme;
+    if (savedTheme && savedTheme !== theme) {
+      updateTheme(savedTheme);
+    } else {
+      updateTheme(theme);
+    }
+  }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme: updateTheme }}>
       {children}
     </ThemeContext.Provider>
   );
