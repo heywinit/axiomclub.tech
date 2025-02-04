@@ -233,7 +233,7 @@ const News = memo(() => {
                   <span className="text-2xl opacity-70">:</span>
                   <CrypticText text="Axiom" />
                   <span className="opacity-70">]</span>
-                  <span className="text-base opacity-50">//</span>
+                  <span className="text-base opacity-50">{"//"}</span>
                   <CrypticText text="Chronicle" />
                   <motion.span
                     animate={{
