@@ -225,6 +225,86 @@ const ProjectRow = memo(
 
 ProjectRow.displayName = "ProjectRow";
 
+const MatrixOverlay = memo(() => (
+  <div className="fixed inset-0 pointer-events-none">
+    <div className="absolute inset-0 bg-[linear-gradient(transparent_2px,var(--background)_2px)] bg-[length:100%_4px] animate-scan" />
+    <div className="absolute inset-0 [background:repeating-linear-gradient(0deg,var(--matrix-color)_0_1px,transparent_1px_4px)] opacity-10" />
+    <div className="absolute inset-0 [background:repeating-linear-gradient(90deg,var(--matrix-color)_0_1px,transparent_1px_4px)] opacity-10" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_-100px,var(--matrix-glow-30),transparent)]" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_800px,var(--matrix-color-20),transparent)]" />
+  </div>
+));
+
+MatrixOverlay.displayName = "MatrixOverlay";
+
+const CrypticText = memo(({ text }: { text: string }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const characters = "アイウエオカキクケコサシスセソタチツテトナニヌネノ";
+
+  return (
+    <motion.span
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className="inline-block relative cursor-pointer"
+    >
+      {text.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          className="inline-block relative"
+          animate={
+            isHovered
+              ? {
+                  y: [0, -2, 0],
+                }
+              : {}
+          }
+          transition={{
+            duration: 0.2,
+            delay: index * 0.02,
+            repeat: isHovered ? Infinity : 0,
+            repeatType: "reverse",
+          }}
+        >
+          {isHovered && (
+            <motion.span
+              className="absolute top-0 left-0 text-[var(--matrix-glow)]"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0, 1, 0],
+              }}
+              transition={{
+                duration: 0.1,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            >
+              {characters[Math.floor(Math.random() * characters.length)]}
+            </motion.span>
+          )}
+          <motion.span
+            animate={
+              isHovered
+                ? {
+                    opacity: [1, 0.5, 1],
+                  }
+                : {}
+            }
+            transition={{
+              duration: 0.2,
+              delay: index * 0.02,
+              repeat: Infinity,
+            }}
+          >
+            {char}
+          </motion.span>
+        </motion.span>
+      ))}
+    </motion.span>
+  );
+});
+
+CrypticText.displayName = "CrypticText";
+
 const Projects = memo(() => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
@@ -274,14 +354,8 @@ const Projects = memo(() => {
   }, [projects, searchQuery, selectedStatus, selectedTech, sortBy, sortOrder]);
 
   return (
-    <section className="min-h-screen py-10 sm:py-20 relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black z-10" />
-        <div className="absolute inset-0 opacity-5">
-          <div className="h-full w-full bg-[linear-gradient(transparent_50%,rgba(32,224,128,.2)_50%,transparent_100%)] bg-[length:100%_3px] animate-matrix" />
-        </div>
-      </div>
+    <section className="min-h-screen py-10 sm:py-20 relative overflow-hidden bg-black font-mono">
+      <MatrixOverlay />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
@@ -289,20 +363,143 @@ const Projects = memo(() => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-16"
+          >
+            <div className="inline-block relative">
+              <h1 className="text-4xl md:text-6xl font-bold mb-4 relative z-10 text-center">
+                <motion.div
+                  className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent inline-flex items-center gap-3 justify-center"
+                  animate={{
+                    textShadow: [
+                      "0 0 20px var(--matrix-color-50)",
+                      "0 0 10px var(--matrix-color-30)",
+                      "0 0 20px var(--matrix-color-50)",
+                    ],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }}
+                >
+                  <span className="opacity-70">[</span>
+                  <CrypticText text="Project" />
+                  <Terminal className="w-8 h-8" />
+                  <CrypticText text="Index" />
+                  <span className="opacity-70">]</span>
+                  <motion.span
+                    animate={{
+                      opacity: [1, 0, 1],
+                    }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                    }}
+                    className="text-[var(--matrix-color)] opacity-50"
+                  >
+                    _
+                  </motion.span>
+                </motion.div>
+              </h1>
+              <motion.div
+                className="absolute -inset-4 bg-black/50 blur-xl -z-10"
+                animate={{
+                  opacity: [0.5, 0.3, 0.5],
+                  scale: [1, 1.02, 1],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+              />
+            </div>
+            <div className="flex items-center justify-center gap-2 text-[var(--matrix-color-90)] mt-4">
+              <Terminal className="w-4 h-4" />
+              <motion.div
+                className="font-mono"
+                animate={{
+                  opacity: [1, 0.5, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                }}
+              >
+                <span className="text-[var(--matrix-color)]">root@axiom</span>
+                <span>:</span>
+                <span className="opacity-75">~</span>
+                <span>$</span>
+              </motion.div>
+              <motion.span
+                className="font-mono"
+                initial={{ width: 0 }}
+                animate={{ width: "auto" }}
+                transition={{ duration: 1, delay: 0.5 }}
+                style={{
+                  overflow: "hidden",
+                  display: "inline-block",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                cat project_manifest.md
+              </motion.span>
+              <motion.span
+                animate={{
+                  opacity: [1, 0, 1],
+                }}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                }}
+                className="font-mono text-[var(--matrix-color)]"
+              >
+                ▊
+              </motion.span>
+            </div>
+          </motion.div>
+
+          {/* Stats Dashboard */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="mb-8"
+            className="mb-8 bg-black/40 backdrop-blur-sm border border-[var(--matrix-color)] rounded-lg p-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               {/* Left side - Terminal style */}
               <div className="text-left font-mono">
                 <div className="flex items-center gap-2 text-[var(--matrix-color)] mb-3">
                   <Terminal size={18} />
-                  <span className="text-lg font-bold">PROJECT INDEX</span>
+                  <span className="text-lg font-bold tracking-wider">
+                    PROJECT STATUS
+                  </span>
                 </div>
-                <div className="text-gray-400">
-                  {filteredProjects.length} projects •{" "}
-                  {projects.filter((p) => p.status === "Completed").length}{" "}
-                  completed
+                <div className="text-[var(--matrix-color-90)] space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-green-400"></span>
+                    <span>
+                      {projects.filter((p) => p.status === "Completed").length}{" "}
+                      Completed
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-yellow-400"></span>
+                    <span>
+                      {
+                        projects.filter((p) => p.status === "In Progress")
+                          .length
+                      }{" "}
+                      In Progress
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-blue-400"></span>
+                    <span>
+                      {projects.filter((p) => p.status === "Planning").length}{" "}
+                      Planning
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -310,7 +507,9 @@ const Projects = memo(() => {
               <div className="text-right font-mono flex items-center justify-end gap-4">
                 <div className="inline-flex items-center gap-3 px-4 py-2 bg-black/30 rounded-lg border border-[var(--matrix-color-30)]">
                   <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
-                  <span className="text-gray-300">System Active</span>
+                  <span className="text-[var(--matrix-color-90)]">
+                    System Active
+                  </span>
                 </div>
                 <motion.a
                   href="https://github.com/axiom-svgu/axiomclub.tech/issues/new?labels=project-suggestion&template=project_suggestion.md"
@@ -318,8 +517,14 @@ const Projects = memo(() => {
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--matrix-color)] text-black rounded-lg hover:bg-[var(--matrix-glow)] transition-colors font-bold"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--matrix-color)] text-black rounded-lg hover:bg-[var(--matrix-glow)] transition-colors font-bold relative overflow-hidden group"
                 >
+                  <motion.span
+                    className="absolute inset-0 bg-white/20"
+                    initial={{ x: "-100%" }}
+                    whileHover={{ x: "100%" }}
+                    transition={{ duration: 0.5 }}
+                  />
                   <span>+</span>
                   <span>Suggest Project</span>
                 </motion.a>
@@ -327,12 +532,12 @@ const Projects = memo(() => {
             </div>
           </motion.div>
 
-          {/* Controls */}
+          {/* Controls with enhanced styling */}
           <div className="mb-6">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
                 <Search
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--matrix-color-90)]"
                   size={18}
                 />
                 <input
@@ -340,12 +545,14 @@ const Projects = memo(() => {
                   placeholder="Search projects..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-black/30 border border-[var(--matrix-color-30)] rounded-lg focus:outline-none focus:border-[var(--matrix-color)] font-mono"
+                  className="w-full pl-10 pr-4 py-2 bg-black/30 border border-[var(--matrix-color-30)] rounded-lg focus:outline-none focus:border-[var(--matrix-color)] font-mono text-[var(--matrix-color)] placeholder-[var(--matrix-color-90)]"
                 />
               </div>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setShowFilters(!showFilters)}
-                className="sm:w-auto inline-flex items-center gap-2 px-4 py-2 bg-black/30 border border-[var(--matrix-color-30)] rounded-lg hover:border-[var(--matrix-color)] transition-colors font-mono"
+                className="sm:w-auto inline-flex items-center gap-2 px-4 py-2 bg-black/30 border border-[var(--matrix-color-30)] rounded-lg hover:border-[var(--matrix-color)] transition-colors font-mono text-[var(--matrix-color)]"
               >
                 <SlidersHorizontal size={16} />
                 <span>Filters</span>
@@ -355,7 +562,7 @@ const Projects = memo(() => {
                     showFilters ? "rotate-180" : ""
                   }`}
                 />
-              </button>
+              </motion.button>
             </div>
 
             <AnimatePresence>
@@ -417,12 +624,12 @@ const Projects = memo(() => {
             </AnimatePresence>
           </div>
 
-          {/* Projects List */}
+          {/* Projects List with enhanced styling */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="rounded-lg border border-[var(--matrix-color-30)] bg-black/20 divide-y divide-[var(--matrix-color-30)]"
+            className="rounded-lg border border-[var(--matrix-color-30)] bg-black/20 backdrop-blur-sm"
           >
             {filteredProjects.length > 0 ? (
               filteredProjects.map((project, index) => (
@@ -433,7 +640,8 @@ const Projects = memo(() => {
                 />
               ))
             ) : (
-              <div className="p-8 text-center text-gray-400 font-mono">
+              <div className="p-8 text-center text-[var(--matrix-color-90)] font-mono">
+                <Terminal className="w-8 h-8 mx-auto mb-4 opacity-50" />
                 No projects match your search criteria
               </div>
             )}

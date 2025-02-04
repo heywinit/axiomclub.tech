@@ -1,8 +1,9 @@
 "use client";
 
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { Terminal, Github, Linkedin } from "lucide-react";
 
 interface TeamMember {
   name: string;
@@ -36,78 +37,118 @@ const teamMembers: TeamMember[] = [
   },
 ];
 
-const GlitchText = ({ text }: { text: string }) => {
+const CrypticText = memo(({ text }: { text: string }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const characters = "アイウエオカキクケコサシスセソタチツテトナニヌネノ";
+
   return (
-    <div className="relative inline-block">
-      <span className="relative z-10">{text}</span>
-      <span
-        className="absolute top-0 left-0 -translate-x-[2px] translate-y-[2px] text-[#ff0000] opacity-50 blur-[0.5px]"
-        style={{ clipPath: "polygon(0 0, 100% 0, 100% 45%, 0 45%)" }}
-      >
-        {text}
-      </span>
-      <span
-        className="absolute top-0 left-0 translate-x-[2px] -translate-y-[2px] text-[#00ff00] opacity-50 blur-[0.5px]"
-        style={{ clipPath: "polygon(0 45%, 100% 45%, 100% 100%, 0 100%)" }}
-      >
-        {text}
-      </span>
-    </div>
+    <motion.span
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className="inline-block relative cursor-pointer"
+    >
+      {text.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          className="inline-block relative"
+          animate={
+            isHovered
+              ? {
+                  y: [0, -2, 0],
+                }
+              : {}
+          }
+          transition={{
+            duration: 0.2,
+            delay: index * 0.02,
+            repeat: isHovered ? Infinity : 0,
+            repeatType: "reverse",
+          }}
+        >
+          {isHovered && (
+            <motion.span
+              className="absolute top-0 left-0 text-[var(--matrix-glow)]"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0, 1, 0],
+              }}
+              transition={{
+                duration: 0.1,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            >
+              {characters[Math.floor(Math.random() * characters.length)]}
+            </motion.span>
+          )}
+          <motion.span
+            animate={
+              isHovered
+                ? {
+                    opacity: [1, 0.5, 1],
+                  }
+                : {}
+            }
+            transition={{
+              duration: 0.2,
+              delay: index * 0.02,
+              repeat: Infinity,
+            }}
+          >
+            {char}
+          </motion.span>
+        </motion.span>
+      ))}
+    </motion.span>
   );
-};
+});
+
+CrypticText.displayName = "CrypticText";
 
 const TeamMemberCard = memo(
   ({ member, index }: { member: TeamMember; index: number }) => {
-    const [ref, inView] = useInView({
-      threshold: 0.1,
+    const { ref, inView } = useInView({
+      threshold: 0.2,
       triggerOnce: true,
     });
 
     return (
       <motion.div
         ref={ref}
-        initial={{ opacity: 0, y: 50 }}
-        animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-        transition={{ duration: 0.5, delay: index * 0.2 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+        transition={{ delay: index * 0.2 }}
         className="relative group"
       >
-        <div className="relative overflow-hidden rounded-lg bg-black/70 backdrop-blur-sm border border-[var(--matrix-color-30)] p-6">
-          {/* Glitch Effect Background */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="absolute inset-0 bg-gradient-to-r from-[var(--matrix-color-10)] to-transparent animate-pulse" />
-            <div className="absolute inset-0 bg-[url('/glitch-pattern.png')] opacity-10 mix-blend-overlay" />
-          </div>
-
-          {/* Content */}
-          <div className="relative z-10">
-            {/* Profile Image */}
-            <div className="w-32 h-32 mx-auto mb-4 relative">
-              <div className="w-full h-full rounded-full bg-[var(--matrix-color-20)] flex items-center justify-center text-[var(--matrix-color)] text-4xl">
-                {member.name[0]}
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-[var(--matrix-color-90)] to-[var(--matrix-glow-30)] rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
+        <div className="relative p-6 bg-black/50 backdrop-blur-sm ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300">
+          <div className="flex flex-col items-center text-center gap-4">
+            <div className="relative w-24 h-24 rounded-full overflow-hidden ring-2 ring-[var(--matrix-color-50)]">
+              <div className="absolute inset-0 bg-[var(--matrix-color-20)] animate-pulse" />
+              {/* Add actual images later */}
+              <div className="absolute inset-0 flex items-center justify-center text-[var(--matrix-color)] text-2xl">
+                {member.name.charAt(0)}
               </div>
-              <div className="absolute inset-0 rounded-full border-2 border-[var(--matrix-color)] opacity-50 animate-pulse" />
             </div>
 
-            {/* Name with Glitch Effect */}
-            <h3 className="text-2xl font-bold text-center mb-2">
-              <GlitchText text={member.name} />
-            </h3>
+            <div>
+              <h3 className="text-xl font-bold text-[var(--matrix-color)]">
+                {member.name}
+              </h3>
+              <p className="text-sm text-[var(--matrix-color-90)] mt-1">
+                {member.role}
+              </p>
+            </div>
 
-            {/* Role */}
-            <p className="text-[var(--matrix-color)] text-center mb-4">
-              {member.role}
-            </p>
-
-            {/* Social Links */}
-            <div className="flex justify-center gap-4">
+            <div className="flex gap-3 text-[var(--matrix-color-90)]">
               {member.github && (
                 <a
                   href={member.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[var(--matrix-color)] hover:text-[var(--matrix-glow)] transition-colors"
+                  className="hover:text-[var(--matrix-color)] transition-colors"
                 >
-                  GitHub
+                  <Github size={18} />
                 </a>
               )}
               {member.linkedin && (
@@ -115,19 +156,13 @@ const TeamMemberCard = memo(
                   href={member.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[var(--matrix-color)] hover:text-[var(--matrix-glow)] transition-colors"
+                  className="hover:text-[var(--matrix-color)] transition-colors"
                 >
-                  LinkedIn
+                  <Linkedin size={18} />
                 </a>
               )}
             </div>
           </div>
-
-          {/* Decorative Elements */}
-          <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-[var(--matrix-color-50)]" />
-          <div className="absolute top-0 right-0 w-4 h-4 border-r-2 border-t-2 border-[var(--matrix-color-50)]" />
-          <div className="absolute bottom-0 left-0 w-4 h-4 border-l-2 border-b-2 border-[var(--matrix-color-50)]" />
-          <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-[var(--matrix-color-50)]" />
         </div>
       </motion.div>
     );
@@ -138,62 +173,49 @@ TeamMemberCard.displayName = "TeamMemberCard";
 
 const Team = memo(() => {
   return (
-    <section className="py-20 relative overflow-hidden">
-      {/* Matrix Rain Background */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black z-10" />
-      </div>
-
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
-              Meet The Team
-            </span>
-          </h2>
-          <p className="text-gray-300 max-w-2xl mx-auto text-lg">
-            Our team of passionate developers and researchers pushing the
-            boundaries of technology.
-          </p>
-        </motion.div>
-
-        {/* Team Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {teamMembers.map((member, index) => (
-            <TeamMemberCard key={index} member={member} index={index} />
-          ))}
-        </div>
-
-        {/* Join the Team CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mt-16"
-        >
-          <p className="text-gray-300 mb-6">
-            Want to join our team of innovators?
-          </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-3 bg-[var(--matrix-color)] text-black font-semibold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors relative overflow-hidden group"
+    <section className="relative overflow-hidden">
+      <div className="container mx-auto px-4">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
           >
-            <motion.span
-              className="absolute inset-0 bg-white/20"
-              initial={{ x: "-100%" }}
-              whileHover={{ x: "100%" }}
-              transition={{ duration: 0.5 }}
-            />
-            Join The Team
-          </motion.button>
-        </motion.div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              <motion.span
+                className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent inline-flex items-center gap-2 justify-center"
+                animate={{
+                  textShadow: [
+                    "0 0 20px var(--matrix-color-50)",
+                    "0 0 10px var(--matrix-color-30)",
+                    "0 0 20px var(--matrix-color-50)",
+                  ],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+              >
+                <Terminal className="w-8 h-8" />
+                <CrypticText text="Core Team" />
+              </motion.span>
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Meet the dedicated individuals driving innovation and excellence
+              at Axiom Club
+            </p>
+          </motion.div>
+
+          {/* Team Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {teamMembers.map((member, index) => (
+              <TeamMemberCard key={member.name} member={member} index={index} />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

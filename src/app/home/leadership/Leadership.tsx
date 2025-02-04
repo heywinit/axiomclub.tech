@@ -1,83 +1,111 @@
 "use client";
 
-import { memo, useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+import React, { memo, useState } from "react";
+import { motion } from "framer-motion";
+import { Terminal, Quote } from "lucide-react";
 
-type LeadershipMessage = {
-  name: string;
-  role: string;
-  message: string;
-  image?: string;
-};
+const CrypticText = memo(({ text }: { text: string }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const characters = "アイウエオカキクケコサシスセソタチツテトナニヌネノ";
 
-const leadershipMessages: LeadershipMessage[] = [
-  {
-    name: "Dr. John Doe",
-    role: "Director",
-    message:
-      "At Axiom Club, we're not just building technology – we're shaping the future. Our students' innovative spirit and dedication to excellence continue to inspire me every day.",
-  },
-  {
-    name: "Prof. Jane Smith",
-    role: "Head of Computer Science",
-    message:
-      "The intersection of academia and practical development at Axiom Club creates an environment where theoretical knowledge transforms into real-world solutions.",
-  },
-  {
-    name: "Dr. Robert Wilson",
-    role: "Professor of Software Engineering",
-    message:
-      "Watching our students grow from learners to innovators is what makes Axiom Club special. Their passion for technology drives our success.",
-  },
-];
+  return (
+    <motion.span
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className="inline-block relative cursor-pointer"
+    >
+      {text.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          className="inline-block relative"
+          animate={
+            isHovered
+              ? {
+                  y: [0, -2, 0],
+                }
+              : {}
+          }
+          transition={{
+            duration: 0.2,
+            delay: index * 0.02,
+            repeat: isHovered ? Infinity : 0,
+            repeatType: "reverse",
+          }}
+        >
+          {isHovered && (
+            <motion.span
+              className="absolute top-0 left-0 text-[var(--matrix-glow)]"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0, 1, 0],
+              }}
+              transition={{
+                duration: 0.1,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            >
+              {characters[Math.floor(Math.random() * characters.length)]}
+            </motion.span>
+          )}
+          <motion.span
+            animate={
+              isHovered
+                ? {
+                    opacity: [1, 0.5, 1],
+                  }
+                : {}
+            }
+            transition={{
+              duration: 0.2,
+              delay: index * 0.02,
+              repeat: Infinity,
+            }}
+          >
+            {char}
+          </motion.span>
+        </motion.span>
+      ))}
+    </motion.span>
+  );
+});
+
+CrypticText.displayName = "CrypticText";
 
 const MessageCard = memo(
   ({
     message,
-    isActive,
+    author,
+    role,
+    delay,
   }: {
-    message: LeadershipMessage;
-    isActive: boolean;
+    message: string;
+    author: string;
+    role: string;
+    delay: number;
   }) => {
     return (
       <motion.div
-        initial={{ opacity: 0, x: 50 }}
-        animate={{
-          opacity: isActive ? 1 : 0,
-          x: isActive ? 0 : 50,
-          scale: isActive ? 1 : 0.9,
-        }}
-        exit={{ opacity: 0, x: -50 }}
-        transition={{ duration: 0.5 }}
-        className="absolute top-0 left-0 w-full h-full"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay }}
+        className="relative group"
       >
-        <div className="bg-black/70 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-8 h-full">
-          <div className="flex flex-col h-full justify-between">
-            {/* Message */}
-            <div className="flex-grow">
-              <p className="text-gray-300 italic text-lg md:text-xl relative mb-8">
-                <span className="absolute -left-4 top-0 text-4xl text-[var(--matrix-color-50)]">
-                  &ldquo;
-                </span>
-                {message.message}
-                <span className="absolute -right-4 bottom-0 text-4xl text-[var(--matrix-color-50)]">
-                  &rdquo;
-                </span>
-              </p>
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-[var(--matrix-color-90)] to-[var(--matrix-glow-30)] rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
+        <div className="relative p-6 bg-black/50 backdrop-blur-sm ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300">
+          <Quote className="text-[var(--matrix-color)] mb-4 w-8 h-8" />
+          <p className="text-gray-300 mb-6 font-serif italic">{message}</p>
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-[var(--matrix-color-20)] flex items-center justify-center text-[var(--matrix-color)]">
+              {author.charAt(0)}
             </div>
-
-            {/* Profile Section */}
-            <div className="flex items-center gap-4 border-t border-[var(--matrix-color-30)] pt-6">
-              <div className="relative">
-                <div className="w-16 h-16 rounded-full bg-[var(--matrix-color-20)] flex items-center justify-center text-[var(--matrix-color)] text-2xl">
-                  {message.name[0]}
-                </div>
-                <div className="absolute inset-0 rounded-full border-2 border-[var(--matrix-color)] opacity-20 animate-pulse" />
+            <div>
+              <div className="font-bold text-[var(--matrix-color)]">
+                {author}
               </div>
-              <div>
-                <h3 className="text-xl font-bold text-white">{message.name}</h3>
-                <p className="text-[var(--matrix-color)]">{message.role}</p>
+              <div className="text-sm text-[var(--matrix-color-90)]">
+                {role}
               </div>
             </div>
           </div>
@@ -90,98 +118,57 @@ const MessageCard = memo(
 MessageCard.displayName = "MessageCard";
 
 const Leadership = memo(() => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [ref, inView] = useInView({
-    threshold: 0.1,
-    triggerOnce: true,
-  });
-
-  // Auto-scroll messages
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((current) => (current + 1) % leadershipMessages.length);
-    }, 6000); // Change message every 6 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
-    <section ref={ref} className="py-16 relative overflow-hidden">
-      <div className="container mx-auto px-4 relative z-10">
+    <section className="relative overflow-hidden">
+      <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          {/* Section Header */}
+          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-12"
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
-                Leadership Insights
-              </span>
+              <motion.span
+                className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent inline-flex items-center gap-2 justify-center"
+                animate={{
+                  textShadow: [
+                    "0 0 20px var(--matrix-color-50)",
+                    "0 0 10px var(--matrix-color-30)",
+                    "0 0 20px var(--matrix-color-50)",
+                  ],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+              >
+                <Terminal className="w-8 h-8" />
+                <CrypticText text="Leadership" />
+              </motion.span>
             </h2>
-            <div className="h-px w-24 mx-auto bg-gradient-to-r from-transparent via-[var(--matrix-color)] to-transparent" />
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Insights from our visionary leaders shaping the future of
+              technology
+            </p>
           </motion.div>
 
-          {/* Messages Carousel */}
-          <div className="relative h-[300px] mb-8">
-            <AnimatePresence mode="wait">
-              {leadershipMessages.map(
-                (message, index) =>
-                  index === activeIndex && (
-                    <MessageCard
-                      key={index}
-                      message={message}
-                      isActive={index === activeIndex}
-                    />
-                  )
-              )}
-            </AnimatePresence>
-
-            {/* Navigation Arrows */}
-            <div className="absolute -left-4 top-1/2 -translate-y-1/2 flex items-center justify-between w-[calc(100%+2rem)]">
-              <button
-                onClick={() =>
-                  setActiveIndex(
-                    (current) =>
-                      (current - 1 + leadershipMessages.length) %
-                      leadershipMessages.length
-                  )
-                }
-                className="w-12 h-12 rounded-full bg-black/50 border border-[var(--matrix-color-30)] flex items-center justify-center text-[var(--matrix-color)] hover:bg-[var(--matrix-color-20)] transition-colors"
-                aria-label="Previous message"
-              >
-                ←
-              </button>
-              <button
-                onClick={() =>
-                  setActiveIndex(
-                    (current) => (current + 1) % leadershipMessages.length
-                  )
-                }
-                className="w-12 h-12 rounded-full bg-black/50 border border-[var(--matrix-color-30)] flex items-center justify-center text-[var(--matrix-color)] hover:bg-[var(--matrix-color-20)] transition-colors"
-                aria-label="Next message"
-              >
-                →
-              </button>
-            </div>
-          </div>
-
-          {/* Navigation Dots */}
-          <div className="flex justify-center gap-2">
-            {leadershipMessages.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index === activeIndex
-                    ? "bg-[var(--matrix-color)] w-6"
-                    : "bg-[var(--matrix-color-30)]"
-                }`}
-                aria-label={`Go to message ${index + 1}`}
-              />
-            ))}
+          {/* Messages Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <MessageCard
+              message="Our mission is to empower students with the skills and knowledge needed to thrive in the ever-evolving tech landscape. Through hands-on experience and collaborative projects, we're building the next generation of innovators."
+              author="Dr. John Smith"
+              role="Faculty Advisor"
+              delay={0.1}
+            />
+            <MessageCard
+              message="At Axiom Club, we believe in learning by doing. Our focus on practical experience and real-world projects helps students bridge the gap between academic knowledge and industry requirements."
+              author="Prof. Jane Doe"
+              role="Technical Mentor"
+              delay={0.2}
+            />
           </div>
         </div>
       </div>
