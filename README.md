@@ -31,7 +31,7 @@ The official website for Axiom Club at Sardar Vallabhbhai Global University. Thi
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/axiomclub.tech.git
+   git clone https://github.com/axiom-svgu/axiomclub.tech.git
    cd axiomclub.tech
    ```
 
