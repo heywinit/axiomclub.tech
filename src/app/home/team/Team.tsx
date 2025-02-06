@@ -18,22 +18,22 @@ const teamMembers: TeamMember[] = [
     name: "Vinesh Rajpurohit",
     role: "Founder & Leader",
     image: "/team/vinesh.jpg",
-    github: "https://github.com/alexmatrix",
-    linkedin: "https://linkedin.com/in/alexmatrix",
+    github: "https://github.com/heywinit",
+    linkedin: "https://www.linkedin.com/in/vinesh-rajpurohit/",
   },
   {
     name: "Vaidehi Shah",
     role: "Frontend Lead",
     image: "/team/vaidehi.jpg",
-    github: "https://github.com/squantum",
-    linkedin: "https://linkedin.com/in/squantum",
+    github: "https://github.com/VaidehiCodes",
+    linkedin: "https://www.linkedin.com/in/vaidehi-shah21/",
   },
   {
     name: "Deepraj Bhati",
     role: "Backend Lead",
     image: "/team/deepraj.jpg",
-    github: "https://github.com/mikecyber",
-    linkedin: "https://linkedin.com/in/mikecyber",
+    github: "https://github.com/byedeepr",
+    linkedin: "https://www.linkedin.com/in/deepraj-bhati-0210a4330/",
   },
 ];
 
