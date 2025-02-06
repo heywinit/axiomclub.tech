@@ -22,7 +22,7 @@ export const getAllProjects = (): Project[] => [
       "OpenAI API",
       "Supabase",
     ],
-    status: "Planning",
+    status: "In Progress",
     github: "https://github.com/axiomclub/waqt",
   },
   {
