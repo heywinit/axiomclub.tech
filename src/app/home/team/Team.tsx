@@ -32,7 +32,7 @@ const teamMembers: TeamMember[] = [
     name: "Deepraj Bhati",
     role: "Backend Lead",
     image: "/team/deepraj.jpg",
-    github: "https://github.com/byedeepr",
+    github: "https://github.com/byedeep",
     linkedin: "https://www.linkedin.com/in/deepraj-bhati-0210a4330/",
   },
 ];
