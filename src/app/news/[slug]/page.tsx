@@ -1,5 +1,5 @@
 import { PawPrint, Snowflake, Webhook } from "lucide-react";
-import { Story } from "@/types/news";
+import { Story, StoryContent } from "@/types/news";
 
 // Speaker configurations
 const SPEAKER_CONFIG = {
@@ -20,6 +20,21 @@ const SPEAKER_CONFIG = {
   },
 } as const;
 
+// Helper function to group consecutive content by speaker
+function groupContentBySpeaker(content: StoryContent[]): StoryContent[][] {
+  return content.reduce((groups: StoryContent[][], current) => {
+    const lastGroup = groups[groups.length - 1];
+
+    if (lastGroup && lastGroup[0].speaker === current.speaker) {
+      lastGroup.push(current);
+    } else {
+      groups.push([current]);
+    }
+
+    return groups;
+  }, []);
+}
+
 async function getStory(slug: string): Promise<Story> {
   const response = await fetch(
     `https://raw.githubusercontent.com/axiom-svgu/blogs/refs/heads/main/${slug}.json`,
@@ -39,6 +54,7 @@ export default async function ArticlePage({
   params: { slug: string };
 }) {
   const story = await getStory(params.slug);
+  const groupedContent = groupContentBySpeaker(story.content);
 
   return (
     <main className="min-h-screen bg-black py-16 px-4">
@@ -50,12 +66,12 @@ export default async function ArticlePage({
 
         {/* Story Content */}
         <div className="space-y-8">
-          {story.content.map((content, index) => {
-            const speaker = SPEAKER_CONFIG[content.speaker];
+          {groupedContent.map((group, groupIndex) => {
+            const speaker = SPEAKER_CONFIG[group[0].speaker];
             const Icon = speaker.icon;
 
             return (
-              <div key={index} className="group relative">
+              <div key={groupIndex} className="group relative">
                 {/* Hover effect container */}
                 <div
                   className="absolute -inset-4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -93,9 +109,11 @@ export default async function ArticlePage({
                   </div>
 
                   {/* Text Content */}
-                  <p className="flex-1 text-gray-300 leading-relaxed">
-                    {content.text}
-                  </p>
+                  <div className="flex-1 text-gray-300 leading-relaxed space-y-4">
+                    {group.map((content, index) => (
+                      <p key={index}>{content.text}</p>
+                    ))}
+                  </div>
                 </div>
               </div>
             );
