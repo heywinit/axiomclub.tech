@@ -2,6 +2,8 @@
 
 import React, { memo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { teamService } from "@/services/teamService";
+import type { Members } from "@/services/teamService"; // Import the Members interface
 import {
   Terminal,
   ChevronDown,
@@ -18,68 +20,18 @@ import {
   Binary,
 } from "lucide-react";
 
-// Types for team members
-interface TeamMember {
-  name: string;
-  role: string;
-  image: string;
-  bio: string;
-  links?: {
-    github?: string;
-    linkedin?: string;
-    email?: string;
-    portfolio?: string;
-  };
-  skills?: string[];
-}
-
 interface TeamSection {
-  name: string;
+  title: string;
   icon: React.ReactNode;
-  members: TeamMember[];
+  members: Members[];
 }
 
-// Mock data - Replace with real data
-const LEADS: TeamMember[] = [
-  {
-    name: "John Doe",
-    role: "Club Lead",
-    image: "/team/lead1.jpg",
-    bio: "Passionate about building innovative solutions and fostering a collaborative tech community.",
-    links: {
-      github: "https://github.com",
-      linkedin: "https://linkedin.com",
-      email: "lead@axiomclub.tech",
-    },
-    skills: ["Full Stack", "System Design", "Team Leadership"],
-  },
-  {
-    name: "Jane Smith",
-    role: "Technical Lead",
-    image: "/team/lead2.jpg",
-    bio: "Experienced in architecting scalable systems and mentoring aspiring developers.",
-    links: {
-      github: "https://github.com",
-      linkedin: "https://linkedin.com",
-    },
-    skills: ["Architecture", "Cloud Computing", "DevOps"],
-  },
-  {
-    name: "Alex Johnson",
-    role: "Innovation Lead",
-    image: "/team/lead3.jpg",
-    bio: "Driving innovation through emerging technologies and creative problem-solving.",
-    links: {
-      github: "https://github.com",
-      linkedin: "https://linkedin.com",
-    },
-    skills: ["AI/ML", "Research", "Innovation Strategy"],
-  },
-];
+// Use the Members type from teamService
+const LEADS = teamService.getTeam();
 
 const TEAM_SECTIONS: TeamSection[] = [
   {
-    name: "Development",
+    title: "Development",
     icon: <Code className="w-5 h-5" />,
     members: [
       {
@@ -93,7 +45,7 @@ const TEAM_SECTIONS: TeamSection[] = [
     ],
   },
   {
-    name: "Systems",
+    title: "Systems",
     icon: <Cpu className="w-5 h-5" />,
     members: [
       {
@@ -107,7 +59,7 @@ const TEAM_SECTIONS: TeamSection[] = [
     ],
   },
   {
-    name: "Security",
+    title: "Security",
     icon: <Shield className="w-5 h-5" />,
     members: [
       {
@@ -121,7 +73,7 @@ const TEAM_SECTIONS: TeamSection[] = [
     ],
   },
   {
-    name: "Design",
+    title: "Design",
     icon: <Palette className="w-5 h-5" />,
     members: [
       {
@@ -135,7 +87,7 @@ const TEAM_SECTIONS: TeamSection[] = [
     ],
   },
   {
-    name: "Content",
+    title: "Content",
     icon: <Megaphone className="w-5 h-5" />,
     members: [
       {
@@ -150,7 +102,7 @@ const TEAM_SECTIONS: TeamSection[] = [
   },
 ];
 
-const TEAM_0X00: TeamMember[] = [
+const TEAM_0X00: Members[] = [
   {
     name: "Hacker 1",
     role: "Full Stack Developer",
@@ -162,7 +114,7 @@ const TEAM_0X00: TeamMember[] = [
 ];
 
 const MemberCard = memo(
-  ({ member, isLead = false }: { member: TeamMember; isLead?: boolean }) => {
+  ({ member, isLead = false }: { member: Members; isLead?: boolean }) => {
     const [, setIsHovered] = useState(false);
 
     return (
@@ -178,11 +130,11 @@ const MemberCard = memo(
         <div className="relative p-4 bg-black/50 ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300">
           <div className="flex flex-col items-center text-center gap-4">
             <div className="relative w-32 h-32 rounded-full overflow-hidden ring-2 ring-[var(--matrix-color-50)]">
-              <div className="absolute inset-0 bg-[var(--matrix-color-20)] animate-pulse" />
-              {/* Add actual images later */}
-              <div className="absolute inset-0 flex items-center justify-center text-[var(--matrix-color)]">
-                {member.name.charAt(0)}
-              </div>
+              <img
+                src={member.image}
+                alt={member.name}
+                className="w-full h-full object-cover"
+              />
             </div>
 
             <div>
@@ -198,7 +150,7 @@ const MemberCard = memo(
 
             {member.skills && (
               <div className="flex flex-wrap gap-2 justify-center">
-                {member.skills.map((skill, index) => (
+                {member.skills.map((skill: string, index: number) => (
                   <span
                     key={index}
                     className="text-xs px-2 py-1 bg-[var(--matrix-color-20)] text-[var(--matrix-color)] rounded border border-[var(--matrix-color-30)]"
@@ -209,48 +161,46 @@ const MemberCard = memo(
               </div>
             )}
 
-            {member.links && (
-              <div className="flex gap-3 text-[var(--matrix-color-90)]">
-                {member.links.github && (
-                  <a
-                    href={member.links.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-[var(--matrix-color)] transition-colors"
-                  >
-                    <Github size={18} />
-                  </a>
-                )}
-                {member.links.linkedin && (
-                  <a
-                    href={member.links.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-[var(--matrix-color)] transition-colors"
-                  >
-                    <Linkedin size={18} />
-                  </a>
-                )}
-                {member.links.email && (
-                  <a
-                    href={`mailto:${member.links.email}`}
-                    className="hover:text-[var(--matrix-color)] transition-colors"
-                  >
-                    <Mail size={18} />
-                  </a>
-                )}
-                {member.links.portfolio && (
-                  <a
-                    href={member.links.portfolio}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-[var(--matrix-color)] transition-colors"
-                  >
-                    <ExternalLink size={18} />
-                  </a>
-                )}
-              </div>
-            )}
+            <div className="flex gap-3 text-[var(--matrix-color-90)]">
+              {member.links?.github && (
+                <a
+                  href={member.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[var(--matrix-color)] transition-colors"
+                >
+                  <Github size={18} />
+                </a>
+              )}
+              {member.links?.linkedin && (
+                <a
+                  href={member.links.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[var(--matrix-color)] transition-colors"
+                >
+                  <Linkedin size={18} />
+                </a>
+              )}
+              {member.links?.email && (
+                <a
+                  href={`mailto:${member.links.email}`}
+                  className="hover:text-[var(--matrix-color)] transition-colors"
+                >
+                  <Mail size={18} />
+                </a>
+              )}
+              {member.links?.portfolio && (
+                <a
+                  href={member.links.portfolio}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[var(--matrix-color)] transition-colors"
+                >
+                  <ExternalLink size={18} />
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </motion.div>
@@ -274,7 +224,7 @@ const TeamSection = memo(({ section }: { section: TeamSection }) => {
             {section.icon}
           </span>
           <h2 className="text-xl font-bold text-[var(--matrix-color)] group-hover:text-[var(--matrix-glow)] transition-colors">
-            {section.name} Team
+            {section.title} Team
           </h2>
         </div>
         <ChevronDown
@@ -386,6 +336,17 @@ const CrypticText = memo(({ text }: { text: string }) => {
 CrypticText.displayName = "CrypticText";
 
 const Team = memo(() => {
+  const [selectedSection, setSelectedSection] = useState(0);
+
+  const SECTIONS: TeamSection[] = [
+    {
+      title: "Leadership",
+      icon: <Terminal size={20} />,
+      members: LEADS,
+    },
+    // Add other sections as needed
+  ];
+
   return (
     <section className="min-h-screen py-10 sm:py-20 relative bg-black font-mono">
       <MatrixOverlay />
