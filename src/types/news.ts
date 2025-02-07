@@ -7,3 +7,13 @@ export interface NewsArticle {
   content?: string;
   imageUrl?: string;
 }
+
+export type StoryContent = {
+  speaker: "W" | "D" | "V"; // Speaker can be W (Vinesh), D (Deep), or V (Vaidehi)
+  text: string;
+};
+
+export type Story = {
+  title: string;
+  content: StoryContent[];
+};
