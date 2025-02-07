@@ -1,9 +1,10 @@
 "use client";
 
-import React, { memo, useState } from "react";
+import React, { memo, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Terminal, Github, Linkedin } from "lucide-react";
+import { teamService } from "@/services/teamService";
 
 interface TeamMember {
   name: string;
@@ -12,30 +13,6 @@ interface TeamMember {
   github?: string;
   linkedin?: string;
 }
-
-const teamMembers: TeamMember[] = [
-  {
-    name: "Vinesh Rajpurohit",
-    role: "Founder & Leader",
-    image: "/team/vinesh.jpg",
-    github: "https://github.com/heywinit",
-    linkedin: "https://www.linkedin.com/in/vinesh-rajpurohit/",
-  },
-  {
-    name: "Vaidehi Shah",
-    role: "Frontend Lead",
-    image: "/team/vaidehi.jpg",
-    github: "https://github.com/VaidehiCodes",
-    linkedin: "https://www.linkedin.com/in/vaidehi-shah21/",
-  },
-  {
-    name: "Deepraj Bhati",
-    role: "Backend Lead",
-    image: "/team/deepraj.jpg",
-    github: "https://github.com/byedeep",
-    linkedin: "https://www.linkedin.com/in/deepraj-bhati-0210a4330/",
-  },
-];
 
 const CrypticText = memo(({ text }: { text: string }) => {
   const [isHovered, setIsHovered] = useState(false);
