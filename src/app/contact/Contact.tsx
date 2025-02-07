@@ -33,8 +33,8 @@ const locations = [
 ];
 
 const socialLinks = [
-  { name: "LinkedIn", url: "https://linkedin.com/company/axiomclub" },
-  { name: "GitHub", url: "https://github.com/axiomclub" },
+  { name: "LinkedIn", url: "https://www.linkedin.com/company/axiom-svgu/" },
+  { name: "GitHub", url: "https://github.com/axiom-svgu" },
   { name: "Twitter", url: "https://twitter.com/axiomclub" },
 ];
 

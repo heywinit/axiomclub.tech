@@ -583,22 +583,22 @@ const About = memo(() => {
                 <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-[var(--matrix-color-30)]" />
                 {[
                   {
-                    year: "2023",
+                    year: "2024",
                     title: "Club Foundation",
                     description:
                       "Axiom Club was established with a vision to revolutionize tech education.",
                   },
                   {
-                    year: "2023",
-                    title: "First Hackathon",
+                    year: "2025",
+                    title: "First win",
                     description:
-                      "Successfully organized our first internal hackathon with 50+ participants.",
+                      "Scored our first win in SparkQuest, a web development event hosted by our college, putting our skills to the test..",
                   },
                   {
-                    year: "2024",
-                    title: "Project Milestones",
+                    year: "2025",
+                    title: "Website Deployment",
                     description:
-                      "Launched multiple successful projects and established industry partnerships.",
+                      "We created this website to put ourselves out there and showcase our passion for tech and innovationo ",
                   },
                 ].map((event, index) => (
                   <motion.div

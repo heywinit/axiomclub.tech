@@ -7,7 +7,7 @@ export const getAllProjects = (): Project[] => [
       "The official website for Axiom Club featuring a unique retro-futuristic interface built with Next.js and React.",
     tech: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Framer Motion"],
     status: "Completed",
-    github: "https://github.com/axiomclub/website",
+    github: "https://github.com/axiom-svgu/axiomclub.tech",
     demo: "https://axiomclub.tech",
   },
   {
@@ -22,8 +22,8 @@ export const getAllProjects = (): Project[] => [
       "OpenAI API",
       "Supabase",
     ],
-    status: "Planning",
-    github: "https://github.com/axiomclub/waqt",
+    status: "In Progress",
+    github: "https://github.com/axiom-svgu/waqt",
   },
   {
     title: "PairUp",

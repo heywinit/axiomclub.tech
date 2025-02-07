@@ -42,38 +42,38 @@ interface TeamSection {
 // Mock data - Replace with real data
 const LEADS: TeamMember[] = [
   {
-    name: "John Doe",
+    name: "Vinesh Rajpurohit",
     role: "Club Lead",
-    image: "/team/lead1.jpg",
+    image: "/team/vinesh.jpg",
     bio: "Passionate about building innovative solutions and fostering a collaborative tech community.",
     links: {
-      github: "https://github.com",
-      linkedin: "https://linkedin.com",
+      github: "https://github.com/heywinit",
+      linkedin: "https://www.linkedin.com/in/vinesh-rajpurohit/",
       email: "lead@axiomclub.tech",
     },
     skills: ["Full Stack", "System Design", "Team Leadership"],
   },
   {
-    name: "Jane Smith",
-    role: "Technical Lead",
-    image: "/team/lead2.jpg",
+    name: "Vaidehi Shah",
+    role: "Frontend Lead",
+    image: "/team/vaidehi.jpg",
     bio: "Experienced in architecting scalable systems and mentoring aspiring developers.",
     links: {
-      github: "https://github.com",
-      linkedin: "https://linkedin.com",
+      github: "https://github.com/VaidehiCodes",
+      linkedin: "https://www.linkedin.com/in/vaidehi-shah21/",
     },
-    skills: ["Architecture", "Cloud Computing", "DevOps"],
+    skills: ["UI/UX", "Frontend", "Blender"],
   },
   {
-    name: "Alex Johnson",
-    role: "Innovation Lead",
-    image: "/team/lead3.jpg",
+    name: "Deepraj Bhati",
+    role: "Backend Lead",
+    image: "/team/deepraj.jpg",
     bio: "Driving innovation through emerging technologies and creative problem-solving.",
     links: {
-      github: "https://github.com",
-      linkedin: "https://linkedin.com",
+      github: "https://github.com/byedeep",
+      linkedin: "https://www.linkedin.com/in/deepraj-bhati-0210a4330/",
     },
-    skills: ["AI/ML", "Research", "Innovation Strategy"],
+    skills: ["Backend", "Architecture", "AI/ML"],
   },
 ];
 
