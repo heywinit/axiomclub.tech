@@ -149,49 +149,94 @@ const TeamMemberCard = memo(
 TeamMemberCard.displayName = "TeamMemberCard";
 
 const Team = memo(() => {
+  const teamMembers = teamService.getTeam();
+
   return (
     <section className="relative overflow-hidden">
-      <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <motion.span
-                className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent inline-flex items-center gap-2 justify-center"
-                animate={{
-                  textShadow: [
-                    "0 0 20px var(--matrix-color-50)",
-                    "0 0 10px var(--matrix-color-30)",
-                    "0 0 20px var(--matrix-color-50)",
-                  ],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                }}
-              >
-                <Terminal className="w-8 h-8" />
-                <CrypticText text="Core Team" />
-              </motion.span>
-            </h2>
-            <p className="text-gray-300 max-w-2xl mx-auto">
-              Meet the dedicated individuals driving innovation and excellence
-              at Axiom Club
-            </p>
-          </motion.div>
+      <div className="container mx-auto px-4 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-4xl font-bold text-[var(--matrix-color)] mb-4">
+            Our Team
+          </h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Meet the minds behind the matrix
+          </p>
+        </motion.div>
 
-          {/* Team Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {teamMembers.map((member, index) => (
-              <TeamMemberCard key={member.name} member={member} index={index} />
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {teamMembers.map((member, index) => (
+            <motion.div
+              key={member.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="relative group"
+            >
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-[var(--matrix-color-90)] to-[var(--matrix-glow-30)] rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
+              <div className="relative p-6 bg-black/50 backdrop-blur-sm ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300">
+                <img
+                  src={member.image}
+                  alt={member.name}
+                  className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
+                />
+                <h3 className="text-xl font-bold text-[var(--matrix-color)] mb-2">
+                  {member.name}
+                </h3>
+                <p className="text-[var(--matrix-color-90)] mb-2">
+                  {member.role}
+                </p>
+                <p className="text-gray-400 text-sm mb-3">{member.bio}</p>
+                <div className="flex flex-wrap gap-2 justify-center mb-4">
+                  {member.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="px-2 py-1 text-xs rounded-full bg-[var(--matrix-color-20)] text-[var(--matrix-color)]"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+                <div className="flex justify-center gap-4">
+                  {member.links?.github && (
+                    <a
+                      href={member.links?.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[var(--matrix-color)] hover:text-[var(--matrix-glow)]"
+                    >
+                      GitHub
+                    </a>
+                  )}
+                  {member.links?.linkedin && (
+                    <a
+                      href={member.links?.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[var(--matrix-color)] hover:text-[var(--matrix-glow)]"
+                    >
+                      LinkedIn
+                    </a>
+                  )}
+                  {member.links?.portfolio && (
+                    <a
+                      href={member.links?.portfolio}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[var(--matrix-color)] hover:text-[var(--matrix-glow)]"
+                    >
+                      Website
+                    </a>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
