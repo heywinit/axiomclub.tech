@@ -30,19 +30,19 @@ export const eventService = {
   getActiveProjects: (): Project[] => [
     {
       name: "Axiom Club Website",
-      progress: 85,
+      progress: 95,
       tech: "Next.js",
     },
     {
-      name: "AI Study Assistant",
-      progress: 60,
-      tech: "Python/ML",
+      name: "AI Task Manager",
+      progress: 35,
+      tech: "Next.js / Go",
     },
-    {
+    /*{
       name: "Campus Events App",
       progress: 40,
       tech: "React Native",
-    },
+    },*/
   ],
 
   getTechStack: (): TechStack[] => [
@@ -66,54 +66,44 @@ export const eventService = {
 
   getRecentActivities: (): Activity[] => [
     {
-      date: "2024-03-15",
-      event: "AI Workshop",
-      details: "Introduction to Machine Learning",
+      date: "2024-09-3",
+      event: "Axiom Created",
+      details: "The creation of this club",
     },
     {
-      date: "2024-03-10",
-      event: "Hackathon",
-      details: "24-hour coding challenge",
+      date: "2025-02-01",
+      event: "Spark Quest",
+      details: "Participated in a webpage devloping compititon",
     },
     {
-      date: "2024-03-05",
-      event: "Tech Talk",
-      details: "Web3 and Blockchain",
+      date: "2025-01-27",
+      event: "The Website",
+      details: "We started wroking on this website",
     },
     {
-      date: "2024-03-01",
-      event: "Project Sprint",
-      details: "Campus Events App Development",
+      date: "2025-03-06",
+      event: "First Project",
+      details: "Started our first open source project",
     },
   ],
 
   getUpcomingEvents: (): Event[] => [
     {
-      date: "MAR 20",
-      event: "React Workshop",
-      type: "Workshop",
-    },
-    {
-      date: "MAR 25",
-      event: "Code Review Session",
-      type: "Meeting",
-    },
-    {
-      date: "APR 01",
-      event: "Spring Hackathon",
-      type: "Event",
+      date: "",
+      event: "/* CONFIDENTIAL */",
+      type: "",
     },
   ],
 
   getClubStats: (): ClubStat[] => [
-    { label: "Active Members", value: "42" },
-    { label: "Project Teams", value: "8" },
+    { label: "Active Members", value: "24" },
+    { label: "Project Teams", value: "1" },
     { label: "Monthly Events", value: "4" },
     { label: "Total Projects", value: "15" },
   ],
 
   getSocialLinks: () => ({
-    discord: "discord.gg/axiomclub",
-    github: "github.com/axiomclub",
+    discord: "https://discord.gg/YebuA3HmYn",
+    github: "https://github.com/axiom-svgu",
   }),
 };

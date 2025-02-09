@@ -18,11 +18,12 @@ export const teamService = {
       name: "Vinesh Rajpurohit",
       role: "Founder & Leader",
       image: "/team/vinesh.jpg",
-      bio: "Chakka",
-      skills: ["Full Stack", "Avionics"],
+      bio: "Usually writing code for screens, sometimes it also makes stuff fly",
+      skills: ["Full Stack", "Avionics" , "competitive programming"],
       links: {
         github: "https://github.com/heywinit",
         linkedin: "https://www.linkedin.com/in/vinesh-rajpurohit/",
+        email: "vinesh@axiomclub.tech"
       },
     },
 
@@ -30,11 +31,12 @@ export const teamService = {
       name: "Vaidehi Shah",
       role: "Frontend Lead",
       image: "/team/vaidehi.jpg",
-      bio: "Cooking, not in the kitchen tho",
-      skills: ["UI/UX", "Frontend"],
+      bio: "Cooking, but not in the kitchen tho.",
+      skills: ["UI/UX", "Frontend" , "3D-Animation"],
       links: {
         github: "https://github.com/VaidehiCodes",
         linkedin: "https://www.linkedin.com/in/vaidehi-shah21/",
+        email: "vaidehi@axiomclub.tech"
       },
     },
 
@@ -42,11 +44,12 @@ export const teamService = {
       name: "Deepraj Bhati",
       role: "Backend Lead",
       image: "/team/deepraj.jpg",
-      bio: "Mahan aadmi",
-      skills: ["Backend"],
+      bio: "I do not read terms and services",
+      skills: ["Backend" , "Architecture" , "AI/ML"],
       links: {
         github: "https://github.com/byedeep",
         linkedin: "https://www.linkedin.com/in/deepraj-bhati-0210a4330/",
+        email: "deep@axiomclub.tech"
       },
     },
   ],

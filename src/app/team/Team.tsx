@@ -133,6 +133,7 @@ const MemberCard = memo(
             <div className="relative w-32 h-32 rounded-full overflow-hidden ring-2 ring-[var(--matrix-color-50)]">
               <img
                 src={member.image}
+
                 alt={member.name}
                 className="w-full h-full object-cover"
               />
@@ -150,7 +151,7 @@ const MemberCard = memo(
             <p className="text-gray-300 text-sm">{member.bio}</p>
 
             {member.skills && (
-              <div className="flex flex-wrap gap-2 justify-center">
+              <div className="flex flex-wrap gap-3 justify-center">
                 {member.skills.map((skill: string, index: number) => (
                   <span
                     key={index}
