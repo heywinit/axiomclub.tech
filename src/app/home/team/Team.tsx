@@ -3,9 +3,18 @@
 import React, { memo } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Github, Linkedin } from "lucide-react";
+import {
+  Github,
+  Linkedin,
+  User,
+  Code,
+  Cpu,
+  Rocket,
+  Terminal,
+  Database,
+  Cloud,
+} from "lucide-react";
 import { teamService } from "@/services/teamService";
-import Image from "next/image";
 
 interface TeamMember {
   name: string;
@@ -14,12 +23,26 @@ interface TeamMember {
   github?: string;
   linkedin?: string;
 }
+
+const getIconByRole = (role: string) => {
+  const roleLC = role.toLowerCase();
+  if (roleLC.includes("founder") || roleLC.includes("leader")) return Rocket;
+  if (roleLC.includes("frontend")) return Code;
+  if (roleLC.includes("backend")) return Database;
+  if (roleLC.includes("full")) return Terminal;
+  if (roleLC.includes("devops")) return Cloud;
+  if (roleLC.includes("system")) return Cpu;
+  return User;
+};
+
 const TeamMemberCard = memo(
   ({ member, index }: { member: TeamMember; index: number }) => {
     const { ref, inView } = useInView({
       threshold: 0.2,
       triggerOnce: true,
     });
+
+    const Icon = getIconByRole(member.role);
 
     return (
       <motion.div
@@ -32,43 +55,53 @@ const TeamMemberCard = memo(
         <div className="absolute -inset-0.5 bg-gradient-to-r from-[var(--matrix-color-90)] to-[var(--matrix-glow-30)] rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
         <div className="relative p-6 bg-black/50 backdrop-blur-sm ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300">
           <div className="flex flex-col items-center text-center gap-4">
-            <div className="relative w-24 h-24 rounded-full overflow-hidden ring-2 ring-[var(--matrix-color-50)]">
-              <div className="absolute inset-0 bg-[var(--matrix-color-20)] animate-pulse" />
-              {/* Add actual images later */}
-              <div className="absolute inset-0 flex items-center justify-center text-[var(--matrix-color)] text-2xl">
-                {member.name.charAt(0)}
-              </div>
+            <div className="relative w-24 h-24 rounded-full overflow-hidden ring-2 ring-[var(--matrix-color-50)] bg-[var(--matrix-color-20)] flex items-center justify-center group">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.5 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{
+                  duration: 0.3,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+                className="absolute inset-0 bg-[var(--matrix-color-20)] opacity-50"
+              />
+              <Icon className="w-12 h-12 text-[var(--matrix-color)] relative z-10 group-hover:scale-110 transition-transform duration-300" />
             </div>
 
-            <div>
-              <h3 className="text-xl font-bold text-[var(--matrix-color)]">
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-[var(--matrix-color)] group-hover:text-[var(--matrix-glow)] transition-colors">
                 {member.name}
               </h3>
-              <p className="text-sm text-[var(--matrix-color-90)] mt-1">
+              <p className="text-sm text-[var(--matrix-color-90)] bg-[var(--matrix-color-20)] px-3 py-1 rounded-full inline-block">
                 {member.role}
               </p>
             </div>
 
-            <div className="flex gap-3 text-[var(--matrix-color-90)]">
+            <div className="flex gap-4 pt-2">
               {member.github && (
-                <a
+                <motion.a
                   href={member.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[var(--matrix-color)] transition-colors"
+                  className="text-[var(--matrix-color-90)] hover:text-[var(--matrix-color)] transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <Github size={18} />
-                </a>
+                  <Github className="w-5 h-5" />
+                </motion.a>
               )}
               {member.linkedin && (
-                <a
+                <motion.a
                   href={member.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-[var(--matrix-color)] transition-colors"
+                  className="text-[var(--matrix-color-90)] hover:text-[var(--matrix-color)] transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <Linkedin size={18} />
-                </a>
+                  <Linkedin className="w-5 h-5" />
+                </motion.a>
               )}
             </div>
           </div>
@@ -102,64 +135,7 @@ const Team = memo(() => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {teamMembers.map((member, index) => (
-            <motion.div
-              key={member.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="relative group"
-            >
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-[var(--matrix-color-90)] to-[var(--matrix-glow-30)] rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
-              <div className="relative p-6 bg-black/50 backdrop-blur-sm ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300">
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  width={96}
-                  height={96}
-                  className="rounded-full mx-auto mb-4 object-cover"
-                />
-                <h3 className="text-xl font-bold text-[var(--matrix-color)] mb-2">
-                  {member.name}
-                </h3>
-                <p className="text-[var(--matrix-color-90)] mb-2">
-                  {member.role}
-                </p>
-
-                <div className="flex justify-center gap-4">
-                  {member.links?.github && (
-                    <a
-                      href={member.links?.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[var(--matrix-color)] hover:text-[var(--matrix-glow)]"
-                    >
-                      GitHub
-                    </a>
-                  )}
-                  {member.links?.linkedin && (
-                    <a
-                      href={member.links?.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[var(--matrix-color)] hover:text-[var(--matrix-glow)]"
-                    >
-                      LinkedIn
-                    </a>
-                  )}
-                  {member.links?.portfolio && (
-                    <a
-                      href={member.links?.portfolio}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[var(--matrix-color)] hover:text-[var(--matrix-glow)]"
-                    >
-                      Website
-                    </a>
-                  )}
-                </div>
-              </div>
-            </motion.div>
+            <TeamMemberCard key={member.name} member={member} index={index} />
           ))}
         </div>
       </div>

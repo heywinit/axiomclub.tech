@@ -20,8 +20,8 @@ import {
   Binary,
   User,
   Webhook,
-  PawPrint,
   Snowflake,
+  Bitcoin,
 } from "lucide-react";
 import CrypticText from "@/components/CrypticText";
 import Image from "next/image";
@@ -124,7 +124,7 @@ const getLeadIcon = (name: string) => {
     case "Vinesh Rajpurohit":
       return Webhook;
     case "Deepraj Bhati":
-      return PawPrint;
+      return Bitcoin;
     case "Vaidehi Shah":
       return Snowflake;
     default:

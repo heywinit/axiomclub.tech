@@ -1,4 +1,4 @@
-import { PawPrint, Snowflake, Webhook } from "lucide-react";
+import { Bitcoin, Snowflake, Webhook } from "lucide-react";
 import { StoryContent } from "@/types/news";
 
 export const SPEAKER_CONFIG = {
@@ -9,7 +9,7 @@ export const SPEAKER_CONFIG = {
   },
   D: {
     name: "Deep",
-    icon: PawPrint,
+    icon: Bitcoin,
     color: "#00d419",
   },
   V: {
