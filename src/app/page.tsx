@@ -3,7 +3,7 @@ import Hero from "@/app/home/hero/Hero";
 import WhatWeDo from "@/app/home/what-we-do/WhatWeDo";
 import FeaturedProjects from "@/app/home/featured-projects/FeaturedProjects";
 import Team from "@/app/home/team/Team";
-import News from "@/app/home/news/News";
+// import News from "@/app/home/news/News";
 import Contact from "@/app/home/contact/Contact";
 
 const MatrixOverlay = () => (
@@ -28,19 +28,19 @@ export default function Home() {
 
       {/* Main Content Sections */}
       <div className="flex flex-col relative z-10">
-        <div className="py-32 border-t border-[var(--matrix-color-30)]">
+        <div className="border-t border-[var(--matrix-color-30)]">
           <WhatWeDo />
         </div>
-        <div className="py-32 border-t border-[var(--matrix-color-30)]">
+        <div className="border-t border-[var(--matrix-color-30)]">
           <Team />
         </div>
-        <div className="py-32 border-t border-[var(--matrix-color-30)]">
+        <div className="border-t border-[var(--matrix-color-30)]">
           <FeaturedProjects />
         </div>
-{/*        <div className="py-32 border-t border-[var(--matrix-color-30)]">
+        {/*        <div className="py-32 border-t border-[var(--matrix-color-30)]">
           //<News />
         </div>*/}
-        <div className="py-32 border-t border-[var(--matrix-color-30)]">
+        <div className="border-t border-[var(--matrix-color-30)]">
           <Contact />
         </div>
       </div>

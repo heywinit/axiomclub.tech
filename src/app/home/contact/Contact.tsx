@@ -248,64 +248,83 @@ const Contact = memo(() => {
   };
 
   return (
-    <section className="py-20 relative overflow-hidden bg-black" id="contact">
-      <div className="container mx-auto px-4 pb-16 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-[var(--matrix-color)] mb-4">
-            Contact Us
-          </h2>
-          <p className="text-[var(--matrix-color-70)] text-lg max-w-2xl mx-auto">
-            Ready to start your next project? Drop us a message through our
-            secure terminal interface.
-          </p>
-        </div>
+    <section className="relative overflow-hidden">
+      <div className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="max-w-3xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-8 sm:mb-12"
         >
-          <div className="bg-black border border-[var(--matrix-color-30)] rounded">
-            {/* Terminal Header */}
-            <div className="border-b border-[var(--matrix-color-30)] p-2 flex items-center">
-              <div className="flex space-x-2">
-                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              </div>
-              <div className="flex-1 text-center text-[var(--matrix-color-70)] text-sm font-mono">
-                AxiomClub Terminal - Contact Interface v1.0.0
-              </div>
-            </div>
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">
+            <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
+              Get in Touch
+            </span>
+          </h2>
+          <p className="text-sm sm:text-base text-gray-300 max-w-2xl mx-auto px-4">
+            Have a project in mind or want to join our community? Let&apos;s
+            talk!
+          </p>
+        </motion.div>
 
-            {/* Terminal Content */}
+        <div className="max-w-3xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-black/50 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-4 sm:p-6"
+          >
             <div
               ref={terminalRef}
-              className="p-4 font-mono h-[400px] overflow-y-auto custom-scrollbar"
+              className="font-mono text-sm sm:text-base overflow-y-auto max-h-[60vh] sm:max-h-[70vh]"
             >
-              {!submitted ? (
-                <form onSubmit={handleSubmit} className="h-full">
-                  <div className="mb-4 text-[var(--matrix-color)]">
-                    <span className="text-[var(--matrix-color-70)]">
-                      Last login: {new Date().toUTCString()}
+              {submitted ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-[var(--matrix-color)]"
+                >
+                  <div className="mb-2">
+                    <span className="mr-2">root@axiom:~$</span>
+                    <span>submit_form</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[var(--matrix-color-70)]">{">"}</span>
+                    <span className="text-green-500">
+                      Form submitted successfully! We&apos;ll get back to you
+                      soon.
                     </span>
-                    <div className="mt-2">
-                      Welcome to AxiomClub Contact Terminal. Press ENTER after
-                      each input to continue.
-                    </div>
                   </div>
-                  {renderPrompt()}
-                </form>
+                </motion.div>
               ) : (
-                <div className="text-[var(--matrix-color)]">
-                  <div className="mb-2">Message sent successfully!</div>
-                  <div className="text-[var(--matrix-color-70)]">
-                    Connection closing in 3 seconds...
-                  </div>
-                </div>
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-2 sm:space-y-4"
+                >
+                  {renderPrompt()}
+                  {currentStep === 3 && (
+                    <div className="mt-4 sm:mt-6">
+                      <motion.button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className={`w-full py-2 sm:py-3 px-4 sm:px-6 bg-[var(--matrix-color)] text-black font-bold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors ${
+                          isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                        whileHover={isSubmitting ? {} : { scale: 1.02 }}
+                        whileTap={isSubmitting ? {} : { scale: 0.98 }}
+                      >
+                        {isSubmitting ? "Submitting..." : "Submit"}
+                      </motion.button>
+                      <p className="text-[var(--matrix-color-70)] text-xs sm:text-sm mt-2 text-center">
+                        Press ENTER or click the button to submit
+                      </p>
+                    </div>
+                  )}
+                </form>
               )}
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

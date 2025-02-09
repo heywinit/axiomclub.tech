@@ -105,14 +105,14 @@ const Hero = memo(() => {
   );
 
   return (
-    <section className="min-h-screen flex items-center justify-center py-10 sm:py-20 will-change-transform">
-      <div className="container mx-auto px-4 h-[calc(100vh-5rem)] sm:h-[calc(100vh-10rem)]">
+    <section className="min-h-screen flex items-center justify-center py-4 sm:py-10 md:py-20 will-change-transform">
+      <div className="container mx-auto px-2 sm:px-4 h-[calc(100vh-2rem)] sm:h-[calc(100vh-5rem)] md:h-[calc(100vh-10rem)]">
         <CRT className="h-full sm:h-[85vh]">
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="p-0 sm:p-8 h-full relative"
+            className="p-2 sm:p-4 md:p-8 h-full relative"
           >
             {/* Terminal Section */}
             <motion.div
@@ -128,11 +128,11 @@ const Hero = memo(() => {
               }}
             >
               <div className="relative h-full">
-                <div className="text-[var(--matrix-color)] font-mono text-sm overflow-hidden h-full">
+                <div className="text-[var(--matrix-color)] font-mono text-xs sm:text-sm overflow-hidden h-full">
                   <motion.pre
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="whitespace-pre-wrap break-words h-full max-w-full"
+                    className="whitespace-pre-wrap break-words h-full max-w-full p-2 sm:p-4"
                   >
                     {displayText}
                     <motion.span
@@ -150,7 +150,7 @@ const Hero = memo(() => {
                 </div>
                 {!isFinished && (
                   <motion.div
-                    className="absolute bottom-24 left-1/2 -translate-x-1/2 bg-black/90 px-4 py-2 rounded-lg border-2 border-[var(--matrix-color-50)] text-[var(--matrix-color)] text-base font-mono flex items-center gap-2 backdrop-blur-sm"
+                    className="absolute bottom-12 sm:bottom-24 left-1/2 -translate-x-1/2 bg-black/90 px-2 sm:px-4 py-1 sm:py-2 rounded-lg border-2 border-[var(--matrix-color-50)] text-[var(--matrix-color)] text-sm sm:text-base font-mono flex items-center gap-2 backdrop-blur-sm"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{
@@ -159,19 +159,19 @@ const Hero = memo(() => {
                       repeatType: "reverse",
                     }}
                   >
-                    <kbd className="px-2 py-0.5 text-sm bg-[var(--matrix-color-10)] border-2 border-[var(--matrix-color-50)] rounded shadow-[0_0_10px_var(--matrix-color-20)]">
+                    <kbd className="px-1 sm:px-2 py-0.5 text-xs sm:text-sm bg-[var(--matrix-color-10)] border-2 border-[var(--matrix-color-50)] rounded shadow-[0_0_10px_var(--matrix-color-20)]">
                       space
                     </kbd>
                     <span>Press to skip</span>
                   </motion.div>
                 )}
-                <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 h-16 sm:h-20 bg-gradient-to-t from-black to-transparent" />
               </div>
             </motion.div>
 
             {/* Main Content Section */}
             <motion.div
-              className="text-white space-y-6 h-full flex flex-col justify-center absolute inset-0"
+              className="text-white space-y-4 sm:space-y-6 h-full flex flex-col justify-center absolute inset-0"
               initial={{ opacity: 0, x: "100%" }}
               animate={{
                 opacity: isFinished ? 1 : 0,
@@ -183,19 +183,19 @@ const Hero = memo(() => {
                 ease: "easeOut",
               }}
             >
-              <div className="relative max-w-4xl mx-auto w-full bg-black/50 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg sm:p-12">
+              <div className="relative max-w-4xl mx-auto w-full bg-black/50 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-4 sm:p-8 md:p-12">
                 {/* Window Header */}
-                <div className="absolute -top-3 left-0 right-0 flex justify-between items-center px-4">
-                  <div className="bg-black px-4 py-1 rounded-full border border-[var(--matrix-color)] text-[var(--matrix-color)] text-xs font-mono">
+                <div className="absolute -top-3 left-0 right-0 flex justify-between items-center px-2 sm:px-4">
+                  <div className="bg-black px-2 sm:px-4 py-1 rounded-full border border-[var(--matrix-color)] text-[var(--matrix-color)] text-[10px] sm:text-xs font-mono">
                     AXIOM_OS {">"}init_future.sh
                   </div>
                 </div>
 
                 {/* Decorative Corner Elements */}
-                <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-[var(--matrix-color-50)] rounded-tl" />
-                <div className="absolute top-0 right-0 w-4 h-4 border-r-2 border-t-2 border-[var(--matrix-color-50)] rounded-tr" />
-                <div className="absolute bottom-0 left-0 w-4 h-4 border-l-2 border-b-2 border-[var(--matrix-color-50)] rounded-bl" />
-                <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-[var(--matrix-color-50)] rounded-br" />
+                <div className="absolute top-0 left-0 w-2 sm:w-4 h-2 sm:h-4 border-l-2 border-t-2 border-[var(--matrix-color-50)] rounded-tl" />
+                <div className="absolute top-0 right-0 w-2 sm:w-4 h-2 sm:h-4 border-r-2 border-t-2 border-[var(--matrix-color-50)] rounded-tr" />
+                <div className="absolute bottom-0 left-0 w-2 sm:w-4 h-2 sm:h-4 border-l-2 border-b-2 border-[var(--matrix-color-50)] rounded-bl" />
+                <div className="absolute bottom-0 right-0 w-2 sm:w-4 h-2 sm:h-4 border-r-2 border-b-2 border-[var(--matrix-color-50)] rounded-br" />
 
                 {/* Content */}
                 <motion.h1
@@ -205,9 +205,9 @@ const Hero = memo(() => {
                     isFinished ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                   }
                   transition={{ delay: 0.5 }}
-                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold relative pb-1"
+                  className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold relative pb-1"
                 >
-                  <div className="absolute -left-6 top-1/2 -translate-y-1/2 w-3 h-12 bg-gradient-to-b from-[var(--matrix-color)] to-[var(--matrix-dark)] rounded-full" />
+                  <div className="absolute -left-3 sm:-left-6 top-1/2 -translate-y-1/2 w-2 sm:w-3 h-8 sm:h-12 bg-gradient-to-b from-[var(--matrix-color)] to-[var(--matrix-dark)] rounded-full" />
                   <motion.span
                     className="inline-block bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent pb-1"
                     initial={{ opacity: 0, y: 20 }}
@@ -226,7 +226,7 @@ const Hero = memo(() => {
                     isFinished ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                   }
                   transition={{ delay: 0.8 }}
-                  className="text-base sm:text-lg text-gray-300 mt-6 border-l-2 border-[var(--matrix-color-30)] pl-4"
+                  className="text-sm sm:text-base md:text-lg text-gray-300 mt-4 sm:mt-6 border-l-2 border-[var(--matrix-color-30)] pl-2 sm:pl-4"
                 >
                   Welcome to{" "}
                   <span className="text-[var(--matrix-color)]">Axiom Club</span>
@@ -244,7 +244,7 @@ const Hero = memo(() => {
                     isFinished ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                   }
                   transition={{ delay: 0.9 }}
-                  className="flex flex-col sm:flex-row gap-4 mt-8"
+                  className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-4 sm:mt-8"
                 >
                   <motion.a
                     variants={buttonVariants}

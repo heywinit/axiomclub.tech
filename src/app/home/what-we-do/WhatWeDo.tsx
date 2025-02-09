@@ -25,16 +25,16 @@ const ActivityCard = ({
       className="relative group"
     >
       <div className="absolute -inset-0.5 bg-gradient-to-r from-[var(--matrix-color-90)] to-[var(--matrix-glow-30)] rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
-      <div className="relative p-6 bg-black/50 backdrop-blur-sm ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300">
-        <div className="flex items-start gap-4">
-          <div className="p-2 bg-[var(--matrix-color-20)] rounded-lg">
-            <span className="text-2xl">{icon}</span>
+      <div className="relative p-4 sm:p-6 bg-black/50 backdrop-blur-sm ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300">
+        <div className="flex items-start gap-2 sm:gap-4">
+          <div className="p-1.5 sm:p-2 bg-[var(--matrix-color-20)] rounded-lg shrink-0">
+            <span className="text-xl sm:text-2xl">{icon}</span>
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[var(--matrix-color)] mb-2">
+            <h3 className="text-base sm:text-lg font-bold text-[var(--matrix-color)] mb-1 sm:mb-2">
               {title}
             </h3>
-            <p className="text-gray-300">{description}</p>
+            <p className="text-sm sm:text-base text-gray-300">{description}</p>
           </div>
         </div>
       </div>
@@ -45,16 +45,16 @@ const ActivityCard = ({
 const WhatWeDo = memo(() => {
   return (
     <section className="relative overflow-hidden">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-8 sm:mb-12 md:mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 md:mb-6">
               <motion.span
                 className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent inline-flex items-center gap-2 justify-center"
                 animate={{
@@ -73,14 +73,14 @@ const WhatWeDo = memo(() => {
                 What We Do
               </motion.span>
             </h2>
-            <p className="text-gray-300 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-gray-300 max-w-2xl mx-auto px-4">
               Empowering students through technology, innovation, and
               collaboration
             </p>
           </motion.div>
 
           {/* Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <ActivityCard
               title="Technical Workshops"
               description="Hands-on learning experiences in cutting-edge technologies and development practices."
