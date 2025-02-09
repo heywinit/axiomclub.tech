@@ -1,5 +1,5 @@
 import Hero from "@/app/home/hero/Hero";
-import Leadership from "@/app/home/leadership/Leadership";
+// import Leadership from "@/app/home/leadership/Leadership";
 import WhatWeDo from "@/app/home/what-we-do/WhatWeDo";
 import FeaturedProjects from "@/app/home/featured-projects/FeaturedProjects";
 import Team from "@/app/home/team/Team";

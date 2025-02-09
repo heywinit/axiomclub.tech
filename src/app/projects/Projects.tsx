@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Project } from "@/types/project";
 import { getAllProjects } from "@/services/projectService";
+import CrypticText from "@/components/CrypticText";
 
 // Custom Dropdown Component
 interface CustomDropdownProps {
@@ -236,74 +237,6 @@ const MatrixOverlay = memo(() => (
 ));
 
 MatrixOverlay.displayName = "MatrixOverlay";
-
-const CrypticText = memo(({ text }: { text: string }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const characters = "アイウエオカキクケコサシスセソタチツテトナニヌネノ";
-
-  return (
-    <motion.span
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className="inline-block relative cursor-pointer"
-    >
-      {text.split("").map((char, index) => (
-        <motion.span
-          key={index}
-          className="inline-block relative"
-          animate={
-            isHovered
-              ? {
-                  y: [0, -2, 0],
-                }
-              : {}
-          }
-          transition={{
-            duration: 0.2,
-            delay: index * 0.02,
-            repeat: isHovered ? Infinity : 0,
-            repeatType: "reverse",
-          }}
-        >
-          {isHovered && (
-            <motion.span
-              className="absolute top-0 left-0 text-[var(--matrix-glow)]"
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: [0, 1, 0],
-              }}
-              transition={{
-                duration: 0.1,
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-            >
-              {characters[Math.floor(Math.random() * characters.length)]}
-            </motion.span>
-          )}
-          <motion.span
-            animate={
-              isHovered
-                ? {
-                    opacity: [1, 0.5, 1],
-                  }
-                : {}
-            }
-            transition={{
-              duration: 0.2,
-              delay: index * 0.02,
-              repeat: Infinity,
-            }}
-          >
-            {char}
-          </motion.span>
-        </motion.span>
-      ))}
-    </motion.span>
-  );
-});
-
-CrypticText.displayName = "CrypticText";
 
 const Projects = memo(() => {
   const [searchQuery, setSearchQuery] = useState("");

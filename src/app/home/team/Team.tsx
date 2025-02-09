@@ -1,10 +1,11 @@
 "use client";
 
-import React, { memo, useMemo, useState } from "react";
+import React, { memo } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Terminal, Github, Linkedin } from "lucide-react";
+import { Github, Linkedin } from "lucide-react";
 import { teamService } from "@/services/teamService";
+import Image from "next/image";
 
 interface TeamMember {
   name: string;
@@ -13,75 +14,6 @@ interface TeamMember {
   github?: string;
   linkedin?: string;
 }
-
-const CrypticText = memo(({ text }: { text: string }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const characters = "アイウエオカキクケコサシスセソタチツテトナニヌネノ";
-
-  return (
-    <motion.span
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className="inline-block relative cursor-pointer"
-    >
-      {text.split("").map((char, index) => (
-        <motion.span
-          key={index}
-          className="inline-block relative"
-          animate={
-            isHovered
-              ? {
-                  y: [0, -2, 0],
-                }
-              : {}
-          }
-          transition={{
-            duration: 0.2,
-            delay: index * 0.02,
-            repeat: isHovered ? Infinity : 0,
-            repeatType: "reverse",
-          }}
-        >
-          {isHovered && (
-            <motion.span
-              className="absolute top-0 left-0 text-[var(--matrix-glow)]"
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: [0, 1, 0],
-              }}
-              transition={{
-                duration: 0.1,
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-            >
-              {characters[Math.floor(Math.random() * characters.length)]}
-            </motion.span>
-          )}
-          <motion.span
-            animate={
-              isHovered
-                ? {
-                    opacity: [1, 0.5, 1],
-                  }
-                : {}
-            }
-            transition={{
-              duration: 0.2,
-              delay: index * 0.02,
-              repeat: Infinity,
-            }}
-          >
-            {char}
-          </motion.span>
-        </motion.span>
-      ))}
-    </motion.span>
-  );
-});
-
-CrypticText.displayName = "CrypticText";
-
 const TeamMemberCard = memo(
   ({ member, index }: { member: TeamMember; index: number }) => {
     const { ref, inView } = useInView({
@@ -180,10 +112,12 @@ const Team = memo(() => {
             >
               <div className="absolute -inset-0.5 bg-gradient-to-r from-[var(--matrix-color-90)] to-[var(--matrix-glow-30)] rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
               <div className="relative p-6 bg-black/50 backdrop-blur-sm ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300">
-                <img
+                <Image
                   src={member.image}
                   alt={member.name}
-                  className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
+                  width={96}
+                  height={96}
+                  className="rounded-full mx-auto mb-4 object-cover"
                 />
                 <h3 className="text-xl font-bold text-[var(--matrix-color)] mb-2">
                   {member.name}
