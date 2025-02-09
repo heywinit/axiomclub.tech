@@ -732,13 +732,20 @@ const About = memo(() => {
                     whileTap={{ scale: 0.95 }}
                     className="px-8 py-3 bg-[var(--matrix-color)] text-black font-semibold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors relative overflow-hidden group"
                   >
-                    <motion.span
-                      className="absolute inset-0 bg-white/20"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: "100%" }}
-                      transition={{ duration: 0.5 }}
-                    />
-                    Apply Now
+                    <motion.a
+                      href={socialLinks.discord}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative inline-block"
+                    >
+                      <motion.span
+                        className="absolute inset-0 bg-white/20"
+                        initial={{ x: "-100%" }}
+                        whileHover={{ x: "100%" }}
+                        transition={{ duration: 0.5 }}
+                      />
+                      Apply Now
+                    </motion.a>
                   </motion.button>
                 </div>
               </div>

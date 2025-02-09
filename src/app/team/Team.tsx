@@ -39,85 +39,31 @@ const TEAM_SECTIONS: TeamSection[] = [
   {
     title: "Development",
     icon: <Code className="w-5 h-5" />,
-    members: [
-      {
-        name: "Member 1",
-        role: "Frontend Developer",
-        image: "/team/dev1.jpg",
-        bio: "Specializes in creating beautiful and responsive user interfaces.",
-        skills: ["React", "TypeScript", "UI/UX"],
-      },
-      // Add more members
-    ],
+    members: [],
   },
   {
     title: "Systems",
     icon: <Cpu className="w-5 h-5" />,
-    members: [
-      {
-        name: "Member 2",
-        role: "Systems Engineer",
-        image: "/team/sys1.jpg",
-        bio: "Expert in designing and maintaining robust system architectures.",
-        skills: ["Linux", "Docker", "AWS"],
-      },
-      // Add more members
-    ],
+    members: [],
   },
   {
     title: "Security",
     icon: <Shield className="w-5 h-5" />,
-    members: [
-      {
-        name: "Member 3",
-        role: "Security Researcher",
-        image: "/team/sec1.jpg",
-        bio: "Focused on identifying and mitigating security vulnerabilities.",
-        skills: ["Pentesting", "Cryptography", "Network Security"],
-      },
-      // Add more members
-    ],
+    members: [],
   },
   {
     title: "Design",
     icon: <Palette className="w-5 h-5" />,
-    members: [
-      {
-        name: "Member 4",
-        role: "UI/UX Designer",
-        image: "/team/des1.jpg",
-        bio: "Creates intuitive and engaging user experiences.",
-        skills: ["Figma", "User Research", "Motion Design"],
-      },
-      // Add more members
-    ],
+    members: [],
   },
   {
     title: "Content",
     icon: <Megaphone className="w-5 h-5" />,
-    members: [
-      {
-        name: "Member 5",
-        role: "Content Strategist",
-        image: "/team/con1.jpg",
-        bio: "Develops engaging technical content and documentation.",
-        skills: ["Technical Writing", "Documentation", "SEO"],
-      },
-      // Add more members
-    ],
+    members: [],
   },
 ];
 
-const TEAM_0X00: Members[] = [
-  {
-    name: "Hacker 1",
-    role: "Full Stack Developer",
-    image: "/team/0x001.jpg",
-    bio: "Competitive programmer and hackathon enthusiast.",
-    skills: ["Competitive Programming", "Rapid Prototyping", "System Design"],
-  },
-  // Add more members
-];
+const TEAM_0X00: Members[] = LEADS;
 
 const getLeadIcon = (name: string) => {
   switch (name) {
@@ -274,11 +220,25 @@ const TeamSection = memo(({ section }: { section: TeamSection }) => {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="mt-4"
           >
-            {section.members.map((member, index) => (
-              <MemberCard key={index} member={member} />
-            ))}
+            <div className="p-6 bg-black/30 border border-[var(--matrix-color-30)] rounded-lg">
+              <p className="text-gray-300 text-center">
+                We are actively looking for passionate individuals to join our{" "}
+                {section.title} team! If you&apos;re interested in{" "}
+                {section.title.toLowerCase()} and want to be part of something
+                exciting, we&apos;d love to hear from you.
+              </p>
+              <div className="mt-4 flex justify-center">
+                <a
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--matrix-color-20)] text-[var(--matrix-color)] rounded border border-[var(--matrix-color-30)] hover:bg-[var(--matrix-color-30)] transition-colors"
+                >
+                  <Mail className="w-4 h-4" />
+                  Get in Touch
+                </a>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -456,12 +416,27 @@ const Team = memo(() => {
             <div className="p-6 bg-black/30 border border-[var(--matrix-color-30)] rounded-lg">
               <p className="text-gray-300 mb-6">
                 Our competitive team that represents Axiom Club in hackathons
-                and coding competitions.
+                and coding competitions. We&apos;re actively looking for
+                talented individuals to join our elite squad and push the
+                boundaries of what&apos;s possible.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {TEAM_0X00.map((member, index) => (
                   <MemberCard key={index} member={member} />
                 ))}
+              </div>
+              <div className="mt-8 text-center">
+                <p className="text-gray-300 mb-4">
+                  Think you have what it takes to be part of Team 0x00?
+                  We&apos;re always on the lookout for exceptional talent!
+                </p>
+                <a
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--matrix-color-20)] text-[var(--matrix-color)] rounded border border-[var(--matrix-color-30)] hover:bg-[var(--matrix-color-30)] transition-colors"
+                >
+                  <Mail className="w-4 h-4" />
+                  Apply to Join
+                </a>
               </div>
             </div>
           </div>

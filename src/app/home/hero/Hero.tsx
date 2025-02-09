@@ -4,6 +4,7 @@ import React, { memo, useCallback, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import useTypewriter from "../../../hooks/useTypewriter";
+import Link from "next/link";
 
 // Dynamically import CRT component with no SSR
 const CRT = dynamic(() => import("../../../components/CRT"), { ssr: false });
@@ -245,10 +246,13 @@ const Hero = memo(() => {
                   transition={{ delay: 0.9 }}
                   className="flex flex-col sm:flex-row gap-4 mt-8"
                 >
-                  <motion.button
+                  <motion.a
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
+                    href="https://discord.gg/YebuA3HmYn"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="px-6 py-3 bg-[var(--matrix-color)] text-black font-semibold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors relative overflow-hidden group"
                   >
                     <motion.span
@@ -258,15 +262,17 @@ const Hero = memo(() => {
                       transition={{ duration: 0.5 }}
                     />
                     Join us
-                  </motion.button>
-                  <motion.button
-                    variants={buttonVariants}
-                    whileHover="hover"
-                    whileTap="tap"
-                    className="px-6 py-3 border-2 border-[var(--matrix-color-30)] text-[var(--matrix-color-50)] font-semibold rounded-lg hover:bg-[var(--matrix-color-50)]/10 transition-colors"
-                  >
-                    Explore Projects
-                  </motion.button>
+                  </motion.a>
+                  <Link href="/projects" passHref>
+                    <motion.button
+                      variants={buttonVariants}
+                      whileHover="hover"
+                      whileTap="tap"
+                      className="px-6 py-3 border-2 border-[var(--matrix-color-30)] text-[var(--matrix-color-50)] font-semibold rounded-lg hover:bg-[var(--matrix-color-50)]/10 transition-colors"
+                    >
+                      Explore Projects
+                    </motion.button>
+                  </Link>
                 </motion.div>
 
                 <motion.div
