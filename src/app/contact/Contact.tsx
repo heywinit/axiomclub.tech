@@ -23,36 +23,33 @@ const contactInfo = [
 
 const locations = [
   {
-    city: "San Francisco",
-    address: "123 Tech Avenue, San Francisco, CA 94105",
-  },
-  {
-    city: "New York",
-    address: "456 Innovation Street, New York, NY 10013",
+    city: "Ahmedabad",
+    address: "Sardar Vallabhbhai Global University - UCP Institute Of Technology",
   },
 ];
 
 const socialLinks = [
   { name: "LinkedIn", url: "https://www.linkedin.com/company/axiom-svgu/" },
   { name: "GitHub", url: "https://github.com/axiom-svgu" },
-  { name: "Twitter", url: "https://twitter.com/axiomclub" },
+  { name: "Twitter", url: "https://x.com/Axiom_Svgu" },
 ];
+
 
 export default function Contact() {
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
       {/* Enhanced Matrix Overlay with more dynamic effects */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[linear-gradient(transparent_2px,var(--background)_2px)] bg-[length:100%_4px] [animation:scan_50s_linear_0s_infinite]" />
-        <div className="absolute inset-0 [background:repeating-linear-gradient(0deg,var(--matrix-color)_0_1px,transparent_1px_4px)] opacity-[0.15] animate-pulse" />
-        <div className="absolute inset-0 [background:repeating-linear-gradient(90deg,var(--matrix-color)_0_1px,transparent_1px_4px)] opacity-[0.15] animate-pulse" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_1200px_at_50%_-100px,var(--matrix-glow-30),transparent)]" />
-      </div>
-
+    <div className="absolute inset-0 bg-[linear-gradient(transparent_2px,var(--background)_2px)] bg-[length:100%_4px] animate-scan" />
+    <div className="absolute inset-0 [background:repeating-linear-gradient(0deg,var(--matrix-color)_0_1px,transparent_1px_4px)] opacity-10" />
+    <div className="absolute inset-0 [background:repeating-linear-gradient(90deg,var(--matrix-color)_0_1px,transparent_1px_4px)] opacity-10" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_-100px,var(--matrix-glow-30),transparent)]" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_800px,var(--matrix-color-20),transparent)]" />
+  </div>
       <div className="relative z-10">
         {/* Enhanced Hero Section */}
         <div className="relative h-[40vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black z-10" />
+ 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -122,14 +119,16 @@ export default function Contact() {
             className="mb-20"
           >
             <h2 className="text-4xl font-bold text-[var(--matrix-color)] mb-12 text-center [text-shadow:0_0_10px_var(--matrix-color-30)]">
-              Our Locations
+              Our Location
             </h2>
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="flex justify-center">
               {locations.map((location) => (
                 <motion.div
                   key={location.city}
+                  transition={{ duration: 0.2 }}
                   whileHover={{ scale: 1.02 }}
-                  className="p-8 border border-[var(--matrix-color-30)] rounded-lg bg-black/50 backdrop-blur-sm relative group overflow-hidden"
+                  className="p-8 border border-[var(--matrix-color-30)] rounded-lg hover:border-[var(--matrix-color)] transition-all duration-300 bg-black/50 backdrop-blur-sm shadow-[0_0_15px_rgba(0,255,0,0.1)]"
+              
                 >
                   <div className="absolute inset-0 bg-[var(--matrix-color)] opacity-0 group-hover:opacity-5 transition-opacity duration-300" />
                   <h3 className="text-[var(--matrix-color)] text-2xl font-bold mb-4">
