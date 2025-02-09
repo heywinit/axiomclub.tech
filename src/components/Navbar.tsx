@@ -69,33 +69,23 @@ const Navbar = memo(() => {
       initial={{ x: -100 }}
       animate={{ x: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="fixed left-0 top-0 h-screen z-50 p-4"
+      className="fixed sm:left-0 sm:top-0 sm:h-screen bottom-0 left-0 right-0 sm:right-auto z-50 p-2 sm:p-4"
     >
       <motion.div
-        className="h-full w-36 bg-black rounded-2xl border border-[var(--matrix-color-30)] shadow-lg flex flex-col items-center gap-4 p-4 relative"
+        className="h-[70px] sm:h-full w-full sm:w-36 bg-black rounded-2xl border border-[var(--matrix-color-30)] shadow-lg flex sm:flex-col flex-row items-center gap-2 p-2 relative sm:gap-4 sm:p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        {/* Brand Display */}
-        <motion.div
-          className="w-full bg-black rounded-lg border-2 border-[var(--matrix-color-30)] p-2 relative overflow-hidden"
-          animate={{
-            boxShadow: [
-              "0 0 0px var(--matrix-color)",
-              "0 0 10px var(--matrix-color)",
-            ],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            repeatType: "reverse",
-          }}
-        >
+        {/* Brand Display - Hide on mobile */}
+        <div className="hidden sm:block w-full">
           <motion.div
-            className="font-mono text-center text-[var(--matrix-color)] text-sm relative z-10"
+            className="w-full bg-black rounded-lg border-2 border-[var(--matrix-color-30)] p-2 relative overflow-hidden"
             animate={{
-              opacity: [1, 0.7],
+              boxShadow: [
+                "0 0 0px var(--matrix-color)",
+                "0 0 10px var(--matrix-color)",
+              ],
             }}
             transition={{
               duration: 2,
@@ -103,14 +93,26 @@ const Navbar = memo(() => {
               repeatType: "reverse",
             }}
           >
-            AXIOM-RC v2.0
+            <motion.div
+              className="font-mono text-center text-[var(--matrix-color)] text-sm relative z-10"
+              animate={{
+                opacity: [1, 0.7],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            >
+              AXIOM-RC v2.0
+            </motion.div>
+            {/* Scanlines */}
+            <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px] pointer-events-none opacity-40" />
           </motion.div>
-          {/* Scanlines */}
-          <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px] pointer-events-none opacity-40" />
-        </motion.div>
+        </div>
 
-        {/* Channel Display */}
-        <div className="w-full space-y-2">
+        {/* Channel Display - Hide on mobile */}
+        <div className="hidden sm:block w-full space-y-1 md:space-y-2">
           <div className="w-full bg-black rounded-lg border-2 border-[var(--matrix-color-30)] p-2 relative overflow-hidden">
             <div className="font-mono text-center text-[var(--matrix-color)] text-xs mb-1">
               CH-{(selectedChannel + 1).toString().padStart(2, "0")}
@@ -144,12 +146,12 @@ const Navbar = memo(() => {
           </div>
         </div>
 
-        {/* Navigation Section */}
-        <div className="w-full space-y-2">
-          <div className="text-[var(--matrix-color)] text-[10px] font-mono text-center border-b-2 border-[var(--matrix-color-30)] pb-1">
+        {/* Navigation Section - Simplified for mobile */}
+        <div className="flex-1 w-full">
+          <div className="hidden sm:block text-[var(--matrix-color)] text-[10px] font-mono text-center border-b-2 border-[var(--matrix-color-30)] pb-1">
             CHANNEL SELECT
           </div>
-          <div className="grid grid-cols-2 gap-2 w-full">
+          <div className="grid sm:grid-cols-2 grid-cols-6 gap-2 w-full">
             {LINKS.map((link, index) => {
               const isActive = pathname === link.href;
               return (
@@ -160,12 +162,12 @@ const Navbar = memo(() => {
                       isActive
                         ? "bg-[var(--matrix-color-20)] border-[var(--matrix-color)]"
                         : "bg-black border-[var(--matrix-color-30)] hover:border-[var(--matrix-color)]"
-                    } flex flex-col items-center justify-center py-2 gap-1`}
+                    } flex flex-col items-center justify-center py-1 sm:py-2 gap-0.5 sm:gap-1`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
                     <span
-                      className={`font-mono text-lg ${
+                      className={`font-mono text-base sm:text-lg ${
                         isActive
                           ? "text-[var(--matrix-color)]"
                           : "text-[var(--matrix-color-50)]"
@@ -173,12 +175,12 @@ const Navbar = memo(() => {
                     >
                       {index + 1}
                     </span>
-                    <span className="text-[8px] font-mono text-[var(--matrix-color-50)]">
+                    <span className="text-[6px] sm:text-[8px] font-mono text-[var(--matrix-color-50)]">
                       {link.label}
                     </span>
                     {isActive && (
                       <motion.div
-                        className="absolute right-1 top-1 w-1.5 h-1.5 rounded-full bg-[var(--matrix-color)]"
+                        className="absolute right-1 top-1 w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[var(--matrix-color)]"
                         animate={{ opacity: [1, 0.5] }}
                         transition={{
                           duration: 1,
@@ -193,8 +195,8 @@ const Navbar = memo(() => {
           </div>
         </div>
 
-        {/* Theme Controls */}
-        <div className="w-full space-y-2">
+        {/* Theme Controls - Hide on mobile */}
+        <div className="hidden sm:block w-full space-y-1 md:space-y-2">
           <div className="text-[var(--matrix-color)] text-[10px] font-mono text-center border-b-2 border-[var(--matrix-color-30)] pb-1">
             COLOR ADJUST
           </div>
@@ -230,8 +232,8 @@ const Navbar = memo(() => {
           </div>
         </div>
 
-        {/* Volume Controls */}
-        <div className="w-full space-y-2">
+        {/* Volume Controls - Hide on mobile */}
+        <div className="hidden sm:block w-full space-y-1 md:space-y-2">
           <div className="text-[var(--matrix-color)] text-[10px] font-mono text-center border-b-2 border-[var(--matrix-color-30)] pb-1">
             SYSTEM
           </div>
@@ -257,16 +259,16 @@ const Navbar = memo(() => {
           </div>
         </div>
 
-        {/* Power Button */}
+        {/* Power Button - Show smaller version on mobile */}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsPowered(false)}
-          className="mt-auto w-full aspect-[2/1] rounded-lg bg-black border-2 border-[var(--matrix-color)] flex items-center justify-center gap-3 relative overflow-hidden group"
+          className="sm:mt-auto w-10 sm:w-full aspect-square sm:aspect-[2/1] rounded-lg bg-black border-2 border-[var(--matrix-color)] flex items-center justify-center gap-1 sm:gap-3 relative overflow-hidden group"
         >
-          <div className="w-6 h-6 rounded-full border-2 border-[var(--matrix-color)] flex items-center justify-center">
+          <div className="w-4 h-4 sm:w-6 sm:h-6 rounded-full border-2 border-[var(--matrix-color)] flex items-center justify-center">
             <motion.div
-              className="w-3 h-3 bg-[var(--matrix-color)] rounded-full"
+              className="w-2 h-2 sm:w-3 sm:h-3 bg-[var(--matrix-color)] rounded-full"
               animate={{
                 opacity: [1, 0.5],
                 scale: [1, 0.9, 1],
@@ -278,7 +280,7 @@ const Navbar = memo(() => {
               }}
             />
           </div>
-          <div className="flex flex-col items-center">
+          <div className="hidden sm:flex flex-col items-center">
             <span className="font-mono text-[10px] text-[var(--matrix-color)]">
               POWER
             </span>
