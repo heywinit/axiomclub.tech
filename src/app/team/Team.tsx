@@ -18,8 +18,13 @@ import {
   Megaphone,
   Rocket,
   Binary,
+  User,
+  Webhook,
+  PawPrint,
+  Snowflake,
 } from "lucide-react";
 import CrypticText from "@/components/CrypticText";
+import Image from "next/image";
 
 interface TeamSection {
   title: string;
@@ -114,9 +119,23 @@ const TEAM_0X00: Members[] = [
   // Add more members
 ];
 
+const getLeadIcon = (name: string) => {
+  switch (name) {
+    case "Vinesh Rajpurohit":
+      return Webhook;
+    case "Deepraj Bhati":
+      return PawPrint;
+    case "Vaidehi Shah":
+      return Snowflake;
+    default:
+      return User;
+  }
+};
+
 const MemberCard = memo(
   ({ member, isLead = false }: { member: Members; isLead?: boolean }) => {
     const [, setIsHovered] = useState(false);
+    const LeadIcon = isLead ? getLeadIcon(member.name) : null;
 
     return (
       <motion.div
@@ -130,13 +149,25 @@ const MemberCard = memo(
         <div className="absolute -inset-0.5 bg-gradient-to-r from-[var(--matrix-color-90)] to-[var(--matrix-glow-30)] rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
         <div className="relative p-4 bg-black/50 ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300">
           <div className="flex flex-col items-center text-center gap-4">
-            <div className="relative w-32 h-32 rounded-full overflow-hidden ring-2 ring-[var(--matrix-color-50)]">
-              <img
-                src={member.image}
-
-                alt={member.name}
-                className="w-full h-full object-cover"
-              />
+            <div className="relative w-32 h-32 rounded-full overflow-hidden ring-2 ring-[var(--matrix-color-50)] flex items-center justify-center bg-[var(--matrix-color-20)]">
+              {isLead && LeadIcon ? (
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.2 }}
+                  className="relative"
+                >
+                  <LeadIcon className="w-16 h-16 transition-colors duration-300 relative z-10 text-[var(--matrix-color)]" />
+                  <div className="absolute inset-0 blur-md -z-10 opacity-50 bg-[var(--matrix-color)]" />
+                </motion.div>
+              ) : (
+                <Image
+                  src={member.image}
+                  alt={member.name}
+                  width={128}
+                  height={128}
+                  className="w-full h-full object-cover"
+                />
+              )}
             </div>
 
             <div>
