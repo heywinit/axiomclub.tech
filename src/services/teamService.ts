@@ -30,7 +30,7 @@ export const teamService = {
       name: "Vaidehi Shah",
       role: "Frontend Lead",
       image: "/team/vaidehi.jpg",
-      bio: "batki",
+      bio: "Cooking, not in the kitchen tho",
       skills: ["UI/UX", "Frontend"],
       links: {
         github: "https://github.com/VaidehiCodes",
