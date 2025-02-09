@@ -17,7 +17,7 @@ import {
   Palette,
   Megaphone,
   Rocket,
-  Binary,
+  // Binary,
   User,
   Webhook,
   Snowflake,
@@ -63,7 +63,7 @@ const TEAM_SECTIONS: TeamSection[] = [
   },
 ];
 
-const TEAM_0X00: Members[] = LEADS;
+// const TEAM_0X00: Members[] = LEADS;
 
 const getLeadIcon = (name: string) => {
   switch (name) {
