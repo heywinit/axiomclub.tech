@@ -30,19 +30,19 @@ export const eventService = {
   getActiveProjects: (): Project[] => [
     {
       name: "Axiom Club Website",
-      progress: 85,
+      progress: 99,
       tech: "Next.js",
     },
     {
-      name: "AI Study Assistant",
-      progress: 60,
-      tech: "Python/ML",
+      name: "AI Time Manager",
+      progress: 35,
+      tech: "Next.js / Go",
     },
-    {
+    /*{
       name: "Campus Events App",
       progress: 40,
       tech: "React Native",
-    },
+    },*/
   ],
 
   getTechStack: (): TechStack[] => [
@@ -66,19 +66,19 @@ export const eventService = {
 
   getRecentActivities: (): Activity[] => [
     {
-      date: "2024-03-15",
-      event: "AI Workshop",
-      details: "Introduction to Machine Learning",
+      date: "2024-09-3",
+      event: "Axiom Created",
+      details: "The creation of this club",
     },
     {
-      date: "2024-03-10",
-      event: "Hackathon",
-      details: "24-hour coding challenge",
+      date: "2025-02-01",
+      event: "Spark Quest",
+      details: "Participated in a webpage devloping compititon",
     },
     {
-      date: "2024-03-05",
+      date: "2025-01-27",
       event: "Tech Talk",
-      details: "Web3 and Blockchain",
+      details: "We started wroking on this website",
     },
     {
       date: "2024-03-01",
@@ -106,14 +106,14 @@ export const eventService = {
   ],
 
   getClubStats: (): ClubStat[] => [
-    { label: "Active Members", value: "42" },
-    { label: "Project Teams", value: "8" },
+    { label: "Active Members", value: "24" },
+    { label: "Project Teams", value: "1" },
     { label: "Monthly Events", value: "4" },
     { label: "Total Projects", value: "15" },
   ],
 
   getSocialLinks: () => ({
     discord: "discord.gg/axiomclub",
-    github: "github.com/axiomclub",
+    github: "https://github.com/axiom-svgu",
   }),
 };

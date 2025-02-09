@@ -648,23 +648,19 @@ const About = memo(() => {
                 </h2>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-3xl mx-auto">
                 {[
                   {
-                    number: "50+",
+                    number: "20+",
                     label: "Active Members",
                     description: "Passionate developers and innovators",
                   },
                   {
-                    number: "10+",
-                    label: "Projects Completed",
+                    number: "2",
+                    label: "Projects in progress",
                     description: "From web apps to AI solutions",
                   },
-                  {
-                    number: "5+",
-                    label: "Industry Partners",
-                    description: "Collaborating for innovation",
-                  },
+
                 ].map((stat, index) => (
                   <motion.div
                     key={index}

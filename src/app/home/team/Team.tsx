@@ -168,7 +168,7 @@ const Team = memo(() => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {teamMembers.map((member, index) => (
             <motion.div
               key={member.name}
@@ -191,17 +191,7 @@ const Team = memo(() => {
                 <p className="text-[var(--matrix-color-90)] mb-2">
                   {member.role}
                 </p>
-                <p className="text-gray-400 text-sm mb-3">{member.bio}</p>
-                <div className="flex flex-wrap gap-2 justify-center mb-4">
-                  {member.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-2 py-1 text-xs rounded-full bg-[var(--matrix-color-20)] text-[var(--matrix-color)]"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
+
                 <div className="flex justify-center gap-4">
                   {member.links?.github && (
                     <a
