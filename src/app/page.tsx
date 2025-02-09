@@ -37,9 +37,9 @@ export default function Home() {
         <div className="py-32 border-t border-[var(--matrix-color-30)]">
           <FeaturedProjects />
         </div>
-        <div className="py-32 border-t border-[var(--matrix-color-30)]">
-          <News />
-        </div>
+{/*        <div className="py-32 border-t border-[var(--matrix-color-30)]">
+          //<News />
+        </div>*/}
         <div className="py-32 border-t border-[var(--matrix-color-30)]">
           <Contact />
         </div>

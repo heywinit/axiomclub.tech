@@ -30,11 +30,11 @@ export const eventService = {
   getActiveProjects: (): Project[] => [
     {
       name: "Axiom Club Website",
-      progress: 99,
+      progress: 95,
       tech: "Next.js",
     },
     {
-      name: "AI Time Manager",
+      name: "AI Task Manager",
       progress: 35,
       tech: "Next.js / Go",
     },
@@ -77,31 +77,21 @@ export const eventService = {
     },
     {
       date: "2025-01-27",
-      event: "Tech Talk",
+      event: "The Website",
       details: "We started wroking on this website",
     },
     {
-      date: "2024-03-01",
-      event: "Project Sprint",
-      details: "Campus Events App Development",
+      date: "2025-03-06",
+      event: "First Project",
+      details: "Started our first open source project",
     },
   ],
 
   getUpcomingEvents: (): Event[] => [
     {
-      date: "MAR 20",
-      event: "React Workshop",
-      type: "Workshop",
-    },
-    {
-      date: "MAR 25",
-      event: "Code Review Session",
-      type: "Meeting",
-    },
-    {
-      date: "APR 01",
-      event: "Spring Hackathon",
-      type: "Event",
+      date: "",
+      event: "/* CONFIDENTIAL */",
+      type: "",
     },
   ],
 
@@ -113,7 +103,7 @@ export const eventService = {
   ],
 
   getSocialLinks: () => ({
-    discord: "discord.gg/axiomclub",
+    discord: "https://discord.gg/YebuA3HmYn",
     github: "https://github.com/axiom-svgu",
   }),
 };

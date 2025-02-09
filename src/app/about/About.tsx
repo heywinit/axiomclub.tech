@@ -648,7 +648,7 @@ const About = memo(() => {
                 </h2>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-3xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
                 {[
                   {
                     number: "20+",
@@ -660,27 +660,19 @@ const About = memo(() => {
                     label: "Projects in progress",
                     description: "From web apps to AI solutions",
                   },
-
                 ].map((stat, index) => (
-                  <motion.div
+                  <div
                     key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.2 }}
-                    className="relative group"
+                    className="p-8 bg-black/30 rounded-lg border border-[var(--matrix-color-30)] hover:border-[var(--matrix-color)] transition-colors"
                   >
-                    <div className="absolute -inset-1 bg-gradient-to-r from-[var(--matrix-color-90)] to-[var(--matrix-glow-30)] rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200" />
-                    <div className="relative p-6 bg-black/50 ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300 text-center">
-                      <div className="text-4xl font-bold text-[var(--matrix-color)] mb-2">
-                        {stat.number}
-                      </div>
-                      <div className="text-xl font-semibold text-white mb-2">
-                        {stat.label}
-                      </div>
-                      <div className="text-gray-300">{stat.description}</div>
+                    <div className="text-4xl font-bold text-[var(--matrix-color)] mb-2">
+                      {stat.number}
                     </div>
-                  </motion.div>
+                    <div className="text-xl text-[var(--matrix-color-90)] mb-2">
+                      {stat.label}
+                    </div>
+                    <div className="text-gray-400">{stat.description}</div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -843,18 +835,24 @@ const About = memo(() => {
                     description:
                       "Access our comprehensive guides and documentation",
                     link: "#",
+                    showLearnMore: false,
+                    status: "Coming soon",
                   },
                   {
                     title: "GitHub Repository",
                     description:
                       "Explore our open-source projects and contributions",
-                    link: "#",
+                    link: `${socialLinks.github}`,
+                    showLearnMore: true,
+                    status: "Learn more",
                   },
                   {
                     title: "Learning Path",
                     description:
                       "Follow our curated learning paths and tutorials",
                     link: "#",
+                    showLearnMore: false,
+                    status: "Coming soon",
                   },
                 ].map((resource, index) => (
                   <motion.div
@@ -863,9 +861,18 @@ const About = memo(() => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
-                    className="group cursor-pointer"
+                    className="group"
                   >
-                    <div className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-6 hover:border-[var(--matrix-color)] transition-colors h-full">
+                    <div
+                      className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-6 hover:border-[var(--matrix-color)] transition-colors h-full"
+                      onClick={() =>
+                        resource.showLearnMore &&
+                        window.open(resource.link, "_blank")
+                      }
+                      style={{
+                        cursor: resource.showLearnMore ? "pointer" : "default",
+                      }}
+                    >
                       <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[var(--matrix-color)] transition-colors">
                         {resource.title}
                       </h3>
@@ -873,7 +880,8 @@ const About = memo(() => {
                         {resource.description}
                       </p>
                       <div className="text-[var(--matrix-color)] font-mono text-sm">
-                        {">"} Learn more
+                        {"> "}
+                        {resource.status}
                       </div>
                     </div>
                   </motion.div>

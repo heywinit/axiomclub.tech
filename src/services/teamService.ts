@@ -23,6 +23,7 @@ export const teamService = {
       links: {
         github: "https://github.com/heywinit",
         linkedin: "https://www.linkedin.com/in/vinesh-rajpurohit/",
+        email: "vinesh@axiomclub.tech"
       },
     },
 
@@ -35,6 +36,7 @@ export const teamService = {
       links: {
         github: "https://github.com/VaidehiCodes",
         linkedin: "https://www.linkedin.com/in/vaidehi-shah21/",
+        email: "vaidehi@axiomclub.tech"
       },
     },
 
@@ -47,6 +49,7 @@ export const teamService = {
       links: {
         github: "https://github.com/byedeep",
         linkedin: "https://www.linkedin.com/in/deepraj-bhati-0210a4330/",
+        email: "deep@axiomclub.tech"
       },
     },
   ],
