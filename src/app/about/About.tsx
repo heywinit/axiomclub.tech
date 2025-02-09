@@ -202,9 +202,9 @@ const About = memo(() => {
             className="max-w-5xl mx-auto text-center"
           >
             <div className="inline-block relative mb-8">
-              <h1 className="text-4xl md:text-6xl font-bold mb-4 relative z-10">
+              <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 relative z-10">
                 <motion.div
-                  className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent inline-flex items-center gap-3 justify-center"
+                  className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent inline-flex flex-wrap items-center gap-2 sm:gap-3 justify-center"
                   animate={{
                     textShadow: [
                       "0 0 20px var(--matrix-color-50)",
@@ -220,7 +220,7 @@ const About = memo(() => {
                 >
                   <span className="opacity-70">[</span>
                   <CrypticText text="About" />
-                  <Terminal className="w-8 h-8" />
+                  <Terminal className="w-6 h-6 sm:w-8 sm:h-8" />
                   <CrypticText text="Axiom" />
                   <span className="opacity-70">]</span>
                   <motion.span
@@ -250,8 +250,8 @@ const About = memo(() => {
                 }}
               />
             </div>
-            <div className="flex items-center justify-center gap-2 text-[var(--matrix-color-90)] mt-4">
-              <Terminal className="w-4 h-4" />
+            <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 text-[var(--matrix-color-90)] mt-4 text-xs sm:text-base">
+              <Terminal className="w-3 h-3 sm:w-4 sm:h-4" />
               <motion.div
                 className="font-mono"
                 animate={{
@@ -305,24 +305,27 @@ const About = memo(() => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color)] rounded-lg p-8 mb-16"
+            className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color)] rounded-lg p-4 sm:p-6 lg:p-8 mb-16"
           >
             {/* Existing dashboard content */}
-            <div className="grid grid-cols-12 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
               {/* Left Column - Key Metrics and Activity */}
-              <div className="col-span-8 grid grid-rows-[auto_1fr] gap-4">
+              <div className="col-span-1 lg:col-span-8 grid grid-rows-[auto_1fr] gap-4">
                 {/* Top Row - Current Projects and Tech Stack */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Active Projects */}
                   <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
                     <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
                       <Code2 className="w-4 h-4" />
                       Projects
                     </div>
-                    <div className="space-y-4">
+                    <div className="space-y-4 overflow-x-auto">
                       {projects.map((project) => (
-                        <div key={project.name} className="space-y-1">
-                          <div className="flex justify-between text-xs">
+                        <div
+                          key={project.name}
+                          className="space-y-1 min-w-[200px]"
+                        >
+                          <div className="flex justify-between text-xs flex-wrap gap-1">
                             <span className="text-[var(--matrix-color)]">
                               {project.name}
                             </span>
@@ -347,7 +350,7 @@ const About = memo(() => {
                       <Braces className="w-4 h-4" />
                       Tech Stack
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 xs:grid-cols-2 gap-4">
                       {techStack.map((stack) => (
                         <div key={stack.category} className="space-y-1">
                           <div className="text-[var(--matrix-color-90)] text-xs">
@@ -375,13 +378,13 @@ const About = memo(() => {
                     <Terminal className="w-4 h-4" />
                     Recent Activities
                   </div>
-                  <div className="space-y-3 overflow-auto max-h-[300px]">
+                  <div className="space-y-3 overflow-auto max-h-[300px] scrollbar-thin scrollbar-thumb-[var(--matrix-color)] scrollbar-track-transparent">
                     {activities.map((activity) => (
                       <div
                         key={activity.date}
                         className="flex items-start gap-3 text-xs border-l-2 border-[var(--matrix-color)] pl-3"
                       >
-                        <div className="text-[var(--matrix-color-90)]">
+                        <div className="text-[var(--matrix-color-90)] whitespace-nowrap">
                           {activity.date}
                         </div>
                         <div>
@@ -399,7 +402,7 @@ const About = memo(() => {
               </div>
 
               {/* Right Column */}
-              <div className="col-span-4 space-y-4">
+              <div className="col-span-1 lg:col-span-4 space-y-4">
                 {/* Stats */}
                 <div className="bg-black/40 rounded-lg border border-[var(--matrix-color)] p-4">
                   <div className="text-[var(--matrix-color)] text-sm font-bold mb-4 flex items-center gap-2">
@@ -410,7 +413,7 @@ const About = memo(() => {
                     {stats.map((stat) => (
                       <div
                         key={stat.label}
-                        className="flex justify-between items-center"
+                        className="flex justify-between items-center flex-wrap gap-2"
                       >
                         <span className="text-[var(--matrix-color-90)] text-xs">
                           {stat.label}
@@ -429,13 +432,13 @@ const About = memo(() => {
                     <Terminal className="w-4 h-4" />
                     Upcoming
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-3 overflow-x-auto">
                     {events.map((event) => (
                       <div
                         key={event.date}
-                        className="flex items-start gap-2 text-xs"
+                        className="flex items-start gap-2 text-xs min-w-[200px]"
                       >
-                        <div className="text-[var(--matrix-color)] font-medium min-w-[60px]">
+                        <div className="text-[var(--matrix-color)] font-medium whitespace-nowrap">
                           {event.date}
                         </div>
                         <div>
@@ -465,7 +468,7 @@ const About = memo(() => {
                       href={`https://${socialLinks.discord}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block text-[var(--matrix-color)] hover:opacity-80"
+                      className="block text-[var(--matrix-color)] hover:opacity-80 break-all"
                     >
                       {socialLinks.discord}
                     </a>
@@ -476,7 +479,7 @@ const About = memo(() => {
                       href={`https://${socialLinks.github}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block text-[var(--matrix-color)] hover:opacity-80"
+                      className="block text-[var(--matrix-color)] hover:opacity-80 break-all"
                     >
                       {socialLinks.github}
                     </a>
@@ -487,14 +490,14 @@ const About = memo(() => {
           </motion.div>
 
           {/* Content Sections with enhanced styling */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-16">
             {sections.map((section, index) => (
               <AboutSection key={section.title} {...section} index={index} />
             ))}
           </div>
 
           {/* History & Timeline Section */}
-          <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
+          <div className="container mx-auto px-4 py-12 sm:py-20 border-t border-[var(--matrix-color-30)]">
             <div className="max-w-6xl mx-auto">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -502,12 +505,12 @@ const About = memo(() => {
                 viewport={{ once: true }}
                 className="text-center mb-16"
               >
-                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
                   <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
                     Our Journey
                   </span>
                 </h2>
-                <p className="text-gray-300 max-w-2xl mx-auto">
+                <p className="text-gray-300 max-w-2xl mx-auto px-4">
                   From humble beginnings to technological excellence
                 </p>
               </motion.div>
@@ -531,7 +534,7 @@ const About = memo(() => {
                     year: "2025",
                     title: "Website Deployment",
                     description:
-                      "We created this website to put ourselves out there and showcase our passion for tech and innovationo ",
+                      "We created this website to put ourselves out there and showcase our passion for tech and innovation",
                   },
                 ].map((event, index) => (
                   <motion.div
@@ -540,14 +543,14 @@ const About = memo(() => {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.2 }}
-                    className={`relative flex items-center gap-8 mb-12 ${
-                      index % 2 === 0 ? "flex-row" : "flex-row-reverse"
-                    }`}
+                    className={`relative flex flex-col ${
+                      index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                    } items-center gap-8 mb-12`}
                   >
                     <div
-                      className={`w-1/2 ${
-                        index % 2 === 0 ? "text-right" : "text-left"
-                      }`}
+                      className={`w-full md:w-1/2 ${
+                        index % 2 === 0 ? "md:text-right" : "md:text-left"
+                      } text-center md:text-left`}
                     >
                       <div className="text-[var(--matrix-color)] font-mono text-xl mb-2">
                         {event.year}
@@ -558,7 +561,7 @@ const About = memo(() => {
                       <p className="text-gray-300">{event.description}</p>
                     </div>
                     <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[var(--matrix-color)] rounded-full border-4 border-black" />
-                    <div className="w-1/2" />
+                    <div className="w-full md:w-1/2" />
                   </motion.div>
                 ))}
               </div>
@@ -566,7 +569,7 @@ const About = memo(() => {
           </div>
 
           {/* Achievements & Impact Section */}
-          <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
+          <div className="container mx-auto px-4 py-12 sm:py-20 border-t border-[var(--matrix-color-30)]">
             <div className="max-w-6xl mx-auto">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -574,14 +577,14 @@ const About = memo(() => {
                 viewport={{ once: true }}
                 className="text-center mb-16"
               >
-                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
                   <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
                     Achievements & Impact
                   </span>
                 </h2>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
                 {[
                   {
                     number: "20+",
@@ -596,12 +599,12 @@ const About = memo(() => {
                 ].map((stat, index) => (
                   <div
                     key={index}
-                    className="p-8 bg-black/30 rounded-lg border border-[var(--matrix-color-30)] hover:border-[var(--matrix-color)] transition-colors"
+                    className="p-6 sm:p-8 bg-black/30 rounded-lg border border-[var(--matrix-color-30)] hover:border-[var(--matrix-color)] transition-colors"
                   >
-                    <div className="text-4xl font-bold text-[var(--matrix-color)] mb-2">
+                    <div className="text-3xl sm:text-4xl font-bold text-[var(--matrix-color)] mb-2">
                       {stat.number}
                     </div>
-                    <div className="text-xl text-[var(--matrix-color-90)] mb-2">
+                    <div className="text-lg sm:text-xl text-[var(--matrix-color-90)] mb-2">
                       {stat.label}
                     </div>
                     <div className="text-gray-400">{stat.description}</div>
@@ -612,7 +615,7 @@ const About = memo(() => {
           </div>
 
           {/* Core Values Section */}
-          <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
+          <div className="container mx-auto px-4 py-12 sm:py-20 border-t border-[var(--matrix-color-30)]">
             <div className="max-w-6xl mx-auto">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -620,14 +623,14 @@ const About = memo(() => {
                 viewport={{ once: true }}
                 className="text-center mb-16"
               >
-                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
                   <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
                     Core Values
                   </span>
                 </h2>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
                   {
                     icon: "💡",
@@ -658,13 +661,17 @@ const About = memo(() => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
-                    className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-6 hover:border-[var(--matrix-color)] transition-colors"
+                    className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-4 sm:p-6 hover:border-[var(--matrix-color)] transition-colors"
                   >
-                    <div className="text-4xl mb-4">{value.icon}</div>
-                    <h3 className="text-xl font-bold text-white mb-2">
+                    <div className="text-3xl sm:text-4xl mb-4">
+                      {value.icon}
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
                       {value.title}
                     </h3>
-                    <p className="text-gray-300">{value.description}</p>
+                    <p className="text-gray-300 text-sm sm:text-base">
+                      {value.description}
+                    </p>
                   </motion.div>
                 ))}
               </div>
@@ -672,27 +679,27 @@ const About = memo(() => {
           </div>
 
           {/* Join Us Section */}
-          <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
+          <div className="container mx-auto px-4 py-12 sm:py-20 border-t border-[var(--matrix-color-30)]">
             <div className="max-w-6xl mx-auto">
-              <div className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color)] rounded-lg p-8 md:p-12">
+              <div className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color)] rounded-lg p-4 sm:p-8 md:p-12">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   className="text-center mb-8"
                 >
-                  <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
                     <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
                       Join Axiom Club
                     </span>
                   </h2>
-                  <p className="text-gray-300 max-w-2xl mx-auto">
+                  <p className="text-gray-300 max-w-2xl mx-auto text-sm sm:text-base px-4">
                     Ready to be part of something extraordinary? Join our
                     community of innovators and shape the future of technology.
                   </p>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
                   {[
                     {
                       title: "Learn",
@@ -716,12 +723,14 @@ const About = memo(() => {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: index * 0.1 }}
-                      className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-6"
+                      className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-4 sm:p-6"
                     >
-                      <h3 className="text-xl font-bold text-white mb-2">
+                      <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
                         {benefit.title}
                       </h3>
-                      <p className="text-gray-300">{benefit.description}</p>
+                      <p className="text-gray-300 text-sm sm:text-base">
+                        {benefit.description}
+                      </p>
                     </motion.div>
                   ))}
                 </div>
@@ -730,7 +739,7 @@ const About = memo(() => {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-8 py-3 bg-[var(--matrix-color)] text-black font-semibold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors relative overflow-hidden group"
+                    className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-[var(--matrix-color)] text-black font-semibold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors relative overflow-hidden group"
                   >
                     <motion.a
                       href={socialLinks.discord}
@@ -753,7 +762,7 @@ const About = memo(() => {
           </div>
 
           {/* Resources Section */}
-          <div className="container mx-auto px-4 py-20 border-t border-[var(--matrix-color-30)]">
+          <div className="container mx-auto px-4 py-12 sm:py-20 border-t border-[var(--matrix-color-30)]">
             <div className="max-w-6xl mx-auto">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -761,14 +770,14 @@ const About = memo(() => {
                 viewport={{ once: true }}
                 className="text-center mb-16"
               >
-                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
                   <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
                     Resources
                   </span>
                 </h2>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {[
                   {
                     title: "Documentation",
@@ -804,7 +813,7 @@ const About = memo(() => {
                     className="group"
                   >
                     <div
-                      className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-6 hover:border-[var(--matrix-color)] transition-colors h-full"
+                      className="bg-black/40 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-4 sm:p-6 hover:border-[var(--matrix-color)] transition-colors h-full"
                       onClick={() =>
                         resource.showLearnMore &&
                         window.open(resource.link, "_blank")
@@ -813,13 +822,13 @@ const About = memo(() => {
                         cursor: resource.showLearnMore ? "pointer" : "default",
                       }}
                     >
-                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[var(--matrix-color)] transition-colors">
+                      <h3 className="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-[var(--matrix-color)] transition-colors">
                         {resource.title}
                       </h3>
-                      <p className="text-gray-300 mb-4">
+                      <p className="text-gray-300 text-sm sm:text-base mb-4">
                         {resource.description}
                       </p>
-                      <div className="text-[var(--matrix-color)] font-mono text-sm">
+                      <div className="text-[var(--matrix-color)] font-mono text-xs sm:text-sm">
                         {"> "}
                         {resource.status}
                       </div>

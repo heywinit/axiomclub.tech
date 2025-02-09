@@ -299,9 +299,9 @@ const Projects = memo(() => {
             className="text-center mb-16"
           >
             <div className="inline-block relative">
-              <h1 className="text-4xl md:text-6xl font-bold mb-4 relative z-10 text-center">
+              <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 relative z-10 text-center">
                 <motion.div
-                  className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent inline-flex items-center gap-3 justify-center"
+                  className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent inline-flex flex-wrap items-center gap-2 sm:gap-3 justify-center"
                   animate={{
                     textShadow: [
                       "0 0 20px var(--matrix-color-50)",
@@ -317,7 +317,7 @@ const Projects = memo(() => {
                 >
                   <span className="opacity-70">[</span>
                   <CrypticText text="Project" />
-                  <Terminal className="w-8 h-8" />
+                  <Terminal className="w-6 h-6 sm:w-8 sm:h-8" />
                   <CrypticText text="Index" />
                   <span className="opacity-70">]</span>
                   <motion.span
@@ -347,8 +347,8 @@ const Projects = memo(() => {
                 }}
               />
             </div>
-            <div className="flex items-center justify-center gap-2 text-[var(--matrix-color-90)] mt-4">
-              <Terminal className="w-4 h-4" />
+            <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 text-[var(--matrix-color-90)] mt-4 text-xs sm:text-base">
+              <Terminal className="w-3 h-3 sm:w-4 sm:h-4" />
               <motion.div
                 className="font-mono"
                 animate={{

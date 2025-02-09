@@ -370,7 +370,6 @@ const Team = memo(() => {
               developers, and tech enthusiasts.
             </p>
           </motion.div>
-
           {/* Club Leads */}
           <div className="mb-16">
             <motion.h2
@@ -387,7 +386,6 @@ const Team = memo(() => {
               ))}
             </div>
           </div>
-
           {/* Team Sections */}
           <div className="mb-16">
             <motion.h2
@@ -402,8 +400,7 @@ const Team = memo(() => {
               <TeamSection key={index} section={section} />
             ))}
           </div>
-
-          {/* Team 0x00 */}
+          {/* Team 0x00
           <div className="mb-16">
             <motion.h2
               initial={{ opacity: 0, x: -20 }}
@@ -439,7 +436,7 @@ const Team = memo(() => {
                 </a>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
