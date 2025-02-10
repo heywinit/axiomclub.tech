@@ -195,6 +195,44 @@ const Navbar = memo(() => {
           </div>
         </div>
 
+        {/* Mobile Theme Changer */}
+        <div className="sm:hidden flex items-center">
+          <motion.div
+            className="w-10 h-10 rounded-lg bg-black border-2 border-[var(--matrix-color-30)] flex items-center justify-center relative overflow-hidden group"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              const currentIndex = THEMES.findIndex((t) => t.name === theme);
+              const nextIndex = (currentIndex + 1) % THEMES.length;
+              setTheme(THEMES[nextIndex].name);
+            }}
+          >
+            <motion.div
+              className="w-4 h-4 rounded-full"
+              style={{
+                backgroundColor: THEMES.find((t) => t.name === theme)?.color,
+              }}
+              animate={{
+                scale: [1, 1.1, 1],
+                opacity: [0.8, 1, 0.8],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            />
+            <motion.div
+              className="absolute inset-0 border-2 rounded-lg border-[var(--matrix-color)]"
+              animate={{ opacity: [0, 0.5, 0] }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+              }}
+            />
+          </motion.div>
+        </div>
+
         {/* Theme Controls - Hide on mobile */}
         <div className="hidden sm:block w-full space-y-1 md:space-y-2">
           <div className="text-[var(--matrix-color)] text-[10px] font-mono text-center border-b-2 border-[var(--matrix-color-30)] pb-1">

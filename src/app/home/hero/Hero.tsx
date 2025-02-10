@@ -107,7 +107,7 @@ const Hero = memo(() => {
   return (
     <section className="min-h-screen flex items-center justify-center py-4 sm:py-10 md:py-20 will-change-transform">
       <div className="container mx-auto px-2 sm:px-4 h-[calc(100vh-2rem)] sm:h-[calc(100vh-5rem)] md:h-[calc(100vh-10rem)]">
-        <CRT className="h-full sm:h-[60vh]">
+        <CRT className="h-full sm:h-[85vh]">
           <motion.div
             variants={containerVariants}
             initial="hidden"
