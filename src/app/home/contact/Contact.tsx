@@ -23,6 +23,27 @@ const interestOptions = [
   "UI/UX Design",
 ];
 
+const quickContacts = [
+  {
+    name: "Vinesh Rajpurohit",
+    role: "Founder & Leader",
+    email: "vinesh@axiomclub.tech",
+    phone: "+91 9724178767",
+  },
+  {
+    name: "Vaidehi Shah",
+    role: "Frontend Lead",
+    email: "vaidehi@axiomclub.tech",
+    phone: "+91 7874702422",
+  },
+  {
+    name: "Deepraj Bhati",
+    role: "Backend Lead",
+    email: "deep@axiomclub.tech",
+    phone: "+91 6355052843",
+  },
+];
+
 const Contact = memo(() => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -227,6 +248,19 @@ const Contact = memo(() => {
                       </button>
                     ))}
                   </div>
+                  <motion.button
+                    type="button"
+                    onClick={() => {
+                      if (validateCurrentStep()) {
+                        setCurrentStep((prev) => prev + 1);
+                      }
+                    }}
+                    className="mt-4 py-2 px-4 bg-[var(--matrix-color-30)] text-[var(--matrix-color)] border border-[var(--matrix-color-30)] rounded hover:bg-[var(--matrix-color)] hover:text-black transition-all duration-300 font-mono text-sm"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    $ continue --next-step
+                  </motion.button>
                 </div>
               )}
             </div>
@@ -248,8 +282,8 @@ const Contact = memo(() => {
   };
 
   return (
-    <section className="relative overflow-hidden">
-      <div className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
+    <section className="relative overflow-hidden pt-20 sm:pt-24">
+      <div className="container mx-auto px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -258,16 +292,91 @@ const Contact = memo(() => {
         >
           <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">
             <span className="bg-gradient-to-r from-[var(--matrix-color)] to-[var(--matrix-glow)] bg-clip-text text-transparent">
-              Get in Touch
+              Initialize Connection
             </span>
           </h2>
           <p className="text-sm sm:text-base text-gray-300 max-w-2xl mx-auto px-4">
-            Have a project in mind or want to join our community? Let&apos;s
-            talk!
+            $ ./connect.sh --protocol=secure --target=axiom_network
           </p>
         </motion.div>
 
-        <div className="max-w-3xl mx-auto">
+        {/* Quick Contact Cards */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8"
+        >
+          {quickContacts.map((contact, index) => (
+            <motion.div
+              key={contact.name}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-black/30 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-4 hover:border-[var(--matrix-color)] transition-all duration-300"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[var(--matrix-color)]">$</span>
+                <h3 className="text-[var(--matrix-color)] font-bold">
+                  {contact.name}
+                </h3>
+              </div>
+              <p className="text-[var(--matrix-color-70)] text-sm mb-3">
+                {contact.role}
+              </p>
+              <div className="space-y-2 text-sm">
+                <motion.a
+                  href={`mailto:${contact.email}`}
+                  className="flex items-center gap-2 text-[var(--matrix-color-70)] hover:text-[var(--matrix-color)] transition-colors"
+                  whileHover={{ x: 5 }}
+                >
+                  <span>{">"}</span>
+                  <span className="font-mono">{contact.email}</span>
+                </motion.a>
+                <motion.a
+                  href={`tel:${contact.phone}`}
+                  className="flex items-center gap-2 text-[var(--matrix-color-70)] hover:text-[var(--matrix-color)] transition-colors"
+                  whileHover={{ x: 5 }}
+                >
+                  <span>{">"}</span>
+                  <span className="font-mono">{contact.phone}</span>
+                </motion.a>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Discord Community Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-8 bg-black/30 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-6 hover:border-[var(--matrix-color)] transition-all duration-300"
+        >
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-center sm:text-left">
+              <h3 className="text-xl font-bold text-[var(--matrix-color)] mb-2">
+                Join Our Discord Community
+              </h3>
+              <p className="text-[var(--matrix-color-70)] text-sm">
+                Connect with fellow developers, share ideas, and stay updated
+                with our latest projects
+              </p>
+            </div>
+            <motion.a
+              href="https://discord.gg/YebuA3HmYn"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-3 bg-[var(--matrix-color)] text-black font-bold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              $ join --server axiom
+            </motion.a>
+          </div>
+        </motion.div>
+
+        <div className="max-w-3xl mx-auto pb-20 sm:pb-24 md:pb-32">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
