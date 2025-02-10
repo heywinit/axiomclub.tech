@@ -107,7 +107,7 @@ const Hero = memo(() => {
   return (
     <section className="min-h-screen flex items-center justify-center py-4 sm:py-10 md:py-20 will-change-transform">
       <div className="container mx-auto px-2 sm:px-4 h-[calc(100vh-2rem)] sm:h-[calc(100vh-5rem)] md:h-[calc(100vh-10rem)]">
-        <CRT className="h-full sm:h-[85vh]">
+        <CRT className="h-full sm:h-[60vh]">
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -184,7 +184,7 @@ const Hero = memo(() => {
                 ease: "easeOut",
               }}
             >
-              <div className="relative max-w-4xl mx-auto w-full bg-black/50 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-4 sm:p-8 md:p-12">
+              <div className="relative max-w-4xl mx-auto w-full bg-black/50 backdrop-blur-sm border border-[var(--matrix-color-30)] rounded-lg p-6 sm:p-8 md:p-12">
                 {/* Window Header */}
                 <div className="absolute -top-3 left-0 right-0 flex justify-between items-center px-2 sm:px-4">
                   <div className="bg-black px-2 sm:px-4 py-1 rounded-full border border-[var(--matrix-color)] text-[var(--matrix-color)] text-[10px] sm:text-xs font-mono">
@@ -206,7 +206,7 @@ const Hero = memo(() => {
                     isFinished ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                   }
                   transition={{ delay: 0.5 }}
-                  className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold relative pb-1"
+                  className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold relative pb-1 mt-4"
                 >
                   <div className="absolute -left-3 sm:-left-6 top-1/2 -translate-y-1/2 w-2 sm:w-3 h-8 sm:h-12 bg-gradient-to-b from-[var(--matrix-color)] to-[var(--matrix-dark)] rounded-full" />
                   <motion.span
@@ -227,7 +227,7 @@ const Hero = memo(() => {
                     isFinished ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                   }
                   transition={{ delay: 0.8 }}
-                  className="text-sm sm:text-base md:text-lg text-gray-300 mt-4 sm:mt-6 border-l-2 border-[var(--matrix-color-30)] pl-2 sm:pl-4"
+                  className="text-sm sm:text-base md:text-lg text-gray-300 mt-6 border-l-2 border-[var(--matrix-color-30)] pl-2 sm:pl-4"
                 >
                   Welcome to{" "}
                   <span className="text-[var(--matrix-color)]">Axiom Club</span>
@@ -245,7 +245,7 @@ const Hero = memo(() => {
                     isFinished ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                   }
                   transition={{ delay: 0.9 }}
-                  className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-4 sm:mt-8"
+                  className="flex flex-row items-center gap-3 mt-6 sm:mt-8"
                 >
                   <motion.a
                     variants={buttonVariants}
@@ -254,7 +254,7 @@ const Hero = memo(() => {
                     href="https://discord.gg/YebuA3HmYn"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-6 py-3 bg-[var(--matrix-color)] text-black font-semibold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors relative overflow-hidden group"
+                    className="px-6 py-2.5 bg-[var(--matrix-color)] text-black font-semibold rounded-lg hover:bg-[var(--matrix-glow)] transition-colors relative overflow-hidden group text-center"
                   >
                     <motion.span
                       className="absolute inset-0 bg-white/20"
@@ -269,7 +269,7 @@ const Hero = memo(() => {
                       variants={buttonVariants}
                       whileHover="hover"
                       whileTap="tap"
-                      className="px-6 py-3 border-2 border-[var(--matrix-color-30)] text-[var(--matrix-color-50)] font-semibold rounded-lg hover:bg-[var(--matrix-color-50)]/10 transition-colors"
+                      className="px-6 py-2.5 border-2 border-[var(--matrix-color-30)] text-[var(--matrix-color-50)] font-semibold rounded-lg hover:bg-[var(--matrix-color-50)]/10 transition-colors"
                     >
                       Explore Projects
                     </motion.button>
@@ -282,7 +282,7 @@ const Hero = memo(() => {
                     isFinished ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                   }
                   transition={{ delay: 1 }}
-                  className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-sm text-gray-400 mt-8 pt-6 border-t border-[var(--matrix-color-30)]"
+                  className="flex flex-row items-center justify-start gap-4 text-sm text-gray-400 mt-6 pt-6 border-t border-[var(--matrix-color-30)]"
                 >
                   {[
                     { text: "Active Projects: 5+", delay: 1.2 },
