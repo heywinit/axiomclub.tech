@@ -149,8 +149,9 @@ const Hero = memo(() => {
                   </motion.pre>
                 </div>
                 {!isFinished && (
-                  <motion.div
-                    className="absolute bottom-12 sm:bottom-24 left-1/2 -translate-x-1/2 bg-black/90 px-2 sm:px-4 py-1 sm:py-2 rounded-lg border-2 border-[var(--matrix-color-50)] text-[var(--matrix-color)] text-sm sm:text-base font-mono flex items-center gap-2 backdrop-blur-sm"
+                  <motion.button
+                    onClick={skip}
+                    className="absolute bottom-12 sm:bottom-24 left-1/2 -translate-x-1/2 bg-black/90 px-2 sm:px-4 py-1 sm:py-2 rounded-lg border-2 border-[var(--matrix-color-50)] text-[var(--matrix-color)] text-sm sm:text-base font-mono flex items-center gap-2 backdrop-blur-sm cursor-pointer hover:bg-black/70 active:scale-95 transition-all"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{
@@ -163,7 +164,7 @@ const Hero = memo(() => {
                       space
                     </kbd>
                     <span>Press to skip</span>
-                  </motion.div>
+                  </motion.button>
                 )}
                 <div className="absolute bottom-0 left-0 right-0 h-16 sm:h-20 bg-gradient-to-t from-black to-transparent" />
               </div>
