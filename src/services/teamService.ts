@@ -31,7 +31,7 @@ export const teamService = {
       role: "Founder & Leader",
       image: "/team/vinesh.jpg",
       bio: "Usually writing code for screens, sometimes it also makes stuff fly",
-      skills: ["Full Stack", "Avionics", "competitive programming"],
+      skills: ["Full Stack", "Avionics", "Competitive Programming"],
       links: {
         github: "https://github.com/heywinit",
         linkedin: "https://www.linkedin.com/in/vinesh-rajpurohit/",
