@@ -560,7 +560,7 @@ const About = memo(() => {
                       </h3>
                       <p className="text-gray-300">{event.description}</p>
                     </div>
-                    <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[var(--matrix-color)] rounded-full border-4 border-black" />
+                    <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[var(--matrix-color)] rounded-full border-4 border-black md:mt-0 mt-4" />
                     <div className="w-full md:w-1/2" />
                   </motion.div>
                 ))}
