@@ -66,7 +66,7 @@ export const eventService = {
 
   getRecentActivities: (): Activity[] => [
     {
-      date: "2024-09-3",
+      date: "2024-09-03",
       event: "Axiom Created",
       details: "The creation of this club",
     },

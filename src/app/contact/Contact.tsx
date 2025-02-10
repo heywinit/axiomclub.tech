@@ -48,10 +48,10 @@ const socialLinks = [
   { name: "Twitter", url: "https://x.com/Axiom_Svgu", icon: Twitter },
   {
     name: "Instagram",
-    url: "https://instagram.com/axiom_svgu",
+    url: "https://instagram.com/axiom.svgu",
     icon: Instagram,
   },
-  { name: "YouTube", url: "https://youtube.com/@axiom_svgu", icon: Youtube },
+  { name: "YouTube", url: "https://youtube.com/@axiom-svgu", icon: Youtube },
   {
     name: "Discord",
     url: "https://discord.gg/YebuA3HmYn",
