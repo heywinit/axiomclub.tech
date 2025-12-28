@@ -38,7 +38,6 @@ export const teamService = {
         email: "vinesh@axiomclub.tech",
       },
     },
-
     {
       name: "Deepraj Bhati",
       role: "Backend Lead",
@@ -52,4 +51,20 @@ export const teamService = {
       },
     },
   ],
+
+  getDesignTeam: (): Members[] => [
+    {
+      name: "Mahek",
+      role: "UI/UX Designer",
+      image: "/team/mahek.jpg",
+      bio: "Crafting beautiful digital experiences",
+      skills: ["UI/UX", "Design Systems", "Visual Design"],
+      links: {
+        email: "mahek@axiomclub.tech",
+      },
+    },
+  ],
+
+  getDevelopmentTeam: (): Members[] => [],
+  getContentTeam: (): Members[] => [],
 };

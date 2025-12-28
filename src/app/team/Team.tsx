@@ -3,7 +3,7 @@
 import React, { memo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { teamService } from "@/services/teamService";
-import type { Members } from "@/services/teamService"; // Import the Members interface
+import type { Members } from "@/services/teamService";
 import {
   Terminal,
   ChevronDown,
@@ -13,18 +13,17 @@ import {
   ExternalLink,
   Code,
   Cpu,
-  Shield,
   Palette,
   Megaphone,
   Rocket,
-  // Binary,
   User,
   Webhook,
   Snowflake,
   Bitcoin,
+  LucideIcon,
+  Worm,
 } from "lucide-react";
 import CrypticText from "@/components/CrypticText";
-import Image from "next/image";
 
 interface TeamSection {
   title: string;
@@ -39,33 +38,23 @@ const TEAM_SECTIONS: TeamSection[] = [
   {
     title: "Development",
     icon: <Code className="w-5 h-5" />,
-    members: [],
-  },
-  {
-    title: "Systems",
-    icon: <Cpu className="w-5 h-5" />,
-    members: [],
-  },
-  {
-    title: "Security",
-    icon: <Shield className="w-5 h-5" />,
-    members: [],
+    members: teamService.getDevelopmentTeam(),
   },
   {
     title: "Design",
     icon: <Palette className="w-5 h-5" />,
-    members: [],
+    members: teamService.getDesignTeam(),
   },
   {
     title: "Content",
     icon: <Megaphone className="w-5 h-5" />,
-    members: [],
+    members: teamService.getContentTeam(),
   },
 ];
 
 // const TEAM_0X00: Members[] = LEADS;
 
-const getLeadIcon = (name: string) => {
+const getMemberIcon = (name: string): LucideIcon => {
   switch (name) {
     case "Vinesh Rajpurohit":
       return Webhook;
@@ -73,6 +62,8 @@ const getLeadIcon = (name: string) => {
       return Bitcoin;
     case "Vaidehi Shah":
       return Snowflake;
+    case "Mahek":
+      return Worm;
     default:
       return User;
   }
@@ -81,7 +72,7 @@ const getLeadIcon = (name: string) => {
 const MemberCard = memo(
   ({ member, isLead = false }: { member: Members; isLead?: boolean }) => {
     const [, setIsHovered] = useState(false);
-    const LeadIcon = isLead ? getLeadIcon(member.name) : null;
+    const Icon = getMemberIcon(member.name);
 
     return (
       <motion.div
@@ -96,24 +87,14 @@ const MemberCard = memo(
         <div className="relative p-4 bg-black/50 ring-1 ring-[var(--matrix-color-90)] rounded-lg hover:ring-[var(--matrix-color)] transition-all duration-300">
           <div className="flex flex-col items-center text-center gap-4">
             <div className="relative w-32 h-32 rounded-full overflow-hidden ring-2 ring-[var(--matrix-color-50)] flex items-center justify-center bg-[var(--matrix-color-20)]">
-              {isLead && LeadIcon ? (
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.2 }}
-                  className="relative"
-                >
-                  <LeadIcon className="w-16 h-16 transition-colors duration-300 relative z-10 text-[var(--matrix-color)]" />
-                  <div className="absolute inset-0 blur-md -z-10 opacity-50 bg-[var(--matrix-color)]" />
-                </motion.div>
-              ) : (
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  width={128}
-                  height={128}
-                  className="w-full h-full object-cover"
-                />
-              )}
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.2 }}
+                className="relative"
+              >
+                <Icon className="w-16 h-16 transition-colors duration-300 relative z-10 text-[var(--matrix-color)]" />
+                <div className="absolute inset-0 blur-md -z-10 opacity-50 bg-[var(--matrix-color)]" />
+              </motion.div>
             </div>
 
             <div>
@@ -223,21 +204,31 @@ const TeamSection = memo(({ section }: { section: TeamSection }) => {
             className="mt-4"
           >
             <div className="p-6 bg-black/30 border border-[var(--matrix-color-30)] rounded-lg">
-              <p className="text-gray-300 text-center">
-                We are actively looking for passionate individuals to join our{" "}
-                {section.title} team! If you&apos;re interested in{" "}
-                {section.title.toLowerCase()} and want to be part of something
-                exciting, we&apos;d love to hear from you.
-              </p>
-              <div className="mt-4 flex justify-center">
-                <a
-                  href="/contact"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--matrix-color-20)] text-[var(--matrix-color)] rounded border border-[var(--matrix-color-30)] hover:bg-[var(--matrix-color-30)] transition-colors"
-                >
-                  <Mail className="w-4 h-4" />
-                  Get in Touch
-                </a>
-              </div>
+              {section.members.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {section.members.map((member) => (
+                    <MemberCard key={member.name} member={member} />
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <p className="text-gray-300 text-center">
+                    We are actively looking for passionate individuals to join
+                    our {section.title} team! If you&apos;re interested in{" "}
+                    {section.title.toLowerCase()} and want to be part of
+                    something exciting, we&apos;d love to hear from you.
+                  </p>
+                  <div className="mt-4 flex justify-center">
+                    <a
+                      href="/contact"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--matrix-color-20)] text-[var(--matrix-color)] rounded border border-[var(--matrix-color-30)] hover:bg-[var(--matrix-color-30)] transition-colors"
+                    >
+                      <Mail className="w-4 h-4" />
+                      Get in Touch
+                    </a>
+                  </div>
+                </>
+              )}
             </div>
           </motion.div>
         )}

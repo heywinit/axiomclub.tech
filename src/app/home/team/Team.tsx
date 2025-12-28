@@ -13,6 +13,7 @@ import {
   Terminal,
   Database,
   Cloud,
+  Palette,
 } from "lucide-react";
 import { teamService } from "@/services/teamService";
 
@@ -22,6 +23,10 @@ interface TeamMember {
   image: string;
   github?: string;
   linkedin?: string;
+  links?: {
+    github?: string;
+    linkedin?: string;
+  };
 }
 
 const getIconByRole = (role: string) => {
@@ -32,6 +37,7 @@ const getIconByRole = (role: string) => {
   if (roleLC.includes("full")) return Terminal;
   if (roleLC.includes("devops")) return Cloud;
   if (roleLC.includes("system")) return Cpu;
+  if (roleLC.includes("design")) return Palette;
   return User;
 };
 
@@ -79,9 +85,9 @@ const TeamMemberCard = memo(
             </div>
 
             <div className="flex gap-3 sm:gap-4 pt-1 sm:pt-2">
-              {member.github && (
+              {member.links?.github && (
                 <motion.a
-                  href={member.github}
+                  href={member.links.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--matrix-color-90)] hover:text-[var(--matrix-color)] transition-colors"
@@ -91,9 +97,9 @@ const TeamMemberCard = memo(
                   <Github className="w-4 sm:w-5 h-4 sm:h-5" />
                 </motion.a>
               )}
-              {member.linkedin && (
+              {member.links?.linkedin && (
                 <motion.a
-                  href={member.linkedin}
+                  href={member.links.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--matrix-color-90)] hover:text-[var(--matrix-color)] transition-colors"
@@ -114,7 +120,15 @@ const TeamMemberCard = memo(
 TeamMemberCard.displayName = "TeamMemberCard";
 
 const Team = memo(() => {
-  const teamMembers = teamService.getTeam();
+  // Get all team members and filter for leads only
+  const teamMembers = teamService
+    .getTeam()
+    .filter(
+      (member) =>
+        member.role.toLowerCase().includes("lead") ||
+        member.role.toLowerCase().includes("founder") ||
+        member.role.toLowerCase().includes("leader")
+    );
 
   return (
     <section className="relative overflow-hidden">
